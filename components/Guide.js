@@ -7,7 +7,7 @@ function MatchRow({ row }) {
   const status = matchStatus(row);
   const chan = channelDisplay(row);
   const isLive = status === 'live';
-  const isPending = chan === 'Kanal bilgisi yakında eklenecek';
+  const isPending = chan === 'Türkiye yayın bilgisi henüz bulunamadı';
 
   return (
     <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-row-link">

@@ -24,7 +24,12 @@ export async function generateMetadata({ params }) {
   const label = competitionLabel(key);
   return {
     title: `${label} Maç Programı ve Yayın Kanalları`,
-    description: `${label}'nde bu hafta oynanacak tüm maçlar, saatleri, puan durumu ve hangi kanalda yayınlandığı bilgisi.`,
+    // Not: `${label} + Türkçe ek` şeklinde kurulmuyor — dinamik lig adına
+    // (Süper Lig, Bundesliga, Ligue 1...) doğru ünlü uyumuyla ek eklemek
+    // genel bir çözüm gerektirir; cümleyi ek gerektirmeyecek şekilde kurmak
+    // daha güvenli (önceden "Trendyol Süper Lig'nde" gibi hatalı bir ek
+    // üretiyordu).
+    description: `${label}: bu hafta oynanacak tüm maçlar, saatleri, puan durumu ve hangi kanalda yayınlandığı bilgisi.`,
     alternates: { canonical: `${SITE_URL}/lig/${slug}` },
   };
 }

@@ -6,8 +6,10 @@ import {
   getFixtureStats,
   getFixturesForCompetition,
   getHeadToHead,
+  getStandings,
   channelDisplay,
   matchStatus,
+  teamSlug,
   windowIso,
 } from '../../../lib/data';
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
@@ -97,18 +99,35 @@ export default async function MatchDetailPage({ params }) {
   let stats = null;
   let h2h = [];
   let otherFixtures = [];
+  let standings = null;
   try {
     const { startIso, endIso } = windowIso(0, 7);
-    [lineups, stats, h2h, otherFixtures] = await Promise.all([
+    [lineups, stats, h2h, otherFixtures, standings] = await Promise.all([
       getFixtureLineups(row.id),
       getFixtureStats(row.id),
       getHeadToHead(row.home_team, row.away_team),
       getFixturesForCompetition(row.competition_key, { startIso, endIso }),
+      getStandings(row.competition_key),
     ]);
   } catch {
     // Bu ek bölümler opsiyonel — hata olursa maç kartının kendisi yine de gösterilsin.
   }
   const otherLeagueMatches = otherFixtures.filter((r) => r.id !== row.id).slice(0, 4);
+
+  // Puan durumu verisi ayrı bir kaynaktan (league_standings) geliyor ve
+  // isim yazımı fikstür verisiyle birebir aynı olmayabilir — önce tam eşleşme,
+  // olmazsa slugify ile gevşek eşleşme deneniyor.
+  function findStanding(teamName) {
+    const list = standings?.standings;
+    if (!Array.isArray(list)) return null;
+    return (
+      list.find((s) => s.team?.name === teamName) ??
+      list.find((s) => teamSlug(s.team?.name) === teamSlug(teamName)) ??
+      null
+    );
+  }
+  const homeStanding = findStanding(row.home_team);
+  const awayStanding = findStanding(row.away_team);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -164,8 +183,8 @@ export default async function MatchDetailPage({ params }) {
             {competitionLabel(row.competition_key)}
             {row.round ? ` · ${row.round}` : ''}
           </div>
-          <h1 style={{ fontSize: 34 }}>
-            {row.home_team} <em>vs</em> {row.away_team}
+          <h1 style={{ fontSize: 30 }}>
+            {row.home_team} - {row.away_team} <em>maçı hangi kanalda, saat kaçta?</em>
           </h1>
         </div>
       </div>
@@ -208,6 +227,16 @@ export default async function MatchDetailPage({ params }) {
               {isLive ? <div className="meta-pill live">● Canlı</div> : null}
               <div className="meta-pill">🗓 {istDateLong(row.kickoff_at)}</div>
               <div className="meta-pill">⏰ Saat {istTime(row.kickoff_at)} (TSİ)</div>
+              {homeStanding ? (
+                <div className="meta-pill">
+                  📊 {row.home_team}: {homeStanding.rank}. sıra, {homeStanding.points} puan
+                </div>
+              ) : null}
+              {awayStanding ? (
+                <div className="meta-pill">
+                  📊 {row.away_team}: {awayStanding.rank}. sıra, {awayStanding.points} puan
+                </div>
+              ) : null}
             </div>
           </div>
 
