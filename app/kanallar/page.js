@@ -6,8 +6,8 @@ import { SITE_URL } from '../../lib/links';
 export const revalidate = 1800;
 
 export const metadata = {
-  title: 'TV Kanalları',
-  description: 'S Sport, beIN Sports, TRT Tabii ve maç yayınlayan tüm Türkiye kanal/platformları — hangi kanalda hangi maçlar var.',
+  title: 'Maç Yayınlayan TV Kanalları ve Yayın Platformları',
+  description: 'S Sport, beIN Sports, TRT Tabii ve maç yayınlayan tüm Türkiye kanal/platformları — hangi kanalda hangi maçlar var, ne zaman oynanıyor.',
   alternates: { canonical: `${SITE_URL}/kanallar` },
 };
 

@@ -1120,6 +1120,25 @@ table.standings-table {
   margin-top: 14px;
 }
 
+/* Lig sayfasında diğer liglere çapraz link */
+.related-leagues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.related-league-chip {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  color: var(--subtext);
+}
+.related-league-chip:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
 /* Yasal metin sayfaları (Gizlilik Politikası vb.) */
 .legal-text {
   max-width: 720px;

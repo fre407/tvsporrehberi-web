@@ -5,7 +5,13 @@ import Standings from '../../../components/Standings';
 import LeagueStats from '../../../components/LeagueStats';
 import AppCta from '../../../components/AppCta';
 import { getFixturesForCompetition, getLeagueStats, getStandings, windowIso } from '../../../lib/data';
-import { competitionFlag, competitionKeyFromSlug, competitionLabel } from '../../../lib/competitions';
+import {
+  competitionFlag,
+  competitionKeyFromSlug,
+  competitionLabel,
+  competitionSlug,
+  MAJOR_COMPETITION_KEYS,
+} from '../../../lib/competitions';
 import { SITE_URL } from '../../../lib/links';
 
 export const revalidate = 600;
@@ -107,6 +113,23 @@ export default async function LeaguePage({ params }) {
           </div>
         </section>
       ) : null}
+
+      <section style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <div className="sec-head">
+            <div className="sec-title">
+              Diğer <span>Ligler</span>
+            </div>
+          </div>
+          <div className="related-leagues">
+            {MAJOR_COMPETITION_KEYS.filter((k) => k !== key).map((k) => (
+              <Link key={k} href={`/lig/${competitionSlug(k)}`} className="related-league-chip">
+                {competitionFlag(k)} {competitionLabel(k)}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <AppCta campaign="lig_sayfasi" />
     </>

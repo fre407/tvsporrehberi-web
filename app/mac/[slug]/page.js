@@ -4,15 +4,18 @@ import {
   getFixturesInWindow,
   getFixtureLineups,
   getFixtureStats,
+  getFixturesForCompetition,
   getHeadToHead,
   channelDisplay,
   matchStatus,
+  windowIso,
 } from '../../../lib/data';
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import AppCta from '../../../components/AppCta';
+import Guide from '../../../components/Guide';
 import Lineups from '../../../components/Lineups';
 import MatchStats from '../../../components/MatchStats';
 import HeadToHead from '../../../components/HeadToHead';
@@ -91,15 +94,19 @@ export default async function MatchDetailPage({ params }) {
   let lineups = null;
   let stats = null;
   let h2h = [];
+  let otherFixtures = [];
   try {
-    [lineups, stats, h2h] = await Promise.all([
+    const { startIso, endIso } = windowIso(0, 7);
+    [lineups, stats, h2h, otherFixtures] = await Promise.all([
       getFixtureLineups(row.id),
       getFixtureStats(row.id),
       getHeadToHead(row.home_team, row.away_team),
+      getFixturesForCompetition(row.competition_key, { startIso, endIso }),
     ]);
   } catch {
     // Bu ek bölümler opsiyonel — hata olursa maç kartının kendisi yine de gösterilsin.
   }
+  const otherLeagueMatches = otherFixtures.filter((r) => r.id !== row.id).slice(0, 4);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -249,6 +256,24 @@ export default async function MatchDetailPage({ params }) {
               </div>
             </div>
             <HeadToHead matches={h2h} />
+          </div>
+        </section>
+      ) : null}
+
+      {otherLeagueMatches.length > 0 ? (
+        <section style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <div>
+                <div className="sec-title">
+                  {competitionLabel(row.competition_key)} <span>Diğer Maçlar</span>
+                </div>
+              </div>
+              <Link className="sec-link" href={`/lig/${competitionSlug(row.competition_key)}`}>
+                Tüm fikstür →
+              </Link>
+            </div>
+            <Guide rows={otherLeagueMatches} />
           </div>
         </section>
       ) : null}

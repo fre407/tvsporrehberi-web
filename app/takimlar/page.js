@@ -7,8 +7,8 @@ import { SITE_URL } from '../../lib/links';
 export const revalidate = 1800;
 
 export const metadata = {
-  title: 'Takımlar',
-  description: 'Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor ve Avrupa\'nın popüler kulüplerinin maçları, saatleri ve TV kanalları.',
+  title: 'Tüm Takımlar — Maç Programı, Saatleri ve Yayın Kanalları',
+  description: 'Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor ve Avrupa\'nın popüler kulüplerinin yaklaşan maçları, kaçta oynanacağı ve hangi kanalda yayınlandığı bilgisi.',
   alternates: { canonical: `${SITE_URL}/takimlar` },
 };
 

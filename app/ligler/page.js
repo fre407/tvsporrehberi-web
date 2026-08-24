@@ -4,8 +4,8 @@ import { COMPETITIONS, competitionSlug, isMajorCompetition } from '../../lib/com
 import { SITE_URL } from '../../lib/links';
 
 export const metadata = {
-  title: 'Ligler ve Kupalar',
-  description: 'Süper Lig, Şampiyonlar Ligi, Premier Lig, LaLiga ve daha fazlası — takip ettiğimiz tüm lig ve kupaların maç programı.',
+  title: 'Tüm Ligler ve Kupalar — Maç Programı, Puan Durumu, Yayın Bilgileri',
+  description: 'Süper Lig, Şampiyonlar Ligi, Premier Lig, LaLiga ve daha fazlası — her ligin maç programı, puan durumu ve hangi kanalda yayınlandığı bilgisi tek sayfada.',
   alternates: { canonical: `${SITE_URL}/ligler` },
 };
 
