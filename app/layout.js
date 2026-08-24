@@ -1,7 +1,17 @@
+import Script from 'next/script';
 import './globals.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { SITE_URL } from '../lib/links';
+
+// Google AdSense mülk doğrulaması + reklam kütüphanesi — AdSense onboarding'in
+// verdiği kod birebir bu (client=ca-pub-3167111771074405, aynı yayıncı
+// kimliği tv-spor-rehberi-app'teki AdMob AppId'siyle paylaşılıyor).
+// strategy="beforeInteractive" ile Next.js bunu sunucu render'ındaki ilk
+// HTML <head>'e gömüyor — AdSense'in "sitenizin her sayfasında <head> içinde
+// olsun" doğrulaması bunu görebiliyor (client tarafında sonradan eklenen bir
+// script'i görmüyor).
+const ADSENSE_CLIENT_ID = 'ca-pub-3167111771074405';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -34,6 +44,12 @@ export default function RootLayout({ children }) {
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap"
+        />
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
         />
       </head>
       <body>
