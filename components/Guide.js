@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { channelDisplay, matchStatus } from '../lib/data';
-import { istTime } from '../lib/format';
+import { istTime, matchSlug } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
 
 function MatchRow({ row }) {
@@ -10,7 +10,7 @@ function MatchRow({ row }) {
   const isPending = chan === 'Kanal bilgisi yakında eklenecek';
 
   return (
-    <Link href={`/mac/${row.id}`} className="mr-row-link">
+    <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-row-link">
       <div className="match-row">
         <div className={`mr-time${isLive ? ' live' : ''}`}>
           {isLive ? (

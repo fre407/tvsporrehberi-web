@@ -1,15 +1,20 @@
 :root {
-  --bg: #0a1420;
-  --bg-deep: #060d16;
-  --surface: #101d2c;
-  --surface-2: #16283b;
-  --border: #22374d;
-  --text: #f2f6fa;
-  --subtext: #8fa5bf;
-  --subtext-dim: #5f7692;
-  --accent: #83e62b;
-  --accent-ink: #0a1a03;
-  --on-air: #ffd23f;
+  /* Marka paleti (kullanıcı isteği, 2026-08-24): siyah + uygulamanın gerçek
+     sarı/altın rengi (#ffe812 — bkz. yayin-masasi admin panelindeki "sinyal"
+     rengi ve android-icon arka planı) + beyaz. Nötrler saf gri değil, hafif
+     sıcak/altın tonuna kaydırılmış (bkz. --border, --subtext) — "seçilmiş"
+     dursun diye. */
+  --bg: #0a0a08;
+  --bg-deep: #000000;
+  --surface: #161410;
+  --surface-2: #1f1c15;
+  --border: #2e2a1e;
+  --text: #f7f5ee;
+  --subtext: #b6ae98;
+  --subtext-dim: #79725e;
+  --accent: #ffe812;
+  --accent-ink: #17140a;
+  --on-air: #d4a017;
   --live: #ff4757;
   --font-display: "Big Shoulders", "Arial Narrow", sans-serif;
   --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -193,7 +198,7 @@ main {
   height: 7px;
   border-radius: 50%;
   background: var(--on-air);
-  box-shadow: 0 0 0 4px rgba(255, 210, 63, 0.18);
+  box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.2);
 }
 h1 {
   font-family: var(--font-display);
@@ -310,7 +315,7 @@ section {
   border-top: 1px solid var(--border);
 }
 .match-row:hover {
-  background: rgba(131, 230, 43, 0.04);
+  background: rgba(255, 232, 18, 0.05);
 }
 .mr-time {
   font-family: var(--font-display);

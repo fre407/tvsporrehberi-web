@@ -1,6 +1,6 @@
 import { getFixturesInWindow, windowIso } from '../lib/data';
 import { competitionSlug, COMPETITIONS } from '../lib/competitions';
-import { dateKeyOffset, slugify } from '../lib/format';
+import { dateKeyOffset, matchSlug, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
 export const revalidate = 3600;
@@ -34,7 +34,7 @@ export default async function sitemap() {
     const { startIso, endIso } = windowIso(3, 14);
     const rows = await getFixturesInWindow(startIso, endIso);
     matchUrls = rows.map((r) => ({
-      url: `${SITE_URL}/mac/${r.id}`,
+      url: `${SITE_URL}/mac/${matchSlug(r.home_team, r.away_team, r.kickoff_at)}`,
       lastModified: r.kickoff_at,
       changeFrequency: 'hourly',
       priority: 0.6,

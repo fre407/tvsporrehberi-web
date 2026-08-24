@@ -1,28 +1,55 @@
-import { notFound } from 'next/navigation';
-import { getFixtureById, channelDisplay, matchStatus } from '../../../lib/data';
-import { istDateLong, istTime } from '../../../lib/format';
+import { notFound, redirect } from 'next/navigation';
+import { getFixtureById, getFixturesInWindow, channelDisplay, matchStatus } from '../../../lib/data';
+import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
-import { slugify } from '../../../lib/format';
 import { SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import AppCta from '../../../components/AppCta';
 
 export const revalidate = 120;
 
-async function loadFixture(id) {
-  const numericId = Number(id);
-  if (!Number.isFinite(numericId)) return null;
+const DATE_TAIL_RE = /\d{4}-\d{2}-\d{2}$/;
+
+// Slug'ın son 10 karakteri her zaman "YYYY-MM-DD" — o günün fikstürleri
+// çekilip her birinin kendi slug'ı (matchSlug ile) yeniden üretilerek tam
+// eşleşme aranıyor. Ayrı bir slug kolonu/tablosu TUTULMUYOR (kullanıcı
+// isteği: mevcut şemaya dokunma).
+async function loadFixtureBySlug(slug) {
+  const dateMatch = slug.match(DATE_TAIL_RE);
+  if (!dateMatch) return null;
+  const dateKey = dateMatch[0];
+  const { startIso, endIso } = istKeyToUtcRange(dateKey);
+  let rows = [];
   try {
-    return await getFixtureById(numericId);
+    rows = await getFixturesInWindow(startIso, endIso);
   } catch {
     return null;
   }
+  return rows.find((r) => matchSlug(r.home_team, r.away_team, r.kickoff_at) === slug) ?? null;
+}
+
+// Eskiden /mac/[sayısal-id] idi — indexlenmiş eski linkler kırılmasın diye
+// sayısal bir param gelirse kalıcı yönlendirme yapılıyor (kullanıcı isteği,
+// 2026-08-24: "sonradan sorun yaşamayalım").
+async function resolveParam(slug) {
+  if (/^-?\d+$/.test(slug)) {
+    let row = null;
+    try {
+      row = await getFixtureById(Number(slug));
+    } catch {
+      row = null;
+    }
+    if (!row) return { row: null };
+    return { row, legacyId: true };
+  }
+  const row = await loadFixtureBySlug(slug);
+  return { row };
 }
 
 export async function generateMetadata({ params }) {
-  const { id } = await params;
-  const row = await loadFixture(id);
-  if (!row) return { title: 'Maç Bulunamadı' };
+  const { slug } = await params;
+  const { row, legacyId } = await resolveParam(slug);
+  if (!row || legacyId) return { title: row ? 'Yönlendiriliyor…' : 'Maç Bulunamadı' };
 
   const chan = channelDisplay(row);
   const dateLabel = istDateLong(row.kickoff_at);
@@ -33,15 +60,16 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    alternates: { canonical: `${SITE_URL}/mac/${row.id}` },
+    alternates: { canonical: `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}` },
     openGraph: { title, description },
   };
 }
 
 export default async function MatchDetailPage({ params }) {
-  const { id } = await params;
-  const row = await loadFixture(id);
+  const { slug } = await params;
+  const { row, legacyId } = await resolveParam(slug);
   if (!row) notFound();
+  if (legacyId) redirect(`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`);
 
   const status = matchStatus(row);
   const chan = channelDisplay(row);
