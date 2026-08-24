@@ -1,6 +1,6 @@
 import { getFixturesInWindow, windowIso } from '../lib/data';
 import { competitionSlug, COMPETITIONS } from '../lib/competitions';
-import { slugify } from '../lib/format';
+import { dateKeyOffset, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
 export const revalidate = 3600;
@@ -10,6 +10,17 @@ export default async function sitemap() {
     { url: `${SITE_URL}/`, changeFrequency: 'hourly', priority: 1 },
     { url: `${SITE_URL}/bugun`, changeFrequency: 'hourly', priority: 0.9 },
   ];
+
+  // Dün + gelecek 13 gün — /gun/[date] (bkz. DayTabs.js'teki aynı aralık).
+  const dayUrls = [];
+  for (let offset = -1; offset <= 13; offset++) {
+    if (offset === 0) continue; // bugün zaten /bugun olarak listelendi
+    dayUrls.push({
+      url: `${SITE_URL}/gun/${dateKeyOffset(offset)}`,
+      changeFrequency: 'hourly',
+      priority: 0.8,
+    });
+  }
 
   const leagueUrls = Object.keys(COMPETITIONS).map((key) => ({
     url: `${SITE_URL}/lig/${competitionSlug(key)}`,
@@ -44,5 +55,5 @@ export default async function sitemap() {
     // — build'i hiç kırmıyoruz.
   }
 
-  return [...staticUrls, ...leagueUrls, ...matchUrls, ...teamUrls];
+  return [...staticUrls, ...dayUrls, ...leagueUrls, ...matchUrls, ...teamUrls];
 }

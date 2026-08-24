@@ -1,7 +1,8 @@
 import Guide from '../../components/Guide';
+import DayTabs from '../../components/DayTabs';
 import AppCta from '../../components/AppCta';
 import { getFixturesInWindow } from '../../lib/data';
-import { istDateKey, istDateLong } from '../../lib/format';
+import { dateKeyOffset, istDateLong, istKeyToUtcRange } from '../../lib/format';
 import { SITE_URL } from '../../lib/links';
 
 export const revalidate = 300;
@@ -16,9 +17,8 @@ export async function generateMetadata() {
 }
 
 export default async function TodayPage() {
-  const now = new Date();
-  const startIso = new Date(now.getTime() - 20 * 3600 * 1000).toISOString();
-  const endIso = new Date(now.getTime() + 30 * 3600 * 1000).toISOString();
+  const todayKey = dateKeyOffset(0);
+  const { startIso, endIso } = istKeyToUtcRange(todayKey);
 
   let rows = [];
   try {
@@ -27,26 +27,25 @@ export default async function TodayPage() {
     rows = [];
   }
 
-  const todayKey = istDateKey(now.toISOString());
-  const todayRows = rows.filter((r) => istDateKey(r.kickoff_at) === todayKey);
-
   return (
     <>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">{istDateLong(now.toISOString())}</div>
+          <div className="eyebrow">{istDateLong(new Date().toISOString())}</div>
           <h1>
             Bugünün <em>maç programı</em>
           </h1>
           <p className="page-desc">
-            Bugün oynanacak tüm maçlar, saatleri (TSİ) ve yayınlandığı kanal — lig lig sıralı.
+            Bugün oynanacak tüm maçlar, saatleri (TSİ) ve yayınlandığı kanal — lig lig sıralı. Dün, yarın ve
+            önümüzdeki 2 haftanın programı için aşağıdaki günlere göz at.
           </p>
         </div>
       </div>
 
       <section style={{ paddingTop: 8 }}>
         <div className="wrap">
-          <Guide rows={todayRows} />
+          <DayTabs activeOffset={0} />
+          <Guide rows={rows} />
         </div>
       </section>
 

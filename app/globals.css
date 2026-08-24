@@ -200,7 +200,10 @@ section {
   display: flex;
   gap: 8px;
   margin-bottom: 22px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
 }
 .day-tab {
   font-size: 13px;
@@ -209,6 +212,8 @@ section {
   border-radius: 9px;
   border: 1px solid var(--border);
   color: var(--subtext);
+  flex: none;
+  white-space: nowrap;
 }
 .day-tab.active {
   background: var(--accent);
