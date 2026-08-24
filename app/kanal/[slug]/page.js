@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
+import JsonLd from '../../../components/JsonLd';
 import { getFixturesForChannelSlug, windowIso } from '../../../lib/data';
 import { SITE_URL } from '../../../lib/links';
 
@@ -43,11 +44,7 @@ export default async function ChannelDetailPage({ params }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
+      <JsonLd data={breadcrumbLd} />
       <div className="crumb wrap">
         <Link href="/">Ana Sayfa</Link> › {displayName}
       </div>

@@ -3,6 +3,29 @@ import './globals.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StickyBanner from '../components/StickyBanner';
+import JsonLd from '../components/JsonLd';
+import { Big_Shoulders, DM_Sans } from 'next/font/google';
+
+// Fontlar next/font ile build sırasında indirilip KENDİ alan adımızdan
+// sunuluyor. Önceden <link> ile fonts.googleapis.com'dan çekiliyordu; bu
+// hem render'ı bloklayan üçüncü taraf bir gidiş-dönüş ekliyor hem de
+// ziyaretçinin IP'sini Google'a gönderiyordu. Self-host ile ikisi de gitti;
+// `display: 'swap'` yazının font inerken görünmesini sağlıyor (CLS/LCP).
+// Her ikisi de değişken (variable) font — weight listelemek yerine tek dosya
+// inip tüm kalınlıkları karşılıyor. subsets'te latin-ext şart: Türkçe
+// ğ/ş/ı/İ karakterleri orada.
+const displayFont = Big_Shoulders({
+  subsets: ['latin-ext'],
+  display: 'swap',
+  variable: '--font-display-src',
+});
+
+const bodyFont = DM_Sans({
+  subsets: ['latin-ext'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-body-src',
+});
 import { SITE_URL } from '../lib/links';
 
 // Google AdSense reklam kütüphanesi — aynı yayıncı kimliği (ca-pub-...)
@@ -60,25 +83,15 @@ const ORG_JSON_LD = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="tr">
+    <html lang="tr" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap"
-        />
         <Script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <script
-          type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }}
-        />
+        <JsonLd data={ORG_JSON_LD} />
       </head>
       <body>
         <div className="sticky-shell">

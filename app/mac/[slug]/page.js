@@ -17,6 +17,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import AppCta from '../../../components/AppCta';
 import Guide from '../../../components/Guide';
+import JsonLd from '../../../components/JsonLd';
 import Lineups from '../../../components/Lineups';
 import MatchStats from '../../../components/MatchStats';
 import HeadToHead from '../../../components/HeadToHead';
@@ -154,16 +155,8 @@ export default async function MatchDetailPage({ params }) {
         {row.home_team} - {row.away_team}
       </div>
 
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbLd} />
 
       <div className="hero" style={{ paddingBottom: 14 }}>
         <div className="wrap">

@@ -1,10 +1,20 @@
 import Link from 'next/link';
 import Guide from '../components/Guide';
 import AppCta from '../components/AppCta';
+import JsonLd from '../components/JsonLd';
 import { getFixturesInWindow, windowIso } from '../lib/data';
 import { istDateLong } from '../lib/format';
+import { SITE_URL } from '../lib/links';
 
 export const revalidate = 300; // 5 dakikada bir yeniden oluştur (ISR) — canlı skor/kanal bilgisi tazeliği için
+
+// Ana sayfada canonical YOKTU (diğer tüm sayfalarda vardı). Bu, sitenin
+// birden fazla adresten (www'lu/www'suz, ?utm_source=... eklenmiş linkler,
+// eski *.vercel.app adresi) erişilebildiği durumlarda Google'ın hangisini
+// "asıl" sayacağını kendi tahminine bırakıyordu.
+export const metadata = {
+  alternates: { canonical: `${SITE_URL}/` },
+};
 
 const FAQ = [
   {
@@ -137,11 +147,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }}
-      />
+      <JsonLd data={FAQ_JSON_LD} />
 
       <AppCta campaign="homepage" />
     </>

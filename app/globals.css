@@ -16,8 +16,10 @@
   --accent-ink: #17140a;
   --on-air: #d4a017;
   --live: #ff4757;
-  --font-display: "Big Shoulders", "Arial Narrow", sans-serif;
-  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* next/font (bkz. app/layout.js) fontları kendi alan adımızdan sunuyor ve
+     adlarını --font-*-src değişkenlerine yazıyor; yedek yığın aynı kaldı. */
+  --font-display: var(--font-display-src), "Arial Narrow", sans-serif;
+  --font-body: var(--font-body-src), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 * {

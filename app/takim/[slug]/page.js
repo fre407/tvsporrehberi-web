@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
 import FormDots from '../../../components/FormDots';
+import JsonLd from '../../../components/JsonLd';
 import { getFixturesForTeamSlug, teamResultLetter, windowIso } from '../../../lib/data';
 import { slugify } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
@@ -55,11 +56,7 @@ export default async function TeamPage({ params }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
+      <JsonLd data={breadcrumbLd} />
       <div className="crumb wrap">
         <Link href="/">Ana Sayfa</Link> › {displayName}
       </div>

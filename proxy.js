@@ -11,6 +11,14 @@ const GOOD_BOTS =
 const BAD_BOTS =
   /curl|wget|python-requests|python-urllib|scrapy|libwww-perl|httpclient|go-http-client|java\/\d|okhttp|postmanruntime|insomnia|mechanize|node-fetch|axios\/|guzzlehttp|ruby|php\/|apache-httpclient|headlesschrome|phantomjs|selenium|playwright|puppeteer/i;
 
+// DİKKAT — bu sayaç işlem belleğinde tutuluyor. Vercel'de her sunucusuz
+// örnek (instance) kendi belleğine sahip olduğu için bu GERÇEK, güvenilir
+// bir hız sınırı DEĞİL: istekler farklı örneklere dağılırsa sayaç sıfırdan
+// başlar ve kararlı bir saldırgan bunu aşabilir. Tek bir örneğe gelen ani
+// yığın istekleri yavaşlatmakta işe yarar, o kadar.
+// Gerçek bir sınır için paylaşımlı bir sayaç (ör. Upstash Redis) veya
+// Vercel WAF gerekir — hesap/ortam değişkeni gerektirdiği için kullanıcı
+// onayı olmadan eklenmedi.
 const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 60;
 const hits = new Map();

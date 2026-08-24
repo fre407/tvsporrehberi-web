@@ -4,6 +4,7 @@ import Guide from '../../../components/Guide';
 import Standings from '../../../components/Standings';
 import LeagueStats from '../../../components/LeagueStats';
 import AppCta from '../../../components/AppCta';
+import JsonLd from '../../../components/JsonLd';
 import { getFixturesForCompetition, getLeagueStats, getStandings, windowIso } from '../../../lib/data';
 import {
   competitionFlag,
@@ -59,11 +60,7 @@ export default async function LeaguePage({ params }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
+      <JsonLd data={breadcrumbLd} />
       <div className="crumb wrap">
         <Link href="/">Ana Sayfa</Link> › {competitionLabel(key)}
       </div>
