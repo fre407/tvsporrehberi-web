@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
-import { getFixturesForTeamSlug, windowIso } from '../../../lib/data';
+import FormDots from '../../../components/FormDots';
+import { getFixturesForTeamSlug, teamResultLetter, windowIso } from '../../../lib/data';
 import { slugify } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 
@@ -40,6 +41,7 @@ export default async function TeamPage({ params }) {
     .filter((m) => new Date(m.kickoff_at).getTime() < now - 3 * 3600 * 1000)
     .slice(-8)
     .reverse();
+  const form = past.map((m) => teamResultLetter(m, displayName)).filter(Boolean).slice(0, 5);
 
   return (
     <>
@@ -48,6 +50,11 @@ export default async function TeamPage({ params }) {
           <div className="eyebrow">Takım Rehberi</div>
           <h1>{displayName}</h1>
           <p className="page-desc">{displayName} takımının yaklaşan maçları, saatleri ve yayın kanalları.</p>
+          {form.length > 0 ? (
+            <div style={{ marginTop: 14 }}>
+              <FormDots results={form} />
+            </div>
+          ) : null}
         </div>
       </div>
 

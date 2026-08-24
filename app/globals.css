@@ -752,7 +752,386 @@ footer.site {
   margin-top: 14px;
 }
 
+/* Puan Durumu */
+.standings-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+table.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+}
+.standings-table th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--subtext-dim);
+  padding: 12px 14px;
+  background: var(--surface-2);
+  font-weight: 700;
+}
+.standings-table th.n {
+  text-align: center;
+}
+.standings-table td {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  border-top: 1px solid var(--border);
+}
+.standings-table td.n {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--subtext);
+}
+.standings-table td.pts {
+  font-weight: 700;
+  color: var(--text);
+}
+.standings-table td.pos {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--subtext-dim);
+}
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.team-cell img,
+.crest-ph {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex: none;
+}
+.crest-ph {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+/* Gol/Asist Kralı */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.stat-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px 16px;
+}
+.stat-list-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 0 8px;
+}
+.stat-list-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+.stat-list-rank {
+  width: 16px;
+  font-size: 12px;
+  color: var(--subtext-dim);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.stat-list-photo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+  background: var(--surface-2);
+}
+.stat-list-photo.ph {
+  background: var(--border);
+}
+.stat-list-name {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 600;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stat-list-team {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--subtext-dim);
+}
+.stat-list-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--accent);
+  flex: none;
+}
+.stat-list-value small {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 10px;
+  color: var(--subtext-dim);
+}
+
+/* İlk 11 */
+.lineup-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+}
+.lineup-teams-row,
+.lineup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.lineup-team-head {
+  text-align: center;
+}
+.lineup-team-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.lineup-formation {
+  font-size: 11.5px;
+  color: var(--subtext-dim);
+  margin-top: 2px;
+}
+.lineup-grid {
+  margin-top: 16px;
+}
+.lineup-col {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.lineup-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.lineup-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--surface-2);
+  color: var(--subtext);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.lineup-sub-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--subtext-dim);
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.lineup-coach-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  text-align: center;
+}
+.lineup-coach-label {
+  color: var(--subtext-dim);
+  display: block;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Maç istatistikleri + olay akışı */
+.match-stats-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+}
+.event-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.event-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+.event-row-home .event-content {
+  grid-column: 1;
+  justify-self: start;
+}
+.event-row-away .event-content {
+  grid-column: 2;
+  justify-self: end;
+  flex-direction: row-reverse;
+}
+.event-content {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  padding: 5px 0;
+}
+.event-minute {
+  color: var(--subtext-dim);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
+.stat-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.stat-row-values {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.stat-row-values span:first-child {
+  text-align: left;
+}
+.stat-row-values span:last-child {
+  text-align: right;
+}
+.stat-row-label {
+  color: var(--subtext-dim);
+  font-weight: 500;
+  font-size: 11px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.stat-row-bar {
+  display: flex;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--border);
+}
+.stat-row-bar-home {
+  background: var(--accent);
+}
+.stat-row-bar-away {
+  background: var(--subtext-dim);
+}
+
+/* Head-to-head */
+.h2h-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.h2h-row {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+}
+.h2h-row:first-child {
+  border-top: none;
+}
+.h2h-row:hover {
+  background: var(--surface-2);
+}
+.h2h-date {
+  color: var(--subtext-dim);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+.h2h-teams b {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.h2h-comp {
+  color: var(--subtext-dim);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+/* Form noktaları (G/B/M) */
+.form-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+.form-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #0a0a08;
+}
+.form-dot-W {
+  background: #3ddc84;
+}
+.form-dot-D {
+  background: var(--subtext-dim);
+  color: var(--bg);
+}
+.form-dot-L {
+  background: #ff4757;
+}
+
+/* Canlı sayfası otomatik yenileme notu */
+.live-refresh-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--subtext-dim);
+  margin-top: 14px;
+}
+
 @media (max-width: 720px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .lineup-teams-row,
+  .lineup-grid,
+  .lineup-coach-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .standings-table {
+    font-size: 12px;
+  }
   h1 {
     font-size: 36px;
   }

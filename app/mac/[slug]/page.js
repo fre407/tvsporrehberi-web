@@ -1,10 +1,21 @@
 import { notFound, redirect } from 'next/navigation';
-import { getFixtureById, getFixturesInWindow, channelDisplay, matchStatus } from '../../../lib/data';
+import {
+  getFixtureById,
+  getFixturesInWindow,
+  getFixtureLineups,
+  getFixtureStats,
+  getHeadToHead,
+  channelDisplay,
+  matchStatus,
+} from '../../../lib/data';
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import AppCta from '../../../components/AppCta';
+import Lineups from '../../../components/Lineups';
+import MatchStats from '../../../components/MatchStats';
+import HeadToHead from '../../../components/HeadToHead';
 
 export const revalidate = 120;
 
@@ -76,6 +87,19 @@ export default async function MatchDetailPage({ params }) {
   const isLive = status === 'live';
   const isFinished = status === 'finished' || status === 'finished_unknown';
   const showScore = row.home_score != null && row.away_score != null && (isLive || isFinished);
+
+  let lineups = null;
+  let stats = null;
+  let h2h = [];
+  try {
+    [lineups, stats, h2h] = await Promise.all([
+      getFixtureLineups(row.id),
+      getFixtureStats(row.id),
+      getHeadToHead(row.home_team, row.away_team),
+    ]);
+  } catch {
+    // Bu ek bölümler opsiyonel — hata olursa maç kartının kendisi yine de gösterilsin.
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -168,6 +192,45 @@ export default async function MatchDetailPage({ params }) {
           </p>
         </div>
       </section>
+
+      {lineups ? (
+        <section style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-title">
+                İlk <span>11</span>
+              </div>
+            </div>
+            <Lineups data={lineups} homeTeam={row.home_team} awayTeam={row.away_team} />
+          </div>
+        </section>
+      ) : null}
+
+      {stats ? (
+        <section style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-title">
+                Maç <span>İstatistikleri</span>
+              </div>
+            </div>
+            <MatchStats data={stats} />
+          </div>
+        </section>
+      ) : null}
+
+      {h2h.length > 0 ? (
+        <section style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-title">
+                Geçmiş <span>Karşılaşmalar</span>
+              </div>
+            </div>
+            <HeadToHead matches={h2h} />
+          </div>
+        </section>
+      ) : null}
 
       <AppCta campaign="mac_detay_footer" />
     </>
