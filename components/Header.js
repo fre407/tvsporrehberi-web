@@ -1,24 +1,78 @@
 import Link from 'next/link';
-import { playStoreUrl } from '../lib/links';
+import SearchBox from './SearchBox';
+
+const NAV_ITEMS = [
+  {
+    href: '/bugun',
+    label: 'Bugün',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M8 3v4M16 3v4M3 10h18" />
+      </svg>
+    ),
+  },
+  {
+    href: '/canli',
+    label: 'Canlı Skorlar',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 12h4l3 8 4-16 3 8h4" />
+      </svg>
+    ),
+  },
+  {
+    href: '/ligler',
+    label: 'Ligler',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M8 21h8M12 17v4M6 4h12v3a6 6 0 0 1-12 0V4Z" />
+        <path d="M6 5H3v1a4 4 0 0 0 3 3.87M18 5h3v1a4 4 0 0 1-3 3.87" />
+      </svg>
+    ),
+  },
+  {
+    href: '/takimlar',
+    label: 'Takımlar',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 3 4 6v6c0 4.5 3.4 7.9 8 9 4.6-1.1 8-4.5 8-9V6l-8-3Z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/kanallar',
+    label: 'Kanallar',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="7" width="18" height="13" rx="2" />
+        <path d="m8 7 4-4 4 4M3 20h18" />
+      </svg>
+    ),
+  },
+];
 
 export default function Header() {
   return (
     <header className="site">
-      <div className="wrap nav">
+      <div className="wrap nav-row1">
         <Link className="brand" href="/">
           <div className="brand-mark">TV</div>
           <div className="brand-name">
             SPOR<span>REHBERİ</span>
           </div>
         </Link>
-        <nav className="links">
-          <Link href="/bugun">Bugünün Maçları</Link>
-          <Link href="/lig/super-lig">Süper Lig</Link>
-          <Link href="/lig/sampiyonlar-ligi">Şampiyonlar Ligi</Link>
-        </nav>
-        <a className="nav-cta" href={playStoreUrl('header')} target="_blank" rel="noopener noreferrer">
-          📲 Uygulamayı İndir
-        </a>
+        <SearchBox />
+      </div>
+      <div className="nav-row2-outer">
+        <div className="wrap nav-row2">
+          {NAV_ITEMS.map((item) => (
+            <Link key={item.href} href={item.href} className="nav-chip">
+              <span className="nav-chip-icon">{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </header>
   );

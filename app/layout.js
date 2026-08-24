@@ -63,8 +63,10 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <StickyBanner />
-        <Header />
+        <div className="sticky-shell">
+          <StickyBanner />
+          <Header />
+        </div>
         <main>{children}</main>
         <Footer />
       </body>

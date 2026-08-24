@@ -55,9 +55,6 @@ img {
 
 /* sticky app banner */
 .sticky-banner {
-  position: sticky;
-  top: 0;
-  z-index: 50;
   background: var(--accent);
   color: var(--accent-ink);
 }
@@ -104,22 +101,32 @@ img {
   opacity: 1;
 }
 
-/* header */
-header.site {
-  border-bottom: 1px solid var(--border);
-  padding: 18px 0;
+/* sticky shell: banner + header birlikte kayarken üstte kalıyor */
+.sticky-shell {
+  position: sticky;
+  top: 0;
+  z-index: 60;
 }
-.nav {
+
+/* header — 2 satır: logo+arama, altında bölüm ikonları (kullanıcının
+   verdiği referans görsele göre, kullanıcı isteği 2026-08-24) */
+header.site {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.nav-row1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  padding: 16px 20px;
   flex-wrap: wrap;
 }
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: none;
 }
 .brand-mark {
   width: 34px;
@@ -143,24 +150,150 @@ header.site {
 .brand-name span {
   color: var(--accent);
 }
-nav.links {
-  display: flex;
-  gap: 22px;
-  font-size: 14px;
-  color: var(--subtext);
-  flex-wrap: wrap;
+
+.nav-row2-outer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-deep);
 }
-nav.links a:hover {
+.nav-row2 {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 20px;
+  scrollbar-width: thin;
+}
+.nav-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--subtext);
+  padding: 7px 13px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.nav-chip:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+.nav-chip-icon {
+  display: flex;
+  color: var(--accent);
+}
+
+/* arama kutusu */
+.searchbox {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+  max-width: 420px;
+}
+.searchbox-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--subtext-dim);
+  display: flex;
+  pointer-events: none;
+}
+.searchbox input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px 10px 38px;
+  font-size: 13.5px;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+.searchbox input::placeholder {
+  color: var(--subtext-dim);
+}
+.searchbox input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.searchbox-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+  padding: 8px;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 70;
+}
+.searchbox-empty {
+  padding: 14px 10px;
+  font-size: 13px;
+  color: var(--subtext-dim);
+  text-align: center;
+}
+.searchbox-group {
+  padding: 6px 0;
+}
+.searchbox-group + .searchbox-group {
+  border-top: 1px solid var(--border);
+}
+.searchbox-group-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--subtext-dim);
+  padding: 6px 10px 4px;
+}
+.searchbox-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
   color: var(--text);
 }
-.nav-cta {
+.searchbox-item:hover {
   background: var(--surface-2);
+}
+.searchbox-item-time {
+  color: var(--subtext-dim);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+/* içerik index sayfaları (Ligler/Takımlar) */
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.index-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
   border: 1px solid var(--border);
-  padding: 9px 16px;
-  border-radius: 9px;
-  font-size: 13.5px;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 14px;
   font-weight: 600;
-  white-space: nowrap;
+}
+.index-card:hover {
+  border-color: var(--accent);
+}
+.index-card-flag {
+  font-size: 18px;
+  flex: none;
+}
+.index-card-name {
+  min-width: 0;
 }
 
 main {
