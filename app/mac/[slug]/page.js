@@ -14,6 +14,7 @@ import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../.
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
+import Image from 'next/image';
 import AppCta from '../../../components/AppCta';
 import Guide from '../../../components/Guide';
 import Lineups from '../../../components/Lineups';
@@ -181,7 +182,9 @@ export default async function MatchDetailPage({ params }) {
           <div className="detail-card">
             <div className="detail-teams">
               <div className="detail-team">
-                {row.home_logo ? <img src={row.home_logo} alt={row.home_team} /> : null}
+                {row.home_logo ? (
+                  <Image src={row.home_logo} alt={row.home_team} width={64} height={64} />
+                ) : null}
                 <Link href={`/takim/${slugify(row.home_team)}`}>{row.home_team}</Link>
               </div>
               <div className="detail-vs">
@@ -200,7 +203,9 @@ export default async function MatchDetailPage({ params }) {
                 )}
               </div>
               <div className="detail-team">
-                {row.away_logo ? <img src={row.away_logo} alt={row.away_team} /> : null}
+                {row.away_logo ? (
+                  <Image src={row.away_logo} alt={row.away_team} width={64} height={64} />
+                ) : null}
                 <Link href={`/takim/${slugify(row.away_team)}`}>{row.away_team}</Link>
               </div>
             </div>

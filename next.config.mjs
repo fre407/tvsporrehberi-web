@@ -2,6 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    // Sadece maç detay sayfasındaki büyük (64px) takım logoları için
+    // kullanılıyor — bu iki görsel dışında sitede next/image kullanılmıyor
+    // (küçük liste ikonları için hacim/kota riski nedeniyle bilinçli
+    // olarak eklenmedi). Takım logoları SoccersAPI'nin kendi CDN'inden
+    // geliyor ve tam host adı bizim kontrolümüzde değil, o yüzden https
+    // üzerinden her kaynağa izin veriyoruz.
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+  },
   async headers() {
     return [
       {
