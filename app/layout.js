@@ -2,6 +2,7 @@ import Script from 'next/script';
 import './globals.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import StickyBanner from '../components/StickyBanner';
 import { SITE_URL } from '../lib/links';
 
 // Google AdSense reklam kütüphanesi — aynı yayıncı kimliği (ca-pub-...)
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        <StickyBanner />
         <Header />
         <main>{children}</main>
         <Footer />
