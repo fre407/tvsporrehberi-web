@@ -1,0 +1,147 @@
+import { notFound } from 'next/navigation';
+import { getFixtureById, channelDisplay, matchStatus } from '../../../lib/data';
+import { istDateLong, istTime } from '../../../lib/format';
+import { competitionLabel, competitionSlug } from '../../../lib/competitions';
+import { slugify } from '../../../lib/format';
+import { SITE_URL, playStoreUrl } from '../../../lib/links';
+import Link from 'next/link';
+import AppCta from '../../../components/AppCta';
+
+export const revalidate = 120;
+
+async function loadFixture(id) {
+  const numericId = Number(id);
+  if (!Number.isFinite(numericId)) return null;
+  try {
+    return await getFixtureById(numericId);
+  } catch {
+    return null;
+  }
+}
+
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const row = await loadFixture(id);
+  if (!row) return { title: 'Maç Bulunamadı' };
+
+  const chan = channelDisplay(row);
+  const dateLabel = istDateLong(row.kickoff_at);
+  const timeLabel = istTime(row.kickoff_at);
+  const title = `${row.home_team} - ${row.away_team} Maçı Hangi Kanalda? Saat Kaçta?`;
+  const description = `${row.home_team} - ${row.away_team} maçı ${dateLabel} günü saat ${timeLabel}'de (TSİ) oynanıyor. Yayın: ${chan}. ${competitionLabel(row.competition_key)} maçının canlı skoru ve detayları.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/mac/${row.id}` },
+    openGraph: { title, description },
+  };
+}
+
+export default async function MatchDetailPage({ params }) {
+  const { id } = await params;
+  const row = await loadFixture(id);
+  if (!row) notFound();
+
+  const status = matchStatus(row);
+  const chan = channelDisplay(row);
+  const isLive = status === 'live';
+  const isFinished = status === 'finished' || status === 'finished_unknown';
+  const showScore = row.home_score != null && row.away_score != null && (isLive || isFinished);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: `${row.home_team} - ${row.away_team}`,
+    startDate: row.kickoff_at,
+    sport: 'Football',
+    homeTeam: { '@type': 'SportsTeam', name: row.home_team },
+    awayTeam: { '@type': 'SportsTeam', name: row.away_team },
+    location: { '@type': 'Place', name: competitionLabel(row.competition_key) },
+    ...(row.channel
+      ? {
+          publication: {
+            '@type': 'BroadcastEvent',
+            broadcastOfEvent: { '@type': 'SportsEvent', name: `${row.home_team} - ${row.away_team}` },
+            videoFormat: 'TV',
+            broadcastDisplayName: row.channel,
+          },
+        }
+      : {}),
+  };
+
+  return (
+    <>
+      <div className="crumb wrap">
+        <Link href="/">Ana Sayfa</Link> ›{' '}
+        <Link href={`/lig/${competitionSlug(row.competition_key)}`}>{competitionLabel(row.competition_key)}</Link> ›{' '}
+        {row.home_team} - {row.away_team}
+      </div>
+
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="hero" style={{ paddingBottom: 14 }}>
+        <div className="wrap">
+          <div className="eyebrow">
+            {competitionLabel(row.competition_key)}
+            {row.round ? ` · ${row.round}` : ''}
+          </div>
+          <h1 style={{ fontSize: 34 }}>
+            {row.home_team} <em>vs</em> {row.away_team}
+          </h1>
+        </div>
+      </div>
+
+      <section style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <div className="detail-card">
+            <div className="detail-teams">
+              <div className="detail-team">
+                {row.home_logo ? <img src={row.home_logo} alt={row.home_team} /> : null}
+                <Link href={`/takim/${slugify(row.home_team)}`}>{row.home_team}</Link>
+              </div>
+              <div className="detail-vs">
+                {showScore ? (
+                  <>
+                    <div className="sc">
+                      {row.home_score} - {row.away_score}
+                    </div>
+                    <div className="lbl">{isLive ? (row.elapsed != null ? `CANLI · ${row.elapsed}'` : 'CANLI') : 'MAÇ SONUCU'}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="time">{istTime(row.kickoff_at)}</div>
+                    <div className="lbl">{istDateLong(row.kickoff_at)}</div>
+                  </>
+                )}
+              </div>
+              <div className="detail-team">
+                {row.away_logo ? <img src={row.away_logo} alt={row.away_team} /> : null}
+                <Link href={`/takim/${slugify(row.away_team)}`}>{row.away_team}</Link>
+              </div>
+            </div>
+
+            <div className="detail-meta">
+              <div className={`meta-pill channel`}>📺 {chan}</div>
+              {isLive ? <div className="meta-pill live">● Canlı</div> : null}
+              <div className="meta-pill">🗓 {istDateLong(row.kickoff_at)}</div>
+              <div className="meta-pill">⏰ Saat {istTime(row.kickoff_at)} (TSİ)</div>
+            </div>
+          </div>
+
+          <p style={{ marginTop: 22 }}>
+            <a href={playStoreUrl('mac_detay')} className="sec-link" target="_blank" rel="noopener noreferrer">
+              📲 Canlı skor bildirimi almak için uygulamayı indir →
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <AppCta campaign="mac_detay_footer" />
+    </>
+  );
+}
