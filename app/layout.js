@@ -4,13 +4,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { SITE_URL } from '../lib/links';
 
-// Google AdSense mülk doğrulaması + reklam kütüphanesi — AdSense onboarding'in
-// verdiği kod birebir bu (client=ca-pub-3167111771074405, aynı yayıncı
-// kimliği tv-spor-rehberi-app'teki AdMob AppId'siyle paylaşılıyor).
-// strategy="beforeInteractive" ile Next.js bunu sunucu render'ındaki ilk
-// HTML <head>'e gömüyor — AdSense'in "sitenizin her sayfasında <head> içinde
-// olsun" doğrulaması bunu görebiliyor (client tarafında sonradan eklenen bir
-// script'i görmüyor).
+// Google AdSense reklam kütüphanesi — aynı yayıncı kimliği (ca-pub-...)
+// tv-spor-rehberi-app'teki AdMob AppId'siyle paylaşılıyor. next/script
+// strategy="beforeInteractive" gerçek tarayıcılarda reklamların yüklenmesi
+// için doğru/performanslı yol, AMA Next.js bunu JS ile (self.__next_s
+// push mekanizmasıyla) enjekte ediyor — ham sunucu HTML'inde LİTERAL bir
+// <script> etiketi olarak GÖRÜNMÜYOR. Bu yüzden AdSense'in site sahipliği
+// doğrulama botu bunu göremeyip "doğrulanamadı" verdi (2026-08-24). Site
+// sahipliği doğrulaması bunun yerine aşağıdaki `metadata.other`'daki statik
+// <meta name="google-adsense-account"> etiketiyle yapılıyor — o, Next'in
+// metadata API'si tarafından gerçek/statik HTML olarak render ediliyor.
 const ADSENSE_CLIENT_ID = 'ca-pub-3167111771074405';
 
 export const metadata = {
@@ -34,6 +37,12 @@ export const metadata = {
   // kodu buraya yapıştırıp deploy etmek yeterli, DNS değişikliği gerekmez.
   verification: {
     // google: 'BURAYA_GOOGLE_SEARCH_CONSOLE_KODUNU_YAPISTIR',
+  },
+  // AdSense site sahipliği doğrulaması — onboarding'in "Meta etiket" yöntemi
+  // (kullanıcı bildirimi, 2026-08-24: script yöntemi JS ile enjekte edildiği
+  // için doğrulanamadı, bkz. yukarıdaki not).
+  other: {
+    'google-adsense-account': ADSENSE_CLIENT_ID,
   },
 };
 
