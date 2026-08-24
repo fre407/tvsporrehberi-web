@@ -38,7 +38,7 @@ export const metadata = {
   // <meta name="google-site-verification" content="..."> kodu verir — o
   // kodu buraya yapıştırıp deploy etmek yeterli, DNS değişikliği gerekmez.
   verification: {
-    // google: 'BURAYA_GOOGLE_SEARCH_CONSOLE_KODUNU_YAPISTIR',
+    google: 'C-EfQ0YSsIpbcAdOOU-tkJlOzz-b2ZucdnRPwGk5noo',
   },
   // AdSense site sahipliği doğrulaması — onboarding'in "Meta etiket" yöntemi
   // (kullanıcı bildirimi, 2026-08-24: script yöntemi JS ile enjekte edildiği
