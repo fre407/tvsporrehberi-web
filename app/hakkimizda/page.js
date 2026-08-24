@@ -30,9 +30,9 @@ export default function AboutPage() {
 
           <h2>Kim işletiyor?</h2>
           <p>
-            Site ve mobil uygulama, bağımsız geliştirici <strong>Fatih Çankaya (Fre4)</strong> tarafından
-            geliştirilip işletiliyor. Herhangi bir spor kulübü, lig, federasyon veya yayın kuruluşuyla bağlantılı,
-            sponsorlu veya bunlar tarafından onaylanmış değildir.
+            Site ve mobil uygulama, <strong>Fre4 Developments</strong> tarafından geliştirilip işletiliyor.
+            Herhangi bir spor kulübü, lig, federasyon veya yayın kuruluşuyla bağlantılı, sponsorlu veya bunlar
+            tarafından onaylanmış değildir.
           </p>
 
           <h2>Bilgiler nereden geliyor?</h2>
