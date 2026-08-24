@@ -31,6 +31,7 @@ export const metadata = {
     siteName: 'TV Spor Rehberi',
     url: SITE_URL,
   },
+  twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true },
   // Google Search Console mülk doğrulaması: search.google.com/search-console
   // üzerinden "URL prefix" ile mülk eklenince "HTML tag" yöntemi bir
@@ -47,6 +48,17 @@ export const metadata = {
   },
 };
 
+// Not: SearchAction (sitelinks arama kutusu) şeması bilerek eklenmedi —
+// Google bunun için gerçek bir HTML sonuç sayfası (ör. /ara?q=...) ister;
+// bizde arama sadece istemci tarafı bir açılır kutu, ayrı bir sonuç sayfası
+// yok. Olmayan bir şeyi şema ile "var" göstermek yanlış olur.
+const ORG_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'TV Spor Rehberi',
+  url: SITE_URL,
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="tr">
@@ -60,6 +72,11 @@ export default function RootLayout({ children }) {
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
           strategy="beforeInteractive"
+        />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }}
         />
       </head>
       <body>

@@ -1120,6 +1120,69 @@ table.standings-table {
   margin-top: 14px;
 }
 
+/* Yasal metin sayfaları (Gizlilik Politikası vb.) */
+.legal-text {
+  max-width: 720px;
+  padding-bottom: 60px;
+  color: var(--subtext);
+  line-height: 1.7;
+}
+.legal-text h2 {
+  font-family: var(--font-display);
+  color: var(--text);
+  font-size: 20px;
+  margin: 28px 0 8px;
+}
+.legal-text a {
+  color: var(--accent);
+}
+.legal-text a:hover {
+  text-decoration: underline;
+}
+.legal-updated {
+  margin-top: 30px;
+  font-size: 12.5px;
+  color: var(--subtext-dim);
+}
+
+/* SSS (FAQ) */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 4px 18px;
+}
+.faq-q {
+  cursor: pointer;
+  padding: 16px 0;
+  font-weight: 700;
+  font-size: 15px;
+  list-style: none;
+}
+.faq-q::-webkit-details-marker {
+  display: none;
+}
+.faq-q::after {
+  content: '+';
+  float: right;
+  color: var(--accent);
+  font-size: 18px;
+}
+.faq-item[open] .faq-q::after {
+  content: '−';
+}
+.faq-a {
+  color: var(--subtext);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 0 0 16px;
+}
+
 @media (max-width: 720px) {
   .stats-grid {
     grid-template-columns: 1fr;

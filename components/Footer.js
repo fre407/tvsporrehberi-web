@@ -14,9 +14,7 @@ export default function Footer() {
           <div className="foot-note">© {new Date().getFullYear()} TV Spor Rehberi</div>
         </div>
         <div className="foot-links">
-          <a href="https://fre407.github.io/gizlilik-politikasi/" target="_blank" rel="noopener noreferrer">
-            Gizlilik Politikası
-          </a>
+          <a href="/gizlilik-politikasi">Gizlilik Politikası</a>
           <a href="https://fre407.github.io/yasal-bilgilendirme.html" target="_blank" rel="noopener noreferrer">
             Yasal Bilgilendirme
           </a>

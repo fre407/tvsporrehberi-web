@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import Standings from '../../../components/Standings';
 import LeagueStats from '../../../components/LeagueStats';
@@ -40,8 +41,26 @@ export default async function LeaguePage({ params }) {
     rows = rows.length ? rows : [];
   }
 
+  const pageUrl = `${SITE_URL}/lig/${slug}`;
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: competitionLabel(key), item: pageUrl },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <div className="crumb wrap">
+        <Link href="/">Ana Sayfa</Link> › {competitionLabel(key)}
+      </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
           <div className="eyebrow">{competitionFlag(key)} Lig Rehberi</div>

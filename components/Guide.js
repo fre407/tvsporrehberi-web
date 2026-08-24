@@ -24,12 +24,20 @@ function MatchRow({ row }) {
         </div>
         <div className="mr-teams">
           <div className="mr-team">
-            {row.home_logo ? <img className="crest" src={row.home_logo} alt="" loading="lazy" /> : <span className="crest" />}
+            {row.home_logo ? (
+              <img className="crest" src={row.home_logo} alt={row.home_team} loading="lazy" />
+            ) : (
+              <span className="crest" />
+            )}
             <span className="nm">{row.home_team}</span>
             {row.home_score != null && status !== 'upcoming' ? <span className="sc">{row.home_score}</span> : null}
           </div>
           <div className="mr-team">
-            {row.away_logo ? <img className="crest" src={row.away_logo} alt="" loading="lazy" /> : <span className="crest" />}
+            {row.away_logo ? (
+              <img className="crest" src={row.away_logo} alt={row.away_team} loading="lazy" />
+            ) : (
+              <span className="crest" />
+            )}
             <span className="nm">{row.away_team}</span>
             {row.away_score != null && status !== 'upcoming' ? <span className="sc">{row.away_score}</span> : null}
           </div>

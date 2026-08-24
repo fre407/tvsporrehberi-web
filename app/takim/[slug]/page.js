@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
 import FormDots from '../../../components/FormDots';
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }) {
 
 export default async function TeamPage({ params }) {
   const { slug: slugParam } = await params;
-  const { matches, displayName } = await loadTeam(slugParam);
+  const { matches, displayName, slug } = await loadTeam(slugParam);
   if (!displayName) notFound();
 
   const now = Date.now();
@@ -43,8 +44,25 @@ export default async function TeamPage({ params }) {
     .reverse();
   const form = past.map((m) => teamResultLetter(m, displayName)).filter(Boolean).slice(0, 5);
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: displayName, item: `${SITE_URL}/takim/${slug}` },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <div className="crumb wrap">
+        <Link href="/">Ana Sayfa</Link> › {displayName}
+      </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
           <div className="eyebrow">Takım Rehberi</div>

@@ -122,6 +122,22 @@ export default async function MatchDetailPage({ params }) {
       : {}),
   };
 
+  const matchUrl = `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`;
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: competitionLabel(row.competition_key),
+        item: `${SITE_URL}/lig/${competitionSlug(row.competition_key)}`,
+      },
+      { '@type': 'ListItem', position: 3, name: `${row.home_team} - ${row.away_team}`, item: matchUrl },
+    ],
+  };
+
   return (
     <>
       <div className="crumb wrap">
@@ -134,6 +150,11 @@ export default async function MatchDetailPage({ params }) {
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
       <div className="hero" style={{ paddingBottom: 14 }}>

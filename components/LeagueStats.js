@@ -8,7 +8,11 @@ function StatList({ title, entries, statKey, statLabel }) {
       {entries.slice(0, 10).map((p, i) => (
         <div className="stat-list-row" key={p.playerId ?? `${p.name}-${i}`}>
           <span className="stat-list-rank">{i + 1}</span>
-          {p.photo ? <img className="stat-list-photo" src={p.photo} alt="" loading="lazy" /> : <span className="stat-list-photo ph" />}
+          {p.photo ? (
+            <img className="stat-list-photo" src={p.photo} alt={p.name ?? ''} loading="lazy" />
+          ) : (
+            <span className="stat-list-photo ph" />
+          )}
           <span className="stat-list-name">
             {p.name}
             <span className="stat-list-team">{p.teamName}</span>

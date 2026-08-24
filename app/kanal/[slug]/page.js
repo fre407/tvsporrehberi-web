@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
 import { getFixturesForChannelSlug, windowIso } from '../../../lib/data';
@@ -31,8 +32,25 @@ export default async function ChannelDetailPage({ params }) {
   const { matches, displayName } = await loadChannel(slug);
   if (!displayName) notFound();
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: displayName, item: `${SITE_URL}/kanal/${slug}` },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <div className="crumb wrap">
+        <Link href="/">Ana Sayfa</Link> › {displayName}
+      </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
           <div className="eyebrow">Kanal Rehberi</div>

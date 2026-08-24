@@ -13,6 +13,7 @@ export default async function sitemap() {
     { url: `${SITE_URL}/ligler`, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${SITE_URL}/takimlar`, changeFrequency: 'daily', priority: 0.6 },
     { url: `${SITE_URL}/kanallar`, changeFrequency: 'daily', priority: 0.6 },
+    { url: `${SITE_URL}/gizlilik-politikasi`, changeFrequency: 'yearly', priority: 0.2 },
   ];
 
   // Dün + gelecek 13 gün — /gun/[date] (bkz. DayTabs.js'teki aynı aralık).

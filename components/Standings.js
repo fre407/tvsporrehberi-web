@@ -23,7 +23,11 @@ export default function Standings({ data }) {
             <tr key={row.rank ?? row.team?.name}>
               <td className="n pos">{row.rank ?? '-'}</td>
               <td className="team-cell">
-                {row.team?.logo ? <img src={row.team.logo} alt="" loading="lazy" /> : <span className="crest-ph" />}
+                {row.team?.logo ? (
+                  <img src={row.team.logo} alt={row.team?.name ?? ''} loading="lazy" />
+                ) : (
+                  <span className="crest-ph" />
+                )}
                 <span>{row.team?.name ?? '-'}</span>
               </td>
               <td className="n">{row.all?.played ?? '-'}</td>
