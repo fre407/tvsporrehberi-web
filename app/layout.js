@@ -6,15 +6,14 @@ import StickyBanner from '../components/StickyBanner';
 import { SITE_URL } from '../lib/links';
 
 // Google AdSense reklam kütüphanesi — aynı yayıncı kimliği (ca-pub-...)
-// tv-spor-rehberi-app'teki AdMob AppId'siyle paylaşılıyor. next/script
-// strategy="beforeInteractive" gerçek tarayıcılarda reklamların yüklenmesi
-// için doğru/performanslı yol, AMA Next.js bunu JS ile (self.__next_s
-// push mekanizmasıyla) enjekte ediyor — ham sunucu HTML'inde LİTERAL bir
-// <script> etiketi olarak GÖRÜNMÜYOR. Bu yüzden AdSense'in site sahipliği
-// doğrulama botu bunu göremeyip "doğrulanamadı" verdi (2026-08-24). Site
-// sahipliği doğrulaması bunun yerine aşağıdaki `metadata.other`'daki statik
-// <meta name="google-adsense-account"> etiketiyle yapılıyor — o, Next'in
-// metadata API'si tarafından gerçek/statik HTML olarak render ediliyor.
+// tv-spor-rehberi-app'teki AdMob AppId'siyle paylaşılıyor. Site sahipliği
+// doğrulaması `metadata.other`'daki statik <meta name="google-adsense-
+// account"> etiketiyle yapılıyor (Next'in metadata API'si bunu gerçek HTML
+// olarak render ediyor). Bu artık çözüldüğü için reklam scripti'ni
+// strategy="afterInteractive" ile yüklüyoruz — "beforeInteractive" hydration
+// öncesi ana thread'i bloklayıp Core Web Vitals'ı (LCP/INP) gereksiz yere
+// kötüleştiriyordu; reklam scriptinin hydration'dan hemen sonra yüklenmesi
+// yeterli, reklam gösterimini etkilemiyor.
 const ADSENSE_CLIENT_ID = 'ca-pub-3167111771074405';
 
 export const metadata = {
@@ -63,6 +62,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap"
@@ -71,7 +72,7 @@ export default function RootLayout({ children }) {
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
         <script
           type="application/ld+json"
