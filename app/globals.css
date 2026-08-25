@@ -599,6 +599,7 @@ section {
 .share-card-meta { display:flex; justify-content:center; align-items:center; gap:9px; color:var(--subtext); font-size:12px; }
 .share-card-meta b { color:var(--accent); font-family:var(--font-display); font-size:20px; letter-spacing:.03em; }.share-card-meta small { font-family:var(--font-body); font-size:9px; }.share-card-meta span { padding-left:9px; border-left:1px solid var(--border); }
 .daily-share-card button { display:block; width:100%; margin-top:16px; border:1px solid var(--accent); border-radius:9px; background:var(--accent); color:var(--accent-ink); padding:10px 11px; font:inherit; font-size:12px; font-weight:800; }
+.share-card-formats { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:16px; }.daily-share-card .share-card-formats button { width:auto; margin:0; border-color:var(--border); background:var(--surface-2); color:var(--subtext); padding:8px 6px; font-size:10px; }.daily-share-card .share-card-formats button.active { border-color:var(--accent); background:rgba(255,232,18,.12); color:var(--accent); }
 .favorite-button:hover,
 .guide-filter:hover {
   border-color: var(--accent);
