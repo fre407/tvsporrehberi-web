@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { channelDisplay, matchStatus } from '../lib/data';
 import { istTime, matchSlug } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
@@ -50,6 +53,8 @@ function MatchRow({ row }) {
 
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
 export default function Guide({ rows }) {
+  const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
+
   if (!rows || rows.length === 0) {
     return <div className="guide empty-note">Bu aralıkta listelenecek maç bulunamadı.</div>;
   }
@@ -65,19 +70,43 @@ export default function Guide({ rows }) {
     (a, b) => competitionPriority(a[0]) - competitionPriority(b[0])
   );
 
+  function toggleLeague(key) {
+    setCollapsedLeagues((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
   return (
     <div className="guide">
-      {groups.map(([key, matches]) => (
+      {groups.map(([key, matches]) => {
+        const isCollapsed = collapsedLeagues.has(key);
+        const label = competitionLabel(key);
+        return (
         <div key={key}>
           <div className="league-row">
             <span>{competitionFlag(key)}</span>
-            <Link href={`/lig/${competitionSlug(key)}`}>{competitionLabel(key)}</Link>
+            <Link href={`/lig/${competitionSlug(key)}`}>{label}</Link>
+            <button
+              type="button"
+              className={`league-toggle${isCollapsed ? ' is-collapsed' : ''}`}
+              onClick={() => toggleLeague(key)}
+              aria-expanded={!isCollapsed}
+              aria-label={`${label} maçlarını ${isCollapsed ? 'aç' : 'kapat'}`}
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="m3 6 5 5 5-5" />
+              </svg>
+            </button>
           </div>
-          {matches.map((row) => (
-            <MatchRow key={row.id} row={row} />
-          ))}
+          {!isCollapsed && matches.map((row) => (
+              <MatchRow key={row.id} row={row} />
+            ))}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

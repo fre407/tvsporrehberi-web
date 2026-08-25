@@ -467,6 +467,39 @@ section {
 .league-row a:hover {
   color: var(--text);
 }
+.league-toggle {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--subtext);
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.league-toggle:hover {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--accent);
+}
+.league-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.league-toggle svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  transition: transform 180ms ease;
+}
+.league-toggle.is-collapsed svg {
+  transform: rotate(-90deg);
+}
 .match-row {
   display: grid;
   grid-template-columns: 60px 1fr 130px;
