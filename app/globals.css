@@ -473,6 +473,7 @@ section {
   height: 30px;
   margin-left: auto;
   place-items: center;
+  background: transparent;
   border: 1px solid transparent;
   border-radius: 7px;
   color: var(--subtext);
