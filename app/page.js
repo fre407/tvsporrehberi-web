@@ -6,8 +6,9 @@ import DayTabs from '../components/DayTabs';
 import Standings from '../components/Standings';
 import LeagueStats from '../components/LeagueStats';
 import LiveNowStrip from '../components/LiveNowStrip';
-import { getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, windowIso } from '../lib/data';
-import { istDateLong } from '../lib/format';
+import DailyShareCard from '../components/DailyShareCard';
+import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, windowIso } from '../lib/data';
+import { istDateLong, istTime } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
 export const revalidate = 300; // 5 dakikada bir yeniden oluştur (ISR) — canlı skor/kanal bilgisi tazeliği için
@@ -112,6 +113,7 @@ export default async function HomePage() {
               <Link className="home-all-matches" href="/bugun">
                 Bugünün tüm maç programını aç →
               </Link>
+              {preview[0] ? <DailyShareCard match={{ homeTeam: preview[0].home_team, awayTeam: preview[0].away_team, time: istTime(preview[0].kickoff_at), channel: channelDisplay(preview[0]) }} /> : null}
             </div>
 
             <aside className="home-sidebar" aria-label="Süper Lig özeti">
