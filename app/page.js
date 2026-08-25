@@ -113,7 +113,7 @@ export default async function HomePage() {
               <Link className="home-all-matches" href="/bugun">
                 Bugünün tüm maç programını aç →
               </Link>
-              {preview[0] ? <DailyShareCard match={{ homeTeam: preview[0].home_team, awayTeam: preview[0].away_team, time: istTime(preview[0].kickoff_at), channel: channelDisplay(preview[0]) }} /> : null}
+              {preview[0] ? <DailyShareCard match={{ homeTeam: preview[0].home_team, awayTeam: preview[0].away_team, homeLogo: preview[0].home_logo, awayLogo: preview[0].away_logo, time: istTime(preview[0].kickoff_at), channel: channelDisplay(preview[0]) }} /> : null}
             </div>
 
             <aside className="home-sidebar" aria-label="Süper Lig özeti">

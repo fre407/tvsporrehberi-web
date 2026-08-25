@@ -333,6 +333,8 @@ header.site {
   font-size: 18px;
   flex: none;
 }
+.index-card-crest { width:26px; height:26px; object-fit:contain; flex:none; }
+.index-card-crest.fallback { display:grid; place-items:center; border-radius:50%; background:var(--surface-2); font-size:13px; }
 .index-card-name {
   min-width: 0;
 }
@@ -587,7 +589,8 @@ section {
 .share-card-top span { color:var(--accent); font-size:10px; font-weight:800; letter-spacing:.08em; }
 .share-card-top b { color:var(--subtext); font-size:10px; letter-spacing:.06em; }
 .share-card-match { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:14px; margin:17px 0 13px; }
-.share-card-match strong { font-size:18px; text-align:center; }
+.share-card-match > div { display:flex; align-items:center; justify-content:center; gap:9px; min-width:0; }.share-card-match img,.share-card-match > div > b { width:34px; height:34px; flex:none; object-fit:contain; border-radius:50%; background:var(--surface-2); padding:3px; }.share-card-match > div > b { display:grid; place-items:center; padding:0; color:var(--accent); font-size:11px; }
+.share-card-match strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:18px; text-align:center; }
 .share-card-match i { display:grid; place-items:center; width:31px; height:31px; border:1px solid rgba(255,232,18,.45); border-radius:50%; color:var(--accent); font-size:10px; font-style:normal; font-weight:800; }
 .share-card-meta { display:flex; justify-content:center; align-items:center; gap:9px; color:var(--subtext); font-size:12px; }
 .share-card-meta b { color:var(--accent); font-size:14px; }.share-card-meta small { font-size:9px; }.share-card-meta span { padding-left:9px; border-left:1px solid var(--border); }
@@ -731,6 +734,7 @@ section {
   font-weight: 600;
   background: transparent;
 }
+.mr-team .crest-fallback { display:grid; place-items:center; font-size:11px; }
 .mr-channel-pills {
   display: flex;
   flex: 1;
@@ -837,6 +841,7 @@ section {
   height: 64px;
   object-fit: contain;
 }
+.detail-crest-fallback { display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:var(--surface-2); font-size:28px; }
 .detail-team a {
   font-size: 17px;
   font-weight: 700;

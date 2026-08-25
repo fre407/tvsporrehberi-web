@@ -35,7 +35,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
             {row.home_logo ? (
               <img className="crest" src={row.home_logo} alt={row.home_team} loading="lazy" />
             ) : (
-              <span className="crest" />
+              <span className="crest crest-fallback">⚽</span>
             )}
             <span className="nm">{row.home_team}</span>
             <FavoriteButton favoriteId={`team:${slugify(row.home_team)}`} label={row.home_team} compact />
@@ -45,7 +45,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
             {row.away_logo ? (
               <img className="crest" src={row.away_logo} alt={row.away_team} loading="lazy" />
             ) : (
-              <span className="crest" />
+              <span className="crest crest-fallback">⚽</span>
             )}
             <span className="nm">{row.away_team}</span>
             <FavoriteButton favoriteId={`team:${slugify(row.away_team)}`} label={row.away_team} compact />

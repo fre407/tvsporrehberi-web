@@ -24,6 +24,7 @@ import Lineups from '../../../components/Lineups';
 import MatchStats from '../../../components/MatchStats';
 import HeadToHead from '../../../components/HeadToHead';
 import MatchDetailActions from '../../../components/MatchDetailActions';
+import DailyShareCard from '../../../components/DailyShareCard';
 
 export const revalidate = 120;
 
@@ -197,7 +198,7 @@ export default async function MatchDetailPage({ params }) {
               <div className="detail-team">
                 {row.home_logo ? (
                   <Image src={row.home_logo} alt={row.home_team} width={64} height={64} />
-                ) : null}
+                ) : <span className="detail-crest-fallback">⚽</span>}
                 <Link href={`/takim/${slugify(row.home_team)}`}>{row.home_team}</Link>
               </div>
               <div className="detail-vs">
@@ -218,7 +219,7 @@ export default async function MatchDetailPage({ params }) {
               <div className="detail-team">
                 {row.away_logo ? (
                   <Image src={row.away_logo} alt={row.away_team} width={64} height={64} />
-                ) : null}
+                ) : <span className="detail-crest-fallback">⚽</span>}
                 <Link href={`/takim/${slugify(row.away_team)}`}>{row.away_team}</Link>
               </div>
             </div>
@@ -249,6 +250,7 @@ export default async function MatchDetailPage({ params }) {
               shareUrl={matchUrl}
               shareText={`${row.home_team} - ${row.away_team} | ${istTime(row.kickoff_at)} (TSİ) | ${chan}`}
             />
+            <DailyShareCard match={{ homeTeam: row.home_team, awayTeam: row.away_team, homeLogo: row.home_logo, awayLogo: row.away_logo, time: istTime(row.kickoff_at), channel: chan }} />
           </div>
 
           <p style={{ marginTop: 22 }}>
