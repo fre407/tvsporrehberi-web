@@ -1746,13 +1746,18 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
     display: none;
   }
   .match-row {
-    grid-template-columns: minmax(0, 1fr) 90px;
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
     padding: 12px 14px;
   }
   .mr-match-link { grid-template-columns: 46px minmax(0, 1fr); gap: 10px; }
-  .mr-channel-wrap { gap: 4px; }
-  .mr-channel-wrap .favorite-button { width: 24px; height: 24px; }
+  .mr-channel-wrap { justify-content:flex-start; gap:4px; padding-left:56px; }
+  .mr-channel-pills { justify-content:flex-start; }
+  .mr-chan { max-width:100%; font-size:12px; }
+  .mr-chan.pending { width:100%; align-items:flex-start; text-align:left; white-space:normal; }
+  .mr-chan.pending span { white-space:normal; }
+  .guide-filter-bar { overflow-x:auto; padding-bottom:3px; scrollbar-width:none; }
+  .guide-filter { flex:none; }
   .match-expanded {
     grid-template-columns: 1fr auto 1fr;
     gap: 10px;
