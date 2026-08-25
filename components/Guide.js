@@ -150,7 +150,7 @@ export default function Guide({ rows }) {
       <div className="guide-filter-bar">
         {[
           ['all', 'Tümü'], ['live', '● Canlı'], ['broadcast', 'Türkiye’de yayınlanan'],
-          ['super_lig', 'Süper Lig'], ['sampiyonlar_ligi', 'Şampiyonlar Ligi'], ['favorites', '★ Takip ettiklerim'],
+          ['super_lig', 'Süper Lig'], ['turkiye_kupasi', 'Türkiye Kupası'], ['sampiyonlar_ligi', 'Şampiyonlar Ligi'], ['favorites', '★ Takip ettiklerim'],
         ].map(([value, label]) => (
           <button key={value} type="button" className={`guide-filter${activeFilter === value ? ' active' : ''}`} onClick={() => chooseFilter(value)} aria-pressed={activeFilter === value}>{label}</button>
         ))}
