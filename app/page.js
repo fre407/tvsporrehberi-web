@@ -5,7 +5,8 @@ import JsonLd from '../components/JsonLd';
 import DayTabs from '../components/DayTabs';
 import Standings from '../components/Standings';
 import LeagueStats from '../components/LeagueStats';
-import { getFixturesInWindow, getLeagueStats, getStandings, windowIso } from '../lib/data';
+import LiveNowStrip from '../components/LiveNowStrip';
+import { getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, windowIso } from '../lib/data';
 import { istDateLong } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
@@ -54,10 +55,11 @@ const FAQ_JSON_LD = {
 
 export default async function HomePage() {
   const { startIso, endIso } = windowIso(0, 1);
-  const [rows, standings, leagueStats] = await Promise.all([
+  const [rows, standings, leagueStats, liveRows] = await Promise.all([
     getFixturesInWindow(startIso, endIso).catch(() => []),
     getStandings('super_lig').catch(() => null),
     getLeagueStats('super_lig').catch(() => null),
+    getLiveFixtures().catch(() => []),
   ]);
   const hasStandings = Array.isArray(standings?.standings) && standings.standings.length > 0;
   const hasLeagueStats = (leagueStats?.top_scorers?.length ?? 0) > 0 || (leagueStats?.top_assists?.length ?? 0) > 0;
@@ -88,6 +90,7 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
+      <LiveNowStrip rows={liveRows} />
 
       <section className="home-guide-section">
         <div className="wrap">

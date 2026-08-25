@@ -505,6 +505,42 @@ section {
 .favorite-button.compact {
   margin-left: auto;
 }
+.match-action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+.share-button {
+  min-height: 30px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+.share-button:hover { border-color: var(--accent); color: var(--accent); }
+.live-now-strip {
+  border-bottom: 1px solid rgba(255, 232, 18, 0.18);
+  background: rgba(255, 232, 18, 0.06);
+}
+.live-now-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 42px;
+  overflow-x: auto;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.live-now-label { color: var(--live); font-weight: 800; }
+.live-now-inner a { color: var(--text); font-weight: 700; }
+.live-now-inner small { margin-left: 5px; color: var(--subtext-dim); font-weight: 500; }
+.live-now-all { margin-left: auto; color: var(--accent) !important; }
 .favorite-button:hover,
 .guide-filter:hover {
   border-color: var(--accent);
@@ -548,11 +584,19 @@ section {
 }
 .match-row {
   display: grid;
-  grid-template-columns: 60px 1fr 130px;
+  grid-template-columns: minmax(0, 1fr) 154px;
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
   border-top: 1px solid var(--border);
+}
+.mr-match-link {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  color: inherit;
 }
 .match-row:hover {
   background: rgba(255, 232, 18, 0.05);
@@ -610,6 +654,9 @@ section {
   padding-left: 10px;
 }
 .mr-chan {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   font-size: 12px;
   font-weight: 700;
   padding: 7px 10px;
@@ -1308,6 +1355,25 @@ table.standings-table {
   line-height: 1.6;
   padding: 0 0 16px;
 }
+.mr-team .favorite-button {
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+  font-size: 11px;
+}
+.mr-channel-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.mr-channel-wrap .mr-chan { flex: 1; min-width: 0; }
+.mr-channel-wrap .favorite-button { flex: none; }
+.mr-chan small {
+  color: var(--subtext-dim);
+  font-size: 9px;
+  font-weight: 600;
+}
 
 /* Ana sayfa — OneFootball'dan ilham alan, fakat TV Spor Rehberi'nin koyu
    yayın stüdyosu kimliğini koruyan takvim + içerik düzeni. */
@@ -1532,10 +1598,13 @@ table.standings-table {
     display: none;
   }
   .match-row {
-    grid-template-columns: 46px 1fr 90px;
+    grid-template-columns: minmax(0, 1fr) 90px;
     gap: 10px;
     padding: 12px 14px;
   }
+  .mr-match-link { grid-template-columns: 46px minmax(0, 1fr); gap: 10px; }
+  .mr-channel-wrap { gap: 4px; }
+  .mr-channel-wrap .favorite-button { width: 24px; height: 24px; }
   .detail-teams {
     grid-template-columns: 1fr;
     gap: 14px;

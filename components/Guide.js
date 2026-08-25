@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { channelDisplay, matchStatus } from '../lib/data';
-import { istTime, matchSlug } from '../lib/format';
+import { istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
 
@@ -14,8 +14,8 @@ function MatchRow({ row }) {
   const isPending = chan === 'Türkiye yayın bilgisi henüz bulunamadı';
 
   return (
-    <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-row-link">
-      <div className="match-row">
+    <div className="match-row">
+      <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-match-link">
         <div className={`mr-time${isLive ? ' live' : ''}`}>
           {isLive ? (
             <>
@@ -34,6 +34,7 @@ function MatchRow({ row }) {
               <span className="crest" />
             )}
             <span className="nm">{row.home_team}</span>
+            <FavoriteButton favoriteId={`team:${slugify(row.home_team)}`} label={row.home_team} compact />
             {row.home_score != null && status !== 'upcoming' ? <span className="sc">{row.home_score}</span> : null}
           </div>
           <div className="mr-team">
@@ -43,19 +44,26 @@ function MatchRow({ row }) {
               <span className="crest" />
             )}
             <span className="nm">{row.away_team}</span>
+            <FavoriteButton favoriteId={`team:${slugify(row.away_team)}`} label={row.away_team} compact />
             {row.away_score != null && status !== 'upcoming' ? <span className="sc">{row.away_score}</span> : null}
           </div>
         </div>
-        <div className={`mr-chan${isPending ? ' pending' : ''}`}>{chan}</div>
+      </Link>
+      <div className="mr-channel-wrap">
+        <div className={`mr-chan${isPending ? ' pending' : ''}`}>
+          <span>{chan}</span>
+          <small>{isPending ? 'Yayın bilgisi bekleniyor' : row.channel ? 'Onaylı yayın bilgisi' : 'Platformda izlenebilir'}</small>
+        </div>
+        {!isPending ? <FavoriteButton favoriteId={`channel:${slugify(chan)}`} label={chan} compact /> : null}
       </div>
-    </Link>
+    </div>
   );
 }
 
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
 export default function Guide({ rows }) {
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
   const [favoriteIds, setFavoriteIds] = useState(() => new Set());
 
   useEffect(() => {
@@ -69,9 +77,12 @@ export default function Guide({ rows }) {
     return <div className="guide empty-note">Bu aralıkta listelenecek maç bulunamadı.</div>;
   }
 
-  const visibleRows = favoritesOnly
-    ? rows.filter((row) => favoriteIds.has(`league:${row.competition_key}`))
-    : rows;
+  const visibleRows = rows.filter((row) => {
+    if (activeFilter === 'favorites') return favoriteIds.has(`league:${row.competition_key}`) || favoriteIds.has(`team:${slugify(row.home_team)}`) || favoriteIds.has(`team:${slugify(row.away_team)}`) || favoriteIds.has(`channel:${slugify(channelDisplay(row))}`);
+    if (activeFilter === 'live') return matchStatus(row) === 'live';
+    if (activeFilter === 'broadcast') return Boolean(row.channel || row.channel2 || row.platform);
+    return activeFilter === 'all' || row.competition_key === activeFilter;
+  });
   const byCompetition = new Map();
   for (const row of visibleRows) {
     const list = byCompetition.get(row.competition_key);
@@ -95,15 +106,12 @@ export default function Guide({ rows }) {
   return (
     <>
       <div className="guide-filter-bar">
-        <button
-          type="button"
-          className={`guide-filter${favoritesOnly ? ' active' : ''}`}
-          onClick={() => setFavoritesOnly((current) => !current)}
-          aria-pressed={favoritesOnly}
-        >
-          ★ Takip ettiklerim
-        </button>
-        <span>{favoritesOnly ? 'Takip ettiğin liglerin maçları gösteriliyor.' : 'Lig yıldızına dokunarak maçlarını takip et.'}</span>
+        {[
+          ['all', 'Tümü'], ['live', '● Canlı'], ['broadcast', 'Türkiye’de yayınlanan'],
+          ['super_lig', 'Süper Lig'], ['sampiyonlar_ligi', 'Şampiyonlar Ligi'], ['favorites', '★ Takip ettiklerim'],
+        ].map(([value, label]) => (
+          <button key={value} type="button" className={`guide-filter${activeFilter === value ? ' active' : ''}`} onClick={() => setActiveFilter(value)} aria-pressed={activeFilter === value}>{label}</button>
+        ))}
       </div>
       {groups.length === 0 ? <div className="guide empty-note">Takip ettiğin lig için bu aralıkta maç bulunamadı.</div> : <div className="guide">
       {groups.map(([key, matches]) => {

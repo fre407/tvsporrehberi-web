@@ -23,6 +23,7 @@ import JsonLd from '../../../components/JsonLd';
 import Lineups from '../../../components/Lineups';
 import MatchStats from '../../../components/MatchStats';
 import HeadToHead from '../../../components/HeadToHead';
+import MatchDetailActions from '../../../components/MatchDetailActions';
 
 export const revalidate = 120;
 
@@ -238,6 +239,16 @@ export default async function MatchDetailPage({ params }) {
                 </div>
               ) : null}
             </div>
+            <MatchDetailActions
+              homeId={slugify(row.home_team)}
+              homeName={row.home_team}
+              awayId={slugify(row.away_team)}
+              awayName={row.away_team}
+              channelId={row.channel || row.platform ? slugify(row.channel || row.platform) : null}
+              channelName={row.channel || row.platform || ''}
+              shareUrl={matchUrl}
+              shareText={`${row.home_team} - ${row.away_team} | ${istTime(row.kickoff_at)} (TSİ) | ${chan}`}
+            />
           </div>
 
           <p style={{ marginTop: 22 }}>
