@@ -41,17 +41,17 @@ export default function DailyShareCard({ match }) {
   async function shareCard() {
     const [homeLogo, awayLogo] = await Promise.all([logoDataUrl(match.homeLogo), logoDataUrl(match.awayLogo)]);
     const crest = (logo, x, label) => logo
-      ? `<circle cx="${x}" cy="274" r="92" fill="#fff"/><image href="${logo}" x="${x - 70}" y="204" width="140" height="140" preserveAspectRatio="xMidYMid meet"/>`
+      ? `<image href="${logo}" x="${x - 82}" y="192" width="164" height="164" preserveAspectRatio="xMidYMid meet"/>`
       : `<circle cx="${x}" cy="274" r="88" fill="#171812" stroke="#ffe812" stroke-opacity=".7" stroke-width="3"/><text x="${x}" y="295" fill="#ffe812" font-size="58" font-family="Arial" font-weight="800" text-anchor="middle">${escapeSvg(label)}</text>`;
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
       <defs><radialGradient id="glow" cx="50%" cy="45%" r="65%"><stop stop-color="#3b3510"/><stop offset="1" stop-color="#0a0a08"/></radialGradient><linearGradient id="line" x1="0" x2="1"><stop stop-color="#ffe812" stop-opacity="0"/><stop offset=".5" stop-color="#ffe812"/><stop offset="1" stop-color="#ffe812" stop-opacity="0"/></linearGradient></defs>
       <rect width="1200" height="630" fill="#080907"/><rect width="1200" height="630" fill="url(#glow)"/><path d="M0 88H1200M0 542H1200" stroke="url(#line)" stroke-width="2"/>
-      <text x="72" y="66" fill="#ffe812" font-size="25" font-family="Arial" font-weight="800" letter-spacing="3">TV SPOR REHBERİ</text><text x="1128" y="66" fill="#c9c4ae" font-size="18" font-family="Arial" text-anchor="end">BUGÜNÜN MAÇI</text>
+      <text x="72" y="66" fill="#ffe812" font-size="28" font-family="Impact, Arial Black, sans-serif" letter-spacing="3">TV SPOR REHBERİ</text><text x="1128" y="66" fill="#c9c4ae" font-size="18" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="end">BUGÜNÜN MAÇI</text>
       ${crest(homeLogo, 238, initials(match.homeTeam))}${crest(awayLogo, 962, initials(match.awayTeam))}
-      <text x="238" y="405" fill="#fff" font-size="31" font-family="Arial" font-weight="700" text-anchor="middle">${escapeSvg(match.homeTeam)}</text><text x="962" y="405" fill="#fff" font-size="31" font-family="Arial" font-weight="700" text-anchor="middle">${escapeSvg(match.awayTeam)}</text>
-      <text x="600" y="248" fill="#c9c4ae" font-size="24" font-family="Arial" font-weight="700" text-anchor="middle">BUGÜN</text><text x="600" y="330" fill="#ffe812" font-size="84" font-family="Arial" font-weight="800" text-anchor="middle">${escapeSvg(match.time)}</text><text x="600" y="365" fill="#c9c4ae" font-size="21" font-family="Arial" text-anchor="middle">TSİ</text>
-      <rect x="390" y="451" width="420" height="52" rx="26" fill="#1d1c14" stroke="#5b5520"/><text x="600" y="485" fill="#ffe812" font-size="24" font-family="Arial" font-weight="700" text-anchor="middle">${escapeSvg(match.channel)}</text>
-      <text x="600" y="581" fill="#9c967f" font-size="20" font-family="Arial" text-anchor="middle">tvsporrehberi.com · Maçlar · Kanallar · Saatler</text>
+      <text x="238" y="405" fill="#fff" font-size="31" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.homeTeam)}</text><text x="962" y="405" fill="#fff" font-size="31" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.awayTeam)}</text>
+      <text x="600" y="248" fill="#c9c4ae" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">BUGÜN</text><text x="600" y="330" fill="#ffe812" font-size="84" font-family="Impact, Arial Black, sans-serif" letter-spacing="2" text-anchor="middle">${escapeSvg(match.time)}</text><text x="600" y="365" fill="#c9c4ae" font-size="21" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">TSİ</text>
+      <rect x="390" y="451" width="420" height="52" rx="26" fill="#1d1c14" stroke="#5b5520"/><text x="600" y="485" fill="#ffe812" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.channel)}</text>
+      <text x="600" y="581" fill="#9c967f" font-size="20" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">tvsporrehberi.com · Maçlar · Kanallar · Saatler</text>
     </svg>`;
     const png = await svgToPng(svg);
     const file = new File([png], 'tv-spor-rehberi-bugunun-maci.png', { type: 'image/png' });

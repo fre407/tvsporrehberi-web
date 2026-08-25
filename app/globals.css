@@ -586,14 +586,14 @@ section {
   background: radial-gradient(circle at 50% 12%, rgba(255,232,18,.16), transparent 46%), linear-gradient(115deg, #18170f, var(--surface));
 }
 .share-card-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-.share-card-top span { color:var(--accent); font-size:10px; font-weight:800; letter-spacing:.08em; }
+.share-card-top span { color:var(--accent); font-family:var(--font-display); font-size:14px; font-weight:800; letter-spacing:.08em; }
 .share-card-top b { color:var(--subtext); font-size:10px; letter-spacing:.06em; }
 .share-card-match { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:14px; margin:17px 0 13px; }
-.share-card-match > div { display:flex; align-items:center; justify-content:center; gap:9px; min-width:0; }.share-card-match img,.share-card-match > div > b { width:34px; height:34px; flex:none; object-fit:contain; border-radius:50%; background:var(--surface-2); padding:3px; }.share-card-match > div > b { display:grid; place-items:center; padding:0; color:var(--accent); font-size:11px; }
-.share-card-match strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:18px; text-align:center; }
+.share-card-match > div { display:flex; align-items:center; justify-content:center; gap:9px; min-width:0; }.share-card-match img,.share-card-match > div > b { width:38px; height:38px; flex:none; object-fit:contain; }.share-card-match > div > b { display:grid; place-items:center; border:1px solid rgba(255,232,18,.55); border-radius:50%; color:var(--accent); font-size:11px; }
+.share-card-match strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--font-display); font-size:23px; letter-spacing:.01em; text-align:center; }
 .share-card-match i { display:grid; place-items:center; width:31px; height:31px; border:1px solid rgba(255,232,18,.45); border-radius:50%; color:var(--accent); font-size:10px; font-style:normal; font-weight:800; }
 .share-card-meta { display:flex; justify-content:center; align-items:center; gap:9px; color:var(--subtext); font-size:12px; }
-.share-card-meta b { color:var(--accent); font-size:14px; }.share-card-meta small { font-size:9px; }.share-card-meta span { padding-left:9px; border-left:1px solid var(--border); }
+.share-card-meta b { color:var(--accent); font-family:var(--font-display); font-size:20px; letter-spacing:.03em; }.share-card-meta small { font-family:var(--font-body); font-size:9px; }.share-card-meta span { padding-left:9px; border-left:1px solid var(--border); }
 .daily-share-card button { display:block; width:100%; margin-top:16px; border:1px solid var(--accent); border-radius:9px; background:var(--accent); color:var(--accent-ink); padding:10px 11px; font:inherit; font-size:12px; font-weight:800; }
 .favorite-button:hover,
 .guide-filter:hover {
