@@ -7,6 +7,8 @@ import { istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
 
+const FILTER_STORAGE_KEY = 'tvsporrehberi:match-filter';
+
 function MatchRow({ row, isExpanded, onToggle }) {
   const status = matchStatus(row);
   const chan = channelDisplay(row);
@@ -93,6 +95,16 @@ export default function Guide({ rows }) {
     return () => window.removeEventListener('tvsporrehberi:favorites', sync);
   }, []);
 
+  useEffect(() => {
+    const savedFilter = window.localStorage.getItem(FILTER_STORAGE_KEY);
+    if (savedFilter) setActiveFilter(savedFilter);
+  }, []);
+
+  function chooseFilter(value) {
+    setActiveFilter(value);
+    window.localStorage.setItem(FILTER_STORAGE_KEY, value);
+  }
+
   if (!rows || rows.length === 0) {
     return <div className="guide empty-note">Bu aralıkta listelenecek maç bulunamadı.</div>;
   }
@@ -130,7 +142,7 @@ export default function Guide({ rows }) {
           ['all', 'Tümü'], ['live', '● Canlı'], ['broadcast', 'Türkiye’de yayınlanan'],
           ['super_lig', 'Süper Lig'], ['sampiyonlar_ligi', 'Şampiyonlar Ligi'], ['favorites', '★ Takip ettiklerim'],
         ].map(([value, label]) => (
-          <button key={value} type="button" className={`guide-filter${activeFilter === value ? ' active' : ''}`} onClick={() => setActiveFilter(value)} aria-pressed={activeFilter === value}>{label}</button>
+          <button key={value} type="button" className={`guide-filter${activeFilter === value ? ' active' : ''}`} onClick={() => chooseFilter(value)} aria-pressed={activeFilter === value}>{label}</button>
         ))}
       </div>
       {groups.length === 0 ? <div className="guide empty-note">Takip ettiğin lig için bu aralıkta maç bulunamadı.</div> : <div className="guide">

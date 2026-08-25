@@ -85,6 +85,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`try { const theme = localStorage.getItem('tvsporrehberi:theme'); if (theme === 'light') document.documentElement.dataset.theme = 'light'; } catch {}`}
+        </Script>
         <Script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}

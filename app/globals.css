@@ -22,6 +22,20 @@
   --font-body: var(--font-body-src), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+html[data-theme='light'] {
+  --bg: #f7f5ee;
+  --bg-deep: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #efede4;
+  --border: #d8d2c0;
+  --text: #1b1a15;
+  --subtext: #5d594e;
+  --subtext-dim: #827c6e;
+  --accent: #dca900;
+  --accent-ink: #1b1707;
+  --on-air: #b17c00;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -35,6 +49,7 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  transition: background-color .2s ease, color .2s ease;
 }
 a {
   color: inherit;
@@ -164,6 +179,26 @@ header.site {
   padding: 10px 20px;
   scrollbar-width: none;
 }
+.theme-toggle {
+  display: inline-flex;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.theme-toggle button {
+  border: 0;
+  background: transparent;
+  color: var(--subtext);
+  padding: 8px 9px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.theme-toggle button.active { background: var(--accent); color: var(--accent-ink); }
 .nav-row2::-webkit-scrollbar,
 .day-tabs::-webkit-scrollbar {
   display: none;
@@ -1494,6 +1529,16 @@ table.standings-table {
   backdrop-filter: blur(10px);
   background: linear-gradient(145deg, rgba(24,27,18,.86), rgba(13,14,11,.80));
   box-shadow: 0 24px 60px rgba(0,0,0,.38), inset 0 1px rgba(255,255,255,.05);
+}
+html[data-theme='light'] .night-match-preview {
+  background:
+    radial-gradient(ellipse 38% 80% at 9% 6%, rgba(220,169,0,.30), transparent 62%),
+    radial-gradient(ellipse 38% 80% at 91% 6%, rgba(220,169,0,.22), transparent 62%),
+    linear-gradient(180deg, #ece7d9 0%, #dfe6d1 100%);
+}
+html[data-theme='light'] .night-match-preview .home-hero-note {
+  background: rgba(255,255,255,.74);
+  box-shadow: 0 20px 45px rgba(74,61,18,.12);
 }
 .home-guide-section {
   padding-top: 24px;

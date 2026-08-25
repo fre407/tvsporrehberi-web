@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SearchBox from './SearchBox';
+import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
   {
@@ -63,6 +64,7 @@ export default function Header() {
           </div>
         </Link>
         <SearchBox />
+        <ThemeToggle />
       </div>
       <div className="nav-row2-outer">
         <div className="wrap nav-row2">
