@@ -36,6 +36,7 @@ async function logoDataUrl(url) {
 
 export default function DailyShareCard({ match }) {
   const [message, setMessage] = useState('Görseli paylaş');
+  const [previewOpen, setPreviewOpen] = useState(false);
   if (!match) return null;
 
   async function shareCard() {
@@ -68,10 +69,23 @@ export default function DailyShareCard({ match }) {
     } catch {}
   }
 
-  return <aside className="daily-share-card">
+  const cardPreview = <div className="daily-share-card">
     <div className="share-card-top"><span>PAYLAŞILABİLİR MAÇ KARTI</span><b>TV SPOR REHBERİ</b></div>
     <div className="share-card-match"><div>{match.homeLogo ? <img src={match.homeLogo} alt="" /> : <b>{initials(match.homeTeam)}</b>}<strong>{match.homeTeam}</strong></div><i>VS</i><div>{match.awayLogo ? <img src={match.awayLogo} alt="" /> : <b>{initials(match.awayTeam)}</b>}<strong>{match.awayTeam}</strong></div></div>
     <div className="share-card-meta"><b>{match.time} <small>TSİ</small></b><span>{match.channel}</span></div>
     <button type="button" onClick={shareCard}>↗ {message}</button>
-  </aside>;
+  </div>;
+
+  return <>
+    <aside className="share-card-launcher">
+      <div><span>MAÇI PAYLAŞ</span><strong>Arkadaşlarına görsel maç kartı gönder</strong></div>
+      <button type="button" onClick={() => setPreviewOpen(true)}>Kartı görüntüle ↗</button>
+    </aside>
+    {previewOpen ? <div className="share-card-modal" role="dialog" aria-modal="true" aria-label="Paylaşılabilir maç kartı" onClick={() => setPreviewOpen(false)}>
+      <div className="share-card-modal-inner" onClick={(event) => event.stopPropagation()}>
+        <button className="share-card-close" type="button" onClick={() => setPreviewOpen(false)} aria-label="Kart önizlemesini kapat">×</button>
+        {cardPreview}
+      </div>
+    </div> : null}
+  </>;
 }
