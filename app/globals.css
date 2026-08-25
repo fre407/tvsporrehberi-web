@@ -46,7 +46,7 @@ body {
 }
 body {
   background: var(--bg);
-  color: var(--text);
+  color: var(--accent);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   transition: background-color .2s ease, color .2s ease;
@@ -723,6 +723,33 @@ section {
   color: var(--subtext-dim);
   font-weight: 600;
   background: transparent;
+}
+.mr-channel-pills {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+}
+.mr-channel-pills.multi {
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+.mr-channel-pills.multi .mr-chan {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 5px 7px;
+  font-size: 10px;
+  border-radius: 7px;
+}
+.mr-channel-status {
+  flex-basis: 100%;
+  color: var(--subtext-dim);
+  font-size: 8px;
+  font-weight: 600;
+  text-align: center;
 }
 .mr-row-link {
   display: contents;
@@ -1417,7 +1444,7 @@ table.standings-table {
   gap: 6px;
   min-width: 0;
 }
-.mr-channel-wrap .mr-chan { flex: 1; min-width: 0; }
+.mr-channel-wrap .mr-channel-pills { flex: 1; min-width: 0; }
 .mr-channel-wrap .favorite-button { flex: none; }
 .match-expanded {
   display: grid;

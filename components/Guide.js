@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { channelDisplay, matchStatus } from '../lib/data';
+import { broadcastServices, channelDisplay, matchStatus } from '../lib/data';
 import { istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
@@ -12,8 +12,10 @@ const FILTER_STORAGE_KEY = 'tvsporrehberi:match-filter';
 function MatchRow({ row, isExpanded, onToggle }) {
   const status = matchStatus(row);
   const chan = channelDisplay(row);
+  const services = broadcastServices(row);
   const isLive = status === 'live';
   const isPending = chan === 'Türkiye yayın bilgisi henüz bulunamadı';
+  const isMultiChannel = services.length > 1;
 
   return (
     <div className={`match-row-shell${isExpanded ? ' is-expanded' : ''}`} onClick={onToggle}>
@@ -53,11 +55,22 @@ function MatchRow({ row, isExpanded, onToggle }) {
         </div>
       </Link>
       <div className="mr-channel-wrap">
-        <div className={`mr-chan${isPending ? ' pending' : ''}`}>
-          <span>{chan}</span>
-          <small>{isPending ? 'Yayın bilgisi bekleniyor' : row.channel ? 'Onaylı yayın bilgisi' : 'Platformda izlenebilir'}</small>
+        <div className={`mr-channel-pills${isPending ? ' pending' : ''}${isMultiChannel ? ' multi' : ''}`}>
+          {isPending ? (
+            <div className="mr-chan pending"><span>{chan}</span><small>Yayın bilgisi bekleniyor</small></div>
+          ) : (
+            <>
+              {services.map((service) => (
+                <div className="mr-chan" key={service} title={service}>
+                  <span>{service}</span>
+                  {!isMultiChannel ? <small>{row.channel ? 'Onaylı yayın bilgisi' : 'Platformda izlenebilir'}</small> : null}
+                </div>
+              ))}
+              {isMultiChannel ? <small className="mr-channel-status">Onaylı yayın bilgisi</small> : null}
+            </>
+          )}
         </div>
-        {!isPending ? <FavoriteButton favoriteId={`channel:${slugify(chan)}`} label={chan} compact /> : null}
+        {!isPending ? services.map((service) => <FavoriteButton key={service} favoriteId={`channel:${slugify(service)}`} label={service} compact />) : null}
       </div>
       </div>
       {isExpanded ? (
@@ -110,7 +123,7 @@ export default function Guide({ rows }) {
   }
 
   const visibleRows = rows.filter((row) => {
-    if (activeFilter === 'favorites') return favoriteIds.has(`league:${row.competition_key}`) || favoriteIds.has(`team:${slugify(row.home_team)}`) || favoriteIds.has(`team:${slugify(row.away_team)}`) || favoriteIds.has(`channel:${slugify(channelDisplay(row))}`);
+    if (activeFilter === 'favorites') return favoriteIds.has(`league:${row.competition_key}`) || favoriteIds.has(`team:${slugify(row.home_team)}`) || favoriteIds.has(`team:${slugify(row.away_team)}`) || broadcastServices(row).some((service) => favoriteIds.has(`channel:${slugify(service)}`));
     if (activeFilter === 'live') return matchStatus(row) === 'live';
     if (activeFilter === 'broadcast') return Boolean(row.channel || row.channel2 || row.platform);
     return activeFilter === 'all' || row.competition_key === activeFilter;
