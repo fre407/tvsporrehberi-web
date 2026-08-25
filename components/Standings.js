@@ -1,7 +1,8 @@
 // Puan Durumu tablosu — league_standings.standings jsonb dizisini render eder
 // (rank, team{name,logo}, points, goalsDiff, all{played,win,draw,lose}).
-export default function Standings({ data }) {
+export default function Standings({ data, limit }) {
   if (!data || !Array.isArray(data.standings) || data.standings.length === 0) return null;
+  const rows = limit ? data.standings.slice(0, limit) : data.standings;
 
   return (
     <div className="standings-wrap">
@@ -19,7 +20,7 @@ export default function Standings({ data }) {
           </tr>
         </thead>
         <tbody>
-          {data.standings.map((row) => (
+          {rows.map((row) => (
             <tr key={row.rank ?? row.team?.name}>
               <td className="n pos">{row.rank ?? '-'}</td>
               <td className="team-cell">

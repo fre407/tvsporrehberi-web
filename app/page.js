@@ -2,7 +2,10 @@ import Link from 'next/link';
 import Guide from '../components/Guide';
 import AppCta from '../components/AppCta';
 import JsonLd from '../components/JsonLd';
-import { getFixturesInWindow, windowIso } from '../lib/data';
+import DayTabs from '../components/DayTabs';
+import Standings from '../components/Standings';
+import LeagueStats from '../components/LeagueStats';
+import { getFixturesInWindow, getLeagueStats, getStandings, windowIso } from '../lib/data';
 import { istDateLong } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
@@ -51,47 +54,93 @@ const FAQ_JSON_LD = {
 
 export default async function HomePage() {
   const { startIso, endIso } = windowIso(0, 1);
-  let rows = [];
-  try {
-    rows = await getFixturesInWindow(startIso, endIso);
-  } catch {
-    rows = [];
-  }
+  const [rows, standings, leagueStats] = await Promise.all([
+    getFixturesInWindow(startIso, endIso).catch(() => []),
+    getStandings('super_lig').catch(() => null),
+    getLeagueStats('super_lig').catch(() => null),
+  ]);
+  const hasStandings = Array.isArray(standings?.standings) && standings.standings.length > 0;
+  const hasLeagueStats = (leagueStats?.top_scorers?.length ?? 0) > 0 || (leagueStats?.top_assists?.length ?? 0) > 0;
   // Ana sayfada en fazla 10 maçlık bir önizleme — tam liste /bugun'da.
   const preview = rows.slice(0, 10);
 
   return (
     <>
-      <div className="hero">
+      <div className="hero home-hero">
         <div className="wrap">
-          <div className="eyebrow">Canlı yayın rehberi</div>
-          <h1>
-            Hangi maç,
-            <br />
-            hangi <em>kanalda</em>, kaçta?
-          </h1>
-          <p className="page-desc">
-            Trendyol Süper Lig&apos;den UEFA Şampiyonlar Ligi&apos;ne, İngiltere Premier Lig&apos;den
-            İspanya LaLiga&apos;ya — günün tüm maçlarını saatiyle ve yayıncı kanalıyla tek sayfada
-            topladık.
-          </p>
+          <div className="home-hero-grid">
+            <div>
+              <div className="eyebrow">Canlı yayın rehberi</div>
+              <h1>
+                Hangi maç,
+                <br />
+                hangi <em>kanalda</em>, kaçta?
+              </h1>
+              <p className="page-desc">
+                Günün maçlarını, yayıncı kanallarını ve canlı skorları tek yerde takip et.
+              </p>
+            </div>
+            <div className="home-hero-note">
+              <span className="home-hero-note-label">BUGÜN</span>
+              <strong>{istDateLong(new Date().toISOString())}</strong>
+              <span>Maç programını lig lig incele, aradığın karşılaşmayı saniyeler içinde bul.</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <section>
+      <section className="home-guide-section">
         <div className="wrap">
-          <div className="sec-head">
-            <div>
-              <div className="sec-title">
-                Yaklaşan <span>Maçlar</span>
+          <DayTabs activeOffset={0} />
+          <div className="home-content-grid">
+            <div className="home-main-column">
+              <div className="sec-head home-guide-heading">
+                <div>
+                  <div className="sec-title">
+                    Bugünün <span>Maçları</span>
+                  </div>
+                  <div className="sec-sub">Saat, kanal ve canlı skor bilgisiyle</div>
+                </div>
+                <Link className="sec-link" href="/bugun">
+                  Tüm program →
+                </Link>
               </div>
-              <div className="sec-sub">{istDateLong(new Date().toISOString())}</div>
+              <Guide rows={preview} />
+              <Link className="home-all-matches" href="/bugun">
+                Bugünün tüm maç programını aç →
+              </Link>
             </div>
-            <Link className="sec-link" href="/bugun">
-              Bugünün tüm maçları →
-            </Link>
+
+            <aside className="home-sidebar" aria-label="Süper Lig özeti">
+              <div className="sidebar-card">
+                <div className="sidebar-card-head">
+                  <div>
+                    <span className="sidebar-kicker">TRENDYOL SÜPER LİG</span>
+                    <h2>Puan Durumu</h2>
+                  </div>
+                  <span className="sidebar-flag" aria-hidden="true">🇹🇷</span>
+                </div>
+                {hasStandings ? <Standings data={standings} limit={8} /> : <div className="sidebar-empty">Puan durumu yakında güncellenecek.</div>}
+                <Link className="sidebar-link" href="/lig/super-lig">
+                  Tüm puan durumunu gör →
+                </Link>
+              </div>
+
+              <div className="sidebar-card">
+                <div className="sidebar-card-head">
+                  <div>
+                    <span className="sidebar-kicker">TRENDYOL SÜPER LİG</span>
+                    <h2>Gol &amp; Asist</h2>
+                  </div>
+                  <span className="sidebar-flag" aria-hidden="true">⚽</span>
+                </div>
+                {hasLeagueStats ? <LeagueStats data={leagueStats} limit={5} /> : <div className="sidebar-empty">Liderlik verileri yakında güncellenecek.</div>}
+                <Link className="sidebar-link" href="/lig/super-lig">
+                  Tüm istatistikleri gör →
+                </Link>
+              </div>
+            </aside>
           </div>
-          <Guide rows={preview} />
         </div>
       </section>
 

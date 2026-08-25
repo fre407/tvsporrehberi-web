@@ -1,11 +1,11 @@
 // Gol Kralı / Asist Kralı — league_stats.top_scorers/top_assists jsonb
 // dizileri ({playerId,name,photo,teamName,goals|assists}[]).
-function StatList({ title, entries, statKey, statLabel }) {
+function StatList({ title, entries, statKey, statLabel, limit }) {
   if (!entries || entries.length === 0) return null;
   return (
     <div className="stat-list">
       <div className="stat-list-title">{title}</div>
-      {entries.slice(0, 10).map((p, i) => (
+      {entries.slice(0, limit).map((p, i) => (
         <div className="stat-list-row" key={p.playerId ?? `${p.name}-${i}`}>
           <span className="stat-list-rank">{i + 1}</span>
           {p.photo ? (
@@ -26,7 +26,7 @@ function StatList({ title, entries, statKey, statLabel }) {
   );
 }
 
-export default function LeagueStats({ data }) {
+export default function LeagueStats({ data, limit = 10 }) {
   if (!data) return null;
   const hasScorers = data.top_scorers?.length > 0;
   const hasAssists = data.top_assists?.length > 0;
@@ -34,8 +34,8 @@ export default function LeagueStats({ data }) {
 
   return (
     <div className="stats-grid">
-      <StatList title="Gol Kralı" entries={data.top_scorers} statKey="goals" statLabel="gol" />
-      <StatList title="Asist Kralı" entries={data.top_assists} statKey="assists" statLabel="asist" />
+      <StatList title="Gol Kralı" entries={data.top_scorers} statKey="goals" statLabel="gol" limit={limit} />
+      <StatList title="Asist Kralı" entries={data.top_assists} statKey="assists" statLabel="asist" limit={limit} />
     </div>
   );
 }
