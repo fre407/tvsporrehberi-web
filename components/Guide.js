@@ -15,7 +15,6 @@ function MatchRow({ row, isExpanded, onToggle }) {
   const services = broadcastServices(row);
   const isLive = status === 'live';
   const isPending = chan === 'Türkiye yayın bilgisi henüz bulunamadı';
-  const isMultiChannel = services.length > 1;
 
   return (
     <div className={`match-row-shell${isExpanded ? ' is-expanded' : ''}`} onClick={onToggle}>
@@ -55,7 +54,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
         </div>
       </Link>
       <div className="mr-channel-wrap">
-        <div className={`mr-channel-pills${isPending ? ' pending' : ''}${isMultiChannel ? ' multi' : ''}`}>
+        <div className={`mr-channel-pills${isPending ? ' pending' : ''}`}>
           {isPending ? (
             <div className="mr-chan pending"><span>{chan}</span><small>Yayın bilgisi bekleniyor</small></div>
           ) : (
@@ -63,14 +62,12 @@ function MatchRow({ row, isExpanded, onToggle }) {
               {services.map((service) => (
                 <div className="mr-chan" key={service} title={service}>
                   <span>{service}</span>
-                  {!isMultiChannel ? <small>{row.channel ? 'Onaylı yayın bilgisi' : 'Platformda izlenebilir'}</small> : null}
+                  <FavoriteButton favoriteId={`channel:${slugify(service)}`} label={service} compact />
                 </div>
               ))}
-              {isMultiChannel ? <small className="mr-channel-status">Onaylı yayın bilgisi</small> : null}
             </>
           )}
         </div>
-        {!isPending ? services.map((service) => <FavoriteButton key={service} favoriteId={`channel:${slugify(service)}`} label={service} compact />) : null}
       </div>
       </div>
       {isExpanded ? (
