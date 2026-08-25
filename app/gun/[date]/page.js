@@ -6,7 +6,7 @@ import { getFixturesInWindow } from '../../../lib/data';
 import { dateKeyDiffDays, dateKeyOffset, istDateLong, istKeyToUtcRange } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MIN_OFFSET = -1;

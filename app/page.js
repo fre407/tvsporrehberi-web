@@ -11,7 +11,7 @@ import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, g
 import { istDateLong, istTime } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
-export const revalidate = 300; // 5 dakikada bir yeniden oluştur (ISR) — canlı skor/kanal bilgisi tazeliği için
+export const revalidate = 60;
 
 // Ana sayfada canonical YOKTU (diğer tüm sayfalarda vardı). Bu, sitenin
 // birden fazla adresten (www'lu/www'suz, ?utm_source=... eklenmiş linkler,

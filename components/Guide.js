@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { broadcastServices, channelDisplay, matchStatus } from '../lib/data';
 import { istTime, matchSlug, slugify } from '../lib/format';
@@ -93,6 +94,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
 
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
 export default function Guide({ rows }) {
+  const router = useRouter();
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
   const [activeFilter, setActiveFilter] = useState('all');
   const [favoriteIds, setFavoriteIds] = useState(() => new Set());
@@ -104,6 +106,17 @@ export default function Guide({ rows }) {
     window.addEventListener('tvsporrehberi:favorites', sync);
     return () => window.removeEventListener('tvsporrehberi:favorites', sync);
   }, []);
+
+  // Ana sayfa ve gün programı açık bırakıldığında canlı satırlar da taze
+  // kalsın. Yalnızca canlı maç varken ve sekme görünürken yeniliyoruz;
+  // /canli sayfasının 25 sn'lik özel poll mekanizmasına dokunmuyoruz.
+  useEffect(() => {
+    if (!rows?.some((row) => matchStatus(row) === 'live')) return undefined;
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'visible') router.refresh();
+    }, 60000);
+    return () => clearInterval(timer);
+  }, [rows, router]);
 
   useEffect(() => {
     const savedFilter = window.localStorage.getItem(FILTER_STORAGE_KEY);

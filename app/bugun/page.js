@@ -5,7 +5,7 @@ import { getFixturesInWindow } from '../../lib/data';
 import { dateKeyOffset, istDateLong, istKeyToUtcRange } from '../../lib/format';
 import { SITE_URL } from '../../lib/links';
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 export async function generateMetadata() {
   const dateLabel = istDateLong(new Date().toISOString());

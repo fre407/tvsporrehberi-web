@@ -26,7 +26,7 @@ import HeadToHead from '../../../components/HeadToHead';
 import MatchDetailActions from '../../../components/MatchDetailActions';
 import DailyShareCard from '../../../components/DailyShareCard';
 
-export const revalidate = 120;
+export const revalidate = 30;
 
 const DATE_TAIL_RE = /\d{4}-\d{2}-\d{2}$/;
 
