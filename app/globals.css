@@ -468,11 +468,55 @@ section {
 .league-row a:hover {
   color: var(--text);
 }
+.guide-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--subtext-dim);
+  font-size: 12px;
+}
+.guide-filter,
+.favorite-button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--subtext);
+}
+.guide-filter {
+  padding: 7px 10px;
+  font: inherit;
+  font-weight: 700;
+}
+.guide-filter.active,
+.favorite-button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.favorite-button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
+  font-size: 15px;
+}
+.favorite-button.compact {
+  margin-left: auto;
+}
+.favorite-button:hover,
+.guide-filter:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.favorite-button.active:hover,
+.guide-filter.active:hover { color: var(--accent-ink); }
 .league-toggle {
   display: grid;
   width: 30px;
   height: 30px;
-  margin-left: auto;
+  margin-left: 2px;
   place-items: center;
   background: transparent;
   border: 1px solid transparent;

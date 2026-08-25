@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { channelDisplay, matchStatus } from '../lib/data';
 import { istTime, matchSlug } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
+import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
 
 function MatchRow({ row }) {
   const status = matchStatus(row);
@@ -54,13 +55,25 @@ function MatchRow({ row }) {
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
 export default function Guide({ rows }) {
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState(() => new Set());
+
+  useEffect(() => {
+    const sync = () => setFavoriteIds(getFavoriteIds());
+    sync();
+    window.addEventListener('tvsporrehberi:favorites', sync);
+    return () => window.removeEventListener('tvsporrehberi:favorites', sync);
+  }, []);
 
   if (!rows || rows.length === 0) {
     return <div className="guide empty-note">Bu aralıkta listelenecek maç bulunamadı.</div>;
   }
 
+  const visibleRows = favoritesOnly
+    ? rows.filter((row) => favoriteIds.has(`league:${row.competition_key}`))
+    : rows;
   const byCompetition = new Map();
-  for (const row of rows) {
+  for (const row of visibleRows) {
     const list = byCompetition.get(row.competition_key);
     if (list) list.push(row);
     else byCompetition.set(row.competition_key, [row]);
@@ -80,7 +93,19 @@ export default function Guide({ rows }) {
   }
 
   return (
-    <div className="guide">
+    <>
+      <div className="guide-filter-bar">
+        <button
+          type="button"
+          className={`guide-filter${favoritesOnly ? ' active' : ''}`}
+          onClick={() => setFavoritesOnly((current) => !current)}
+          aria-pressed={favoritesOnly}
+        >
+          ★ Takip ettiklerim
+        </button>
+        <span>{favoritesOnly ? 'Takip ettiğin liglerin maçları gösteriliyor.' : 'Lig yıldızına dokunarak maçlarını takip et.'}</span>
+      </div>
+      {groups.length === 0 ? <div className="guide empty-note">Takip ettiğin lig için bu aralıkta maç bulunamadı.</div> : <div className="guide">
       {groups.map(([key, matches]) => {
         const isCollapsed = collapsedLeagues.has(key);
         const label = competitionLabel(key);
@@ -89,6 +114,7 @@ export default function Guide({ rows }) {
           <div className="league-row">
             <span>{competitionFlag(key)}</span>
             <Link href={`/lig/${competitionSlug(key)}`}>{label}</Link>
+            <FavoriteButton favoriteId={`league:${key}`} label={label} compact />
             <button
               type="button"
               className={`league-toggle${isCollapsed ? ' is-collapsed' : ''}`}
@@ -107,6 +133,7 @@ export default function Guide({ rows }) {
         </div>
         );
       })}
-    </div>
+      </div>}
+    </>
   );
 }
