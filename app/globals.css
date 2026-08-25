@@ -415,6 +415,28 @@ section {
   border-color: var(--accent);
   color: var(--accent-ink);
 }
+.day-tab-date {
+  display: flex;
+  min-width: 116px;
+  min-height: 58px;
+  padding: 7px 12px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+.day-tab-date-main {
+  font-size: 12px;
+  font-weight: 700;
+}
+.day-tab-date-weekday {
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.72;
+}
 
 /* guide table */
 .guide {
