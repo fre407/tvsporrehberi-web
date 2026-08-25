@@ -600,7 +600,11 @@ section {
   gap: 14px;
   padding: 14px 18px;
   border-top: 1px solid var(--border);
+  cursor: pointer;
 }
+.match-row-shell { border-top: 1px solid var(--border); }
+.match-row-shell .match-row { border-top: none; }
+.match-row-shell.is-expanded { background: linear-gradient(115deg, rgba(255,232,18,.08), rgba(18,21,16,.92)); }
 .mr-match-link {
   display: grid;
   grid-template-columns: 60px minmax(0, 1fr);
@@ -1380,6 +1384,24 @@ table.standings-table {
 }
 .mr-channel-wrap .mr-chan { flex: 1; min-width: 0; }
 .mr-channel-wrap .favorite-button { flex: none; }
+.match-expanded {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 28px;
+  padding: 26px 34px 20px;
+  border-top: 1px solid rgba(255,232,18,.18);
+  background:
+    radial-gradient(ellipse at center, rgba(255,232,18,.11), transparent 60%),
+    linear-gradient(180deg, rgba(12,15,11,.35), rgba(6,7,6,.25));
+}
+.match-expanded-team { display:flex; align-items:center; gap:14px; font-size:18px; }
+.match-expanded-team.away { justify-content:flex-end; text-align:right; }
+.match-expanded-team img { width:58px; height:58px; object-fit:contain; }
+.match-expanded-center { display:grid; gap:5px; text-align:center; }
+.match-expanded-center span { color:var(--accent); font-family:var(--font-display); font-size:34px; font-weight:800; }
+.match-expanded-center small { color:var(--subtext); font-size:11px; font-weight:700; text-transform:uppercase; }
+.match-expanded-link { grid-column:1 / -1; justify-self:center; margin-top:2px; padding:9px 14px; border:1px solid rgba(255,232,18,.55); border-radius:8px; color:var(--accent); font-size:12px; font-weight:800; }
 .mr-chan small {
   color: var(--subtext-dim);
   font-size: 9px;
@@ -1428,6 +1450,50 @@ table.standings-table {
 .home-hero-note strong {
   color: var(--text);
   font-size: 17px;
+}
+
+/* Yerel tasarım önizlemesi — Gece Maçı: görsel dosyası olmadan stadyum
+   ışıkları ve saha ufku hissi veren özgün CSS atmosferi. */
+.night-match-preview {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 58px 0 48px;
+  background:
+    radial-gradient(ellipse 38% 80% at 9% 6%, rgba(255, 232, 18, .20), transparent 62%),
+    radial-gradient(ellipse 38% 80% at 91% 6%, rgba(255, 232, 18, .20), transparent 62%),
+    linear-gradient(180deg, #090a08 0%, #10130d 66%, #11170e 100%);
+}
+.night-match-preview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .7;
+  background:
+    linear-gradient(109deg, transparent 0 18%, rgba(255,232,18,.055) 18.2% 19%, transparent 19.3% 100%),
+    linear-gradient(71deg, transparent 0 81%, rgba(255,232,18,.055) 81.2% 82%, transparent 82.3% 100%),
+    repeating-linear-gradient(0deg, transparent 0 45px, rgba(255,255,255,.018) 46px 47px);
+  mask-image: linear-gradient(to bottom, black, transparent 92%);
+}
+.night-match-preview::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -8%;
+  bottom: -115px;
+  width: 62%;
+  height: 205px;
+  border: 1px solid rgba(255,232,18,.14);
+  border-radius: 50%;
+  box-shadow: 0 -28px 70px rgba(125,155,35,.08), inset 0 18px 44px rgba(255,232,18,.04);
+  transform: perspective(440px) rotateX(56deg);
+}
+.night-match-preview .wrap { position: relative; }
+.night-match-preview .home-hero-note {
+  backdrop-filter: blur(10px);
+  background: linear-gradient(145deg, rgba(24,27,18,.86), rgba(13,14,11,.80));
+  box-shadow: 0 24px 60px rgba(0,0,0,.38), inset 0 1px rgba(255,255,255,.05);
 }
 .home-guide-section {
   padding-top: 24px;
@@ -1616,6 +1682,17 @@ table.standings-table {
   .mr-match-link { grid-template-columns: 46px minmax(0, 1fr); gap: 10px; }
   .mr-channel-wrap { gap: 4px; }
   .mr-channel-wrap .favorite-button { width: 24px; height: 24px; }
+  .match-expanded {
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    padding: 20px 14px 16px;
+  }
+  .match-expanded-team { flex-direction: column; gap: 7px; font-size: 12px; text-align: center; }
+  .match-expanded-team.away { justify-content: flex-start; text-align: center; }
+  .match-expanded-team img { width: 40px; height: 40px; }
+  .match-expanded-center span { font-size: 25px; }
+  .match-expanded-center small { font-size: 9px; }
+  .match-expanded-link { margin-top: 4px; }
   .detail-teams {
     grid-template-columns: 1fr;
     gap: 14px;

@@ -7,15 +7,16 @@ import { istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
 
-function MatchRow({ row }) {
+function MatchRow({ row, isExpanded, onToggle }) {
   const status = matchStatus(row);
   const chan = channelDisplay(row);
   const isLive = status === 'live';
   const isPending = chan === 'Türkiye yayın bilgisi henüz bulunamadı';
 
   return (
-    <div className="match-row">
-      <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-match-link">
+    <div className={`match-row-shell${isExpanded ? ' is-expanded' : ''}`} onClick={onToggle}>
+      <div className="match-row">
+      <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-match-link" onClick={(event) => event.preventDefault()}>
         <div className={`mr-time${isLive ? ' live' : ''}`}>
           {isLive ? (
             <>
@@ -56,6 +57,24 @@ function MatchRow({ row }) {
         </div>
         {!isPending ? <FavoriteButton favoriteId={`channel:${slugify(chan)}`} label={chan} compact /> : null}
       </div>
+      </div>
+      {isExpanded ? (
+        <div className="match-expanded">
+          <div className="match-expanded-team">
+            {row.home_logo ? <img src={row.home_logo} alt="" /> : null}
+            <strong>{row.home_team}</strong>
+          </div>
+          <div className="match-expanded-center">
+            <span>{isLive ? (row.elapsed != null ? `${row.elapsed}' · CANLI` : 'CANLI') : istTime(row.kickoff_at)}</span>
+            <small>{competitionLabel(row.competition_key)}</small>
+          </div>
+          <div className="match-expanded-team away">
+            {row.away_logo ? <img src={row.away_logo} alt="" /> : null}
+            <strong>{row.away_team}</strong>
+          </div>
+          <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="match-expanded-link" onClick={(event) => event.stopPropagation()}>Maç detayına git →</Link>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -65,6 +84,7 @@ export default function Guide({ rows }) {
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
   const [activeFilter, setActiveFilter] = useState('all');
   const [favoriteIds, setFavoriteIds] = useState(() => new Set());
+  const [expandedMatchId, setExpandedMatchId] = useState(null);
 
   useEffect(() => {
     const sync = () => setFavoriteIds(getFavoriteIds());
@@ -136,7 +156,7 @@ export default function Guide({ rows }) {
             </button>
           </div>
           {!isCollapsed && matches.map((row) => (
-              <MatchRow key={row.id} row={row} />
+              <MatchRow key={row.id} row={row} isExpanded={expandedMatchId === row.id} onToggle={() => setExpandedMatchId((current) => current === row.id ? null : row.id)} />
             ))}
         </div>
         );

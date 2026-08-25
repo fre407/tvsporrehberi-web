@@ -39,7 +39,7 @@ export default function FavoriteButton({ favoriteId, label, compact = false }) {
     <button
       type="button"
       className={`favorite-button${active ? ' active' : ''}${compact ? ' compact' : ''}`}
-      onClick={toggle}
+      onClick={(event) => { event.stopPropagation(); toggle(); }}
       aria-pressed={active}
       aria-label={`${label} ${active ? 'takipten çıkar' : 'takibe al'}`}
       title={active ? 'Takipten çıkar' : 'Takibe al'}

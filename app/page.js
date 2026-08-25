@@ -69,7 +69,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <div className="hero home-hero">
+      <div className="hero home-hero night-match-preview">
         <div className="wrap">
           <div className="home-hero-grid">
             <div>
