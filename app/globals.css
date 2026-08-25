@@ -46,7 +46,7 @@ body {
 }
 body {
   background: var(--bg);
-  color: var(--accent);
+  color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   transition: background-color .2s ease, color .2s ease;
@@ -1510,7 +1510,7 @@ table.standings-table {
   letter-spacing: 0.09em;
 }
 .home-hero-note strong {
-  color: var(--text);
+  color: var(--accent);
   font-size: 17px;
 }
 
