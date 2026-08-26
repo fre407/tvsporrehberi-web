@@ -86,6 +86,14 @@ function featuredPreview(rows, limit = 10) {
     .slice(0, limit);
 }
 
+function FeatureIcon({ type }) {
+  const common = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, 'aria-hidden': true };
+  if (type === 'live') return <svg {...common}><path d="M3 12h4l2.1 5.5L14 5l2.4 7H21" /><path d="M4 5.5h3M17 18.5h3" opacity=".55" /></svg>;
+  if (type === 'lineup') return <svg {...common}><path d="M7 4.5 4.5 7l2.1 3.1V20h10.8v-9.9L19.5 7 17 4.5l-2.7 2H9.7L7 4.5Z" /><path d="M9.5 10h5M12 10v6" /></svg>;
+  if (type === 'table') return <svg {...common}><path d="M4 4.5h16v15H4z" /><path d="M4 9.5h16M9.5 4.5v15M14.5 4.5v15" /></svg>;
+  return <svg {...common}><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" /><path d="M10 21h4" /></svg>;
+}
+
 export default async function HomePage() {
   const { startIso, endIso } = windowIso(0, 1);
   const [rows, standings, leagueStats, liveRows] = await Promise.all([
@@ -195,22 +203,22 @@ export default async function HomePage() {
           </div>
           <div className="feature-grid">
             <div className="feature">
-              <div className="fi">⚡</div>
+              <div className="fi"><FeatureIcon type="live" /></div>
               <h3>Canlı Skor</h3>
               <p>Dakika dakika skor ve maç durumu, sayfa yenilemeden.</p>
             </div>
             <div className="feature">
-              <div className="fi">👕</div>
+              <div className="fi"><FeatureIcon type="lineup" /></div>
               <h3>İlk 11&apos;ler</h3>
               <p>Resmi kadrolar açıklanır açıklanmaz burada.</p>
             </div>
             <div className="feature">
-              <div className="fi">📊</div>
+              <div className="fi"><FeatureIcon type="table" /></div>
               <h3>Puan Durumu</h3>
               <p>Süper Lig ve 5 büyük Avrupa liginde güncel tablo.</p>
             </div>
             <div className="feature">
-              <div className="fi">🔔</div>
+              <div className="fi"><FeatureIcon type="notification" /></div>
               <h3>Maç Bildirimleri</h3>
               <p>Favori takımının maçını uygulamadan anında öğren.</p>
             </div>
