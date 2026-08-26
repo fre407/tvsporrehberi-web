@@ -329,6 +329,20 @@ header.site {
 .index-card:hover {
   border-color: var(--accent);
 }
+.channel-index-card {
+  gap: 8px;
+  padding: 8px 8px 8px 14px;
+}
+.channel-index-link {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+  min-height: 30px;
+}
+.channel-index-card .favorite-button {
+  flex: none;
+}
 .index-card-flag {
   font-size: 18px;
   flex: none;
@@ -865,6 +879,19 @@ html[data-theme='light'] .match-row-shell.is-expanded {
 }
 .detail-team a:hover {
   color: var(--accent);
+}
+.detail-team-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+.detail-team-name .favorite-button {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  font-size: 12px;
 }
 .detail-vs {
   text-align: center;

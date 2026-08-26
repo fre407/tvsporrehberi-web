@@ -2,6 +2,8 @@ import Link from 'next/link';
 import AppCta from '../../components/AppCta';
 import { getDistinctChannels, windowIso } from '../../lib/data';
 import { SITE_URL } from '../../lib/links';
+import { slugify } from '../../lib/format';
+import FavoriteButton from '../../components/FavoriteButton';
 
 export const revalidate = 1800;
 
@@ -39,9 +41,12 @@ export default async function ChannelsIndexPage() {
           ) : (
             <div className="index-grid">
               {channels.map((c) => (
-                <Link key={c.slug} href={`/kanal/${c.slug}`} className="index-card">
-                  <span className="index-card-name">{c.name}</span>
-                </Link>
+                <div key={c.slug} className="index-card channel-index-card">
+                  <Link href={`/kanal/${c.slug}`} className="channel-index-link">
+                    <span className="index-card-name">{c.name}</span>
+                  </Link>
+                  <FavoriteButton favoriteId={`channel:${slugify(c.name)}`} label={c.name} compact />
+                </div>
               ))}
             </div>
           )}

@@ -25,6 +25,7 @@ import MatchStats from '../../../components/MatchStats';
 import HeadToHead from '../../../components/HeadToHead';
 import MatchDetailActions from '../../../components/MatchDetailActions';
 import DailyShareCard from '../../../components/DailyShareCard';
+import FavoriteButton from '../../../components/FavoriteButton';
 
 export const revalidate = 30;
 
@@ -199,7 +200,10 @@ export default async function MatchDetailPage({ params }) {
                 {row.home_logo ? (
                   <Image src={row.home_logo} alt={row.home_team} width={64} height={64} />
                 ) : <span className="detail-crest-fallback">⚽</span>}
-                <Link href={`/takim/${slugify(row.home_team)}`}>{row.home_team}</Link>
+                <div className="detail-team-name">
+                  <Link href={`/takim/${slugify(row.home_team)}`}>{row.home_team}</Link>
+                  <FavoriteButton favoriteId={`team:${slugify(row.home_team)}`} label={row.home_team} />
+                </div>
               </div>
               <div className="detail-vs">
                 {showScore ? (
@@ -220,7 +224,10 @@ export default async function MatchDetailPage({ params }) {
                 {row.away_logo ? (
                   <Image src={row.away_logo} alt={row.away_team} width={64} height={64} />
                 ) : <span className="detail-crest-fallback">⚽</span>}
-                <Link href={`/takim/${slugify(row.away_team)}`}>{row.away_team}</Link>
+                <div className="detail-team-name">
+                  <Link href={`/takim/${slugify(row.away_team)}`}>{row.away_team}</Link>
+                  <FavoriteButton favoriteId={`team:${slugify(row.away_team)}`} label={row.away_team} />
+                </div>
               </div>
             </div>
 
@@ -241,14 +248,6 @@ export default async function MatchDetailPage({ params }) {
               ) : null}
             </div>
             <MatchDetailActions
-              matchId={row.id}
-              matchName={`${row.home_team} - ${row.away_team} maçı`}
-              homeId={slugify(row.home_team)}
-              homeName={row.home_team}
-              awayId={slugify(row.away_team)}
-              awayName={row.away_team}
-              channelId={row.channel || row.platform ? slugify(row.channel || row.platform) : null}
-              channelName={row.channel || row.platform || ''}
               shareUrl={matchUrl}
               shareText={`${row.home_team} - ${row.away_team} | ${istTime(row.kickoff_at)} (TSİ) | ${chan}`}
             />

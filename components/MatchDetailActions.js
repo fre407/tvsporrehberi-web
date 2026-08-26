@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import FavoriteButton from './FavoriteButton';
 
-export default function MatchDetailActions({ matchId, matchName, homeId, homeName, awayId, awayName, channelId, channelName, shareUrl, shareText }) {
+export default function MatchDetailActions({ shareUrl, shareText }) {
   const [shared, setShared] = useState(false);
 
   async function share() {
@@ -19,10 +18,6 @@ export default function MatchDetailActions({ matchId, matchName, homeId, homeNam
 
   return (
     <div className="match-action-row">
-      <FavoriteButton favoriteId={`match:${matchId}`} label={matchName} />
-      <FavoriteButton favoriteId={`team:${homeId}`} label={homeName} />
-      <FavoriteButton favoriteId={`team:${awayId}`} label={awayName} />
-      {channelId ? <FavoriteButton favoriteId={`channel:${channelId}`} label={channelName} /> : null}
       <button type="button" className="share-button" onClick={share}>
         {shared ? 'Bağlantı kopyalandı' : '↗ Paylaş'}
       </button>
