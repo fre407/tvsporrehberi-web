@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { broadcastServices, channelDisplay, matchStatus } from '../lib/data';
 import { istTime, matchSlug, slugify } from '../lib/format';
-import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
+import { competitionFlag, competitionLabel, competitionPriority, competitionShort, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
 import { useLanguage } from './LanguageProvider';
 
