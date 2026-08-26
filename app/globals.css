@@ -1863,7 +1863,6 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
   }
 
   .day-tab:not(.active):hover {
-    transform: translateY(-1px);
     border-color: var(--accent);
     color: var(--text);
     background: var(--surface-2);
