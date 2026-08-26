@@ -241,6 +241,8 @@ export default async function MatchDetailPage({ params }) {
               ) : null}
             </div>
             <MatchDetailActions
+              matchId={row.id}
+              matchName={`${row.home_team} - ${row.away_team} maçı`}
               homeId={slugify(row.home_team)}
               homeName={row.home_team}
               awayId={slugify(row.away_team)}

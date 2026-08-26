@@ -69,6 +69,11 @@ function MatchRow({ row, isExpanded, onToggle }) {
             </>
           )}
         </div>
+        <FavoriteButton
+          favoriteId={`match:${row.id}`}
+          label={`${row.home_team} - ${row.away_team} maçı`}
+          compact
+        />
       </div>
       </div>
       {isExpanded ? (
@@ -133,7 +138,7 @@ export default function Guide({ rows }) {
   }
 
   const visibleRows = rows.filter((row) => {
-    if (activeFilter === 'favorites') return favoriteIds.has(`league:${row.competition_key}`) || favoriteIds.has(`team:${slugify(row.home_team)}`) || favoriteIds.has(`team:${slugify(row.away_team)}`) || broadcastServices(row).some((service) => favoriteIds.has(`channel:${slugify(service)}`));
+    if (activeFilter === 'favorites') return favoriteIds.has(`match:${row.id}`) || favoriteIds.has(`league:${row.competition_key}`) || favoriteIds.has(`team:${slugify(row.home_team)}`) || favoriteIds.has(`team:${slugify(row.away_team)}`) || broadcastServices(row).some((service) => favoriteIds.has(`channel:${slugify(service)}`));
     if (activeFilter === 'live') return matchStatus(row) === 'live';
     if (activeFilter === 'broadcast') return Boolean(row.channel || row.channel2 || row.platform);
     return activeFilter === 'all' || row.competition_key === activeFilter;
