@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { channelDisplay } from '../lib/data';
 import { matchSlug } from '../lib/format';

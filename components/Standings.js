@@ -1,3 +1,5 @@
+'use client';
+
 import { useLanguage } from './LanguageProvider';
 // Puan Durumu tablosu — league_standings.standings jsonb dizisini render eder
 // (rank, team{name,logo}, points, goalsDiff, all{played,win,draw,lose}).

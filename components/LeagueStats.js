@@ -1,3 +1,5 @@
+'use client';
+
 import { useLanguage } from './LanguageProvider';
 // Gol Kralı / Asist Kralı — league_stats.top_scorers/top_assists jsonb
 // dizileri ({playerId,name,photo,teamName,goals|assists}[]).
