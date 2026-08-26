@@ -12,7 +12,7 @@ function StatList({ title, entries, statKey, statLabel, limit }) {
         <div className="stat-list-row" key={p.playerId ?? `${p.name}-${i}`}>
           <span className="stat-list-rank">{i + 1}</span>
           {p.photo ? (
-            <img className="stat-list-photo" src={p.photo} alt={p.name ?? ''} loading="lazy" />
+            <img className="stat-list-photo" src={p.photo} alt={p.name ?? ''} width="26" height="26" loading="lazy" />
           ) : (
             <span className="stat-list-photo ph" />
           )}

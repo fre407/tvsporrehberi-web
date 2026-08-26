@@ -36,7 +36,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
         <div className="mr-teams">
           <div className="mr-team">
             {row.home_logo ? (
-              <img className="crest" src={row.home_logo} alt={row.home_team} loading="lazy" />
+              <img className="crest" src={row.home_logo} alt={row.home_team} width="18" height="18" loading="lazy" />
             ) : (
               <span className="crest crest-fallback">⚽</span>
             )}
@@ -45,7 +45,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
           </div>
           <div className="mr-team">
             {row.away_logo ? (
-              <img className="crest" src={row.away_logo} alt={row.away_team} loading="lazy" />
+              <img className="crest" src={row.away_logo} alt={row.away_team} width="18" height="18" loading="lazy" />
             ) : (
               <span className="crest crest-fallback">⚽</span>
             )}
@@ -71,7 +71,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
       {isExpanded ? (
         <div className="match-expanded">
           <div className="match-expanded-team">
-            {row.home_logo ? <img src={row.home_logo} alt="" /> : null}
+            {row.home_logo ? <img src={row.home_logo} alt="" width="58" height="58" loading="lazy" /> : null}
             <strong>{row.home_team}</strong>
           </div>
           <div className="match-expanded-center">
@@ -79,7 +79,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
             <small>{competitionLabel(row.competition_key, locale)}</small>
           </div>
           <div className="match-expanded-team away">
-            {row.away_logo ? <img src={row.away_logo} alt="" /> : null}
+            {row.away_logo ? <img src={row.away_logo} alt="" width="58" height="58" loading="lazy" /> : null}
             <strong>{row.away_team}</strong>
           </div>
           <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="match-expanded-link" onClick={(event) => event.stopPropagation()}>{t('common.details')}</Link>

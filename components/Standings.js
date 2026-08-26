@@ -29,7 +29,7 @@ export default function Standings({ data, limit }) {
               <td className="n pos">{row.rank ?? '-'}</td>
               <td className="team-cell">
                 {row.team?.logo ? (
-                  <img src={row.team.logo} alt={row.team?.name ?? ''} loading="lazy" />
+                  <img src={row.team.logo} alt={row.team?.name ?? ''} width="20" height="20" loading="lazy" />
                 ) : (
                   <span className="crest-ph" />
                 )}

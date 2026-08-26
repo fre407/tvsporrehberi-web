@@ -10,8 +10,11 @@ import { getLocale } from '../../../lib/locale';
 export const revalidate = 60;
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const MIN_OFFSET = -1;
-const MAX_OFFSET = 13;
+// Gün sayfaları bir sezon boyunca erişilebilir kalır. Gün şeridi sade
+// kalmak için kısa olsa da, Google'ın ve eski paylaşımların URL'leri 404'e
+// düşmez. Gelecek 30 gün de planlanmış fikstürler için açıktır.
+const MIN_OFFSET = -365;
+const MAX_OFFSET = 30;
 
 function resolveOffset(dateParam) {
   if (!DATE_RE.test(dateParam)) return null;

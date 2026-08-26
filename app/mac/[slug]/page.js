@@ -7,6 +7,7 @@ import {
   getFixturesForCompetition,
   getHeadToHead,
   getStandings,
+  broadcastServices,
   channelDisplay,
   matchStatus,
   teamSlug,
@@ -131,29 +132,37 @@ export default async function MatchDetailPage({ params }) {
   }
   const homeStanding = findStanding(row.home_team);
   const awayStanding = findStanding(row.away_team);
+  const matchUrl = `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`;
+  const broadcastServiceList = broadcastServices(row);
+  const eventStatus = isFinished
+    ? 'https://schema.org/EventCompleted'
+    : isLive
+      ? 'https://schema.org/EventInProgress'
+      : 'https://schema.org/EventScheduled';
+  const broadcastEvents = broadcastServiceList.map((service) => ({
+    '@type': 'BroadcastEvent',
+    broadcastOfEvent: { '@type': 'SportsEvent', name: `${row.home_team} - ${row.away_team}`, url: matchUrl },
+    videoFormat: 'TV',
+    broadcastDisplayName: service,
+  }));
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SportsEvent',
     name: `${row.home_team} - ${row.away_team}`,
+    url: matchUrl,
     startDate: row.kickoff_at,
+    dateModified: row.updated_at ?? row.kickoff_at,
+    eventStatus,
     sport: 'Football',
     homeTeam: { '@type': 'SportsTeam', name: row.home_team },
     awayTeam: { '@type': 'SportsTeam', name: row.away_team },
+    image: [row.home_logo, row.away_logo].filter(Boolean),
     location: { '@type': 'Place', name: competitionLabel(row.competition_key) },
-    ...(row.channel
-      ? {
-          publication: {
-            '@type': 'BroadcastEvent',
-            broadcastOfEvent: { '@type': 'SportsEvent', name: `${row.home_team} - ${row.away_team}` },
-            videoFormat: 'TV',
-            broadcastDisplayName: row.channel,
-          },
-        }
-      : {}),
+    organizer: { '@type': 'SportsOrganization', name: competitionLabel(row.competition_key) },
+    ...(broadcastEvents.length ? { publication: broadcastEvents } : {}),
   };
 
-  const matchUrl = `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`;
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

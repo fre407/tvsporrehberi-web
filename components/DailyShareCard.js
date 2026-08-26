@@ -91,7 +91,7 @@ export default function DailyShareCard({ match }) {
 
   const cardPreview = <div className="daily-share-card">
     <div className="share-card-top"><span>{t('share.title')}</span><b>TV SPOR REHBERİ</b></div>
-    <div className="share-card-match"><div>{match.homeLogo ? <img src={match.homeLogo} alt="" /> : <b>{initials(match.homeTeam)}</b>}<strong>{match.homeTeam}</strong></div><i>VS</i><div>{match.awayLogo ? <img src={match.awayLogo} alt="" /> : <b>{initials(match.awayTeam)}</b>}<strong>{match.awayTeam}</strong></div></div>
+    <div className="share-card-match"><div>{match.homeLogo ? <img src={match.homeLogo} alt="" width="38" height="38" /> : <b>{initials(match.homeTeam)}</b>}<strong>{match.homeTeam}</strong></div><i>VS</i><div>{match.awayLogo ? <img src={match.awayLogo} alt="" width="38" height="38" /> : <b>{initials(match.awayTeam)}</b>}<strong>{match.awayTeam}</strong></div></div>
     <div className="share-card-meta"><b>{match.time} <small>TSİ</small></b><span>{match.channel}</span></div>
     <div className="share-card-formats"><button type="button" className={format === 'instagram-story' ? 'active' : ''} onClick={() => setFormat('instagram-story')}>{t('share.storyFormat')}</button><button type="button" className={format === 'wide' ? 'active' : ''} onClick={() => setFormat('wide')}>{t('share.wide')}</button></div>
     <button type="button" onClick={shareCard}>↗ {format === 'instagram-story' ? t('share.story') : (message || t('share.image'))}</button>

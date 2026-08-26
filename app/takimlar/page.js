@@ -43,7 +43,7 @@ export default async function TeamsIndexPage() {
             <div className="index-grid">
               {teams.map((t) => (
                 <Link key={t.slug} href={`/takim/${t.slug}`} className="index-card">
-                  {t.logo ? <img className="index-card-crest" src={t.logo} alt="" /> : <span className="index-card-crest fallback">⚽</span>}
+                  {t.logo ? <img className="index-card-crest" src={t.logo} alt="" width="26" height="26" loading="lazy" /> : <span className="index-card-crest fallback">⚽</span>}
                   <span className="index-card-name">{t.name}</span>
                 </Link>
               ))}
