@@ -31,12 +31,14 @@ export default function StickyBanner() {
   return (
     <div className="sticky-banner">
       <div className="wrap sticky-banner-inner">
-        <span className="sticky-banner-text">
-          📲 <strong>TV Spor Rehberi</strong> uygulamasını indir — maç bildirimlerini kaçırma.
-        </span>
+        <span className="sticky-banner-icon" aria-hidden="true">TV</span>
+        <div className="sticky-banner-copy">
+          <span className="sticky-banner-kicker">TV SPOR REHBERİ UYGULAMASI</span>
+          <span className="sticky-banner-text">Maç saati, yayıncı kanal ve canlı skor bildirimlerini kaçırma.</span>
+        </div>
         <div className="sticky-banner-actions">
           <a href={playStoreUrl('sticky_banner')} target="_blank" rel="noopener noreferrer" className="sticky-banner-cta">
-            İndir
+            <span>Google Play</span><strong>Ücretsiz indir</strong>
           </a>
           <button type="button" onClick={dismiss} aria-label="Banner'ı kapat" className="sticky-banner-close">
             ✕
