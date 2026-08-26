@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 const STORAGE_KEY = 'tvsporrehberi:theme';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
-    const next = saved === 'light' ? 'light' : 'dark';
+    const next = saved === 'dark' ? 'dark' : 'light';
     setTheme(next);
     document.documentElement.dataset.theme = next;
   }, []);

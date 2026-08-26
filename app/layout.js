@@ -86,7 +86,7 @@ export default function RootLayout({ children }) {
     <html lang="tr" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <head>
         <Script id="theme-init" strategy="beforeInteractive">
-          {`try { const theme = localStorage.getItem('tvsporrehberi:theme'); if (theme === 'light') document.documentElement.dataset.theme = 'light'; } catch {}`}
+          {`try { const theme = localStorage.getItem('tvsporrehberi:theme'); document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }`}
         </Script>
         <Script
           async
