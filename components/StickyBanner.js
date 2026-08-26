@@ -31,7 +31,7 @@ export default function StickyBanner() {
   return (
     <div className="sticky-banner">
       <div className="wrap sticky-banner-inner">
-        <span className="sticky-banner-icon" aria-hidden="true">TV</span>
+        <img className="sticky-banner-logo" src="/icon.png" alt="TV Spor Rehberi" width="32" height="32" />
         <div className="sticky-banner-copy">
           <span className="sticky-banner-kicker">TV SPOR REHBERİ UYGULAMASI</span>
           <span className="sticky-banner-text">Maç saati, yayıncı kanal ve canlı skor bildirimlerini kaçırma.</span>

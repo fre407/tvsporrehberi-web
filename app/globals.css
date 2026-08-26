@@ -83,18 +83,11 @@ img {
   min-height: 48px;
   padding: 7px 20px;
 }
-.sticky-banner-icon {
-  display: grid;
-  width: 27px;
-  height: 27px;
-  place-items: center;
-  border: 1px solid rgba(23, 20, 10, .26);
-  border-radius: 7px;
-  background: rgba(255, 255, 255, .32);
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: .02em;
+.sticky-banner-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex: none;
 }
 .sticky-banner-copy {
   display: flex;
@@ -1915,7 +1908,7 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
 
 @media (max-width: 720px) {
   .sticky-banner-inner { gap: 8px; min-height: 44px; padding: 6px 14px; }
-  .sticky-banner-icon { width: 25px; height: 25px; font-size: 12px; }
+  .sticky-banner-logo { width: 28px; height: 28px; }
   .sticky-banner-copy { display: block; }
   .sticky-banner-kicker { display: none; }
   .sticky-banner-text { display: block; font-size: 11px; }
