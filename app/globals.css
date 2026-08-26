@@ -662,6 +662,9 @@ html[data-theme='light'] .daily-share-card .share-card-meta span { border-left-c
 .match-row-shell { border-top: 1px solid var(--border); }
 .match-row-shell .match-row { border-top: none; }
 .match-row-shell.is-expanded { background: linear-gradient(115deg, rgba(255,232,18,.08), rgba(18,21,16,.92)); }
+html[data-theme='light'] .match-row-shell.is-expanded {
+  background: linear-gradient(112deg, #fffdf3 0%, #f4eed7 54%, #ece8db 100%);
+}
 .mr-match-link {
   display: grid;
   grid-template-columns: 60px minmax(0, 1fr);
@@ -1464,6 +1467,17 @@ table.standings-table {
   background:
     radial-gradient(ellipse at center, rgba(255,232,18,.11), transparent 60%),
     linear-gradient(180deg, rgba(12,15,11,.35), rgba(6,7,6,.25));
+}
+html[data-theme='light'] .match-expanded {
+  border-top-color: rgba(181, 136, 0, .30);
+  background:
+    radial-gradient(ellipse at center, rgba(255, 222, 94, .32), transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 252, .94), rgba(242, 237, 219, .94));
+}
+html[data-theme='light'] .match-expanded-team { color: #211d10; }
+html[data-theme='light'] .match-expanded-link {
+  border-color: rgba(181, 136, 0, .62);
+  background: rgba(255, 255, 255, .60);
 }
 .match-expanded-team { display:flex; align-items:center; gap:14px; font-size:18px; }
 .match-expanded-team.away { justify-content:flex-end; text-align:right; }
