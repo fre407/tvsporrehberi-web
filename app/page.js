@@ -46,6 +46,14 @@ const FAQ = [
   },
 ];
 
+const FAQ_EN = [
+  { q: 'What is TV Spor Rehberi?', a: 'It is a free broadcast guide that brings together match times, TV channels and live scores from the Süper Lig, Champions League and Europe’s major leagues.' },
+  { q: 'How often is broadcast information updated?', a: 'Match schedules and channel information are refreshed automatically at regular intervals, so changes are reflected on the site shortly afterwards.' },
+  { q: 'Are live scores updated in real time?', a: 'The Live Scores page refreshes match scores and minutes automatically at regular intervals without requiring a page reload.' },
+  { q: 'Which leagues and tournaments are covered?', a: 'The coverage includes the Trendyol Süper Lig, Premier League, LaLiga, Serie A, Bundesliga, Ligue 1, Champions League, Europa League, Conference League and more.' },
+  { q: 'Where can I download the TV Spor Rehberi mobile app?', a: 'You can download the app free from Google Play and enable match notifications for your favourite team.' },
+];
+
 const FAQ_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -99,6 +107,12 @@ function FeatureIcon({ type }) {
 export default async function HomePage() {
   const locale = await getLocale();
   const copy = (key) => t(locale, `home.${key}`);
+  const faq = locale === 'en' ? FAQ_EN : FAQ;
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })),
+  };
   const { startIso, endIso } = windowIso(0, 1);
   const [rows, standings, leagueStats, liveRows] = await Promise.all([
     getFixturesInWindow(startIso, endIso).catch(() => []),
@@ -238,7 +252,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="faq-list">
-            {FAQ.map((item) => (
+            {faq.map((item) => (
               <details className="faq-item" key={item.q}>
                 <summary className="faq-q">{item.q}</summary>
                 <p className="faq-a">{item.a}</p>
@@ -247,7 +261,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <JsonLd data={FAQ_JSON_LD} />
+      <JsonLd data={faqJsonLd} />
 
       <AppCta campaign="homepage" />
     </>
