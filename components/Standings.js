@@ -1,6 +1,8 @@
+import { useLanguage } from './LanguageProvider';
 // Puan Durumu tablosu — league_standings.standings jsonb dizisini render eder
 // (rank, team{name,logo}, points, goalsDiff, all{played,win,draw,lose}).
 export default function Standings({ data, limit }) {
+  const { locale } = useLanguage();
   if (!data || !Array.isArray(data.standings) || data.standings.length === 0) return null;
   const rows = limit ? data.standings.slice(0, limit) : data.standings;
 
@@ -10,13 +12,13 @@ export default function Standings({ data, limit }) {
         <thead>
           <tr>
             <th className="n">#</th>
-            <th>Takım</th>
+            <th>{locale === 'en' ? 'Team' : 'Takım'}</th>
             <th className="n">O</th>
-            <th className="n">G</th>
-            <th className="n">B</th>
-            <th className="n">M</th>
+            <th className="n">{locale === 'en' ? 'W' : 'G'}</th>
+            <th className="n">{locale === 'en' ? 'D' : 'B'}</th>
+            <th className="n">{locale === 'en' ? 'L' : 'M'}</th>
             <th className="n">AV</th>
-            <th className="n pts">P</th>
+            <th className="n pts">{locale === 'en' ? 'Pts' : 'P'}</th>
           </tr>
         </thead>
         <tbody>

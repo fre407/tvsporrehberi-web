@@ -10,6 +10,8 @@ import DailyShareCard from '../components/DailyShareCard';
 import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, windowIso } from '../lib/data';
 import { istDateLong, istTime, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
+import { getLocale } from '../lib/locale';
+import { t } from '../lib/i18n';
 
 export const revalidate = 60;
 
@@ -95,6 +97,8 @@ function FeatureIcon({ type }) {
 }
 
 export default async function HomePage() {
+  const locale = await getLocale();
+  const copy = (key) => t(locale, `home.${key}`);
   const { startIso, endIso } = windowIso(0, 1);
   const [rows, standings, leagueStats, liveRows] = await Promise.all([
     getFixturesInWindow(startIso, endIso).catch(() => []),
@@ -115,20 +119,20 @@ export default async function HomePage() {
         <div className="wrap">
           <div className="home-hero-grid">
             <div>
-              <div className="eyebrow">Canlı yayın rehberi</div>
+              <div className="eyebrow">{copy('eyebrow')}</div>
               <h1>
-                Hangi maç,
+                {copy('title1')}
                 <br />
-                hangi <em>kanalda</em>, kaçta?
+                {locale === 'en' ? <>on which <em>channel</em>, at what time?</> : <>hangi <em>kanalda</em>, kaçta?</>}
               </h1>
               <p className="page-desc">
-                Günün maçlarını, yayıncı kanallarını ve canlı skorları tek yerde takip et.
+                {copy('intro')}
               </p>
             </div>
             <div className="home-hero-note">
-              <span className="home-hero-note-label">BUGÜN</span>
+              <span className="home-hero-note-label">{copy('today')}</span>
               <strong>{istDateLong(new Date().toISOString())}</strong>
-              <span>Maç programını lig lig incele, aradığın karşılaşmayı saniyeler içinde bul.</span>
+              <span>{copy('note')}</span>
             </div>
           </div>
         </div>
@@ -137,39 +141,39 @@ export default async function HomePage() {
 
       <section className="home-guide-section">
         <div className="wrap">
-          <DayTabs activeOffset={0} />
+          <DayTabs activeOffset={0} locale={locale} />
           <div className="home-content-grid">
             <div className="home-main-column">
               <div className="sec-head home-guide-heading">
                 <div>
                   <div className="sec-title">
-                    Bugünün <span>Maçları</span>
+                    {locale === 'en' ? <>Today&apos;s <span>Matches</span></> : <>Bugünün <span>Maçları</span></>}
                   </div>
-                  <div className="sec-sub">Saat, kanal ve canlı skor bilgisiyle</div>
+                  <div className="sec-sub">{copy('subtitle')}</div>
                 </div>
                 <Link className="sec-link" href="/bugun">
-                  Tüm program →
+                  {copy('programme')}
                 </Link>
               </div>
               <Guide rows={preview} preserveGroupOrder />
               <Link className="home-all-matches" href="/bugun">
-                Bugünün tüm maç programını aç →
+                {copy('allMatches')}
               </Link>
-              {preview[0] ? <DailyShareCard match={{ homeTeam: preview[0].home_team, awayTeam: preview[0].away_team, homeLogo: preview[0].home_logo, awayLogo: preview[0].away_logo, time: istTime(preview[0].kickoff_at), channel: channelDisplay(preview[0]) }} /> : null}
+              {preview[0] ? <DailyShareCard match={{ homeTeam: preview[0].home_team, awayTeam: preview[0].away_team, homeLogo: preview[0].home_logo, awayLogo: preview[0].away_logo, time: istTime(preview[0].kickoff_at), channel: channelDisplay(preview[0], locale) }} /> : null}
             </div>
 
-            <aside className="home-sidebar" aria-label="Süper Lig özeti">
+            <aside className="home-sidebar" aria-label={locale === 'en' ? 'Süper Lig overview' : 'Süper Lig özeti'}>
               <div className="sidebar-card">
                 <div className="sidebar-card-head">
                   <div>
                     <span className="sidebar-kicker">TRENDYOL SÜPER LİG</span>
-                    <h2>Puan Durumu</h2>
+                    <h2>{copy('standings')}</h2>
                   </div>
                   <span className="sidebar-flag" aria-hidden="true">🇹🇷</span>
                 </div>
-                {hasStandings ? <Standings data={standings} limit={8} /> : <div className="sidebar-empty">Puan durumu yakında güncellenecek.</div>}
+                {hasStandings ? <Standings data={standings} limit={8} /> : <div className="sidebar-empty">{copy('standingsEmpty')}</div>}
                 <Link className="sidebar-link" href="/lig/super-lig">
-                  Tüm puan durumunu gör →
+                  {copy('allStandings')}
                 </Link>
               </div>
 
@@ -177,13 +181,13 @@ export default async function HomePage() {
                 <div className="sidebar-card-head">
                   <div>
                     <span className="sidebar-kicker">TRENDYOL SÜPER LİG</span>
-                    <h2>Gol &amp; Asist</h2>
+                    <h2>{copy('goalsAssists')}</h2>
                   </div>
                   <span className="sidebar-flag" aria-hidden="true">⚽</span>
                 </div>
-                {hasLeagueStats ? <LeagueStats data={leagueStats} limit={5} /> : <div className="sidebar-empty">Liderlik verileri yakında güncellenecek.</div>}
+                {hasLeagueStats ? <LeagueStats data={leagueStats} limit={5} /> : <div className="sidebar-empty">{copy('statsEmpty')}</div>}
                 <Link className="sidebar-link" href="/lig/super-lig">
-                  Tüm istatistikleri gör →
+                  {copy('allStats')}
                 </Link>
               </div>
             </aside>
@@ -196,31 +200,31 @@ export default async function HomePage() {
           <div className="sec-head">
             <div>
               <div className="sec-title">
-                Sadece yayın rehberi <span>değil</span>
+              {locale === 'en' ? <>More than a broadcast <span>guide</span></> : <>Sadece yayın rehberi <span>değil</span></>}
               </div>
-              <div className="sec-sub">Uygulamadaki her şey web&apos;de de seninle</div>
+              <div className="sec-sub">{copy('moreSub')}</div>
             </div>
           </div>
           <div className="feature-grid">
             <div className="feature">
               <div className="fi"><FeatureIcon type="live" /></div>
-              <h3>Canlı Skor</h3>
-              <p>Dakika dakika skor ve maç durumu, sayfa yenilemeden.</p>
+              <h3>{copy('liveScore')}</h3>
+              <p>{copy('liveScoreText')}</p>
             </div>
             <div className="feature">
               <div className="fi"><FeatureIcon type="lineup" /></div>
-              <h3>İlk 11&apos;ler</h3>
-              <p>Resmi kadrolar açıklanır açıklanmaz burada.</p>
+              <h3>{copy('lineups')}</h3>
+              <p>{copy('lineupsText')}</p>
             </div>
             <div className="feature">
               <div className="fi"><FeatureIcon type="table" /></div>
-              <h3>Puan Durumu</h3>
-              <p>Süper Lig ve 5 büyük Avrupa liginde güncel tablo.</p>
+              <h3>{copy('table')}</h3>
+              <p>{copy('tableText')}</p>
             </div>
             <div className="feature">
               <div className="fi"><FeatureIcon type="notification" /></div>
-              <h3>Maç Bildirimleri</h3>
-              <p>Favori takımının maçını uygulamadan anında öğren.</p>
+              <h3>{copy('notifications')}</h3>
+              <p>{copy('notificationsText')}</p>
             </div>
           </div>
         </div>
@@ -230,7 +234,7 @@ export default async function HomePage() {
         <div className="wrap">
           <div className="sec-head">
             <div className="sec-title">
-              Sıkça Sorulan <span>Sorular</span>
+              {locale === 'en' ? <>Frequently Asked <span>Questions</span></> : <>Sıkça Sorulan <span>Sorular</span></>}
             </div>
           </div>
           <div className="faq-list">

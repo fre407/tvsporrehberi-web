@@ -8,6 +8,7 @@ import { getFixturesForTeamSlug, teamResultLetter, windowIso } from '../../../li
 import { slugify } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 import { TEAM_NAME_ALIASES } from '../../../lib/teamNames';
+import { getLocale } from '../../../lib/locale';
 
 export const revalidate = 600;
 
@@ -51,6 +52,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function TeamPage({ params }) {
+  const locale = await getLocale();
   const { slug: slugParam } = await params;
   const { matches, displayName, slug, redirectTo } = await loadTeam(slugParam);
   if (redirectTo) redirect(`/takim/${redirectTo}`);
@@ -68,7 +70,7 @@ export default async function TeamPage({ params }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+      { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Home' : 'Ana Sayfa', item: SITE_URL },
       { '@type': 'ListItem', position: 2, name: displayName, item: `${SITE_URL}/takim/${slug}` },
     ],
   };
@@ -77,13 +79,13 @@ export default async function TeamPage({ params }) {
     <>
       <JsonLd data={breadcrumbLd} />
       <div className="crumb wrap">
-        <Link href="/">Ana Sayfa</Link> › {displayName}
+        <Link href="/">{locale === 'en' ? 'Home' : 'Ana Sayfa'}</Link> › {displayName}
       </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">Takım Rehberi</div>
+          <div className="eyebrow">{locale === 'en' ? 'Team Guide' : 'Takım Rehberi'}</div>
           <h1>{displayName}</h1>
-          <p className="page-desc">{displayName} takımının yaklaşan maçları, saatleri ve yayın kanalları.</p>
+          <p className="page-desc">{locale === 'en' ? `Upcoming ${displayName} matches, kick-off times and broadcast channels.` : `${displayName} takımının yaklaşan maçları, saatleri ve yayın kanalları.`}</p>
           {form.length > 0 ? (
             <div style={{ marginTop: 14 }}>
               <FormDots results={form} />
@@ -96,7 +98,7 @@ export default async function TeamPage({ params }) {
         <div className="wrap">
           <div className="sec-head">
             <div className="sec-title">
-              Yaklaşan <span>Maçlar</span>
+              {locale === 'en' ? <>Upcoming <span>Matches</span></> : <>Yaklaşan <span>Maçlar</span></>}
             </div>
           </div>
           <Guide rows={upcoming} />
@@ -108,7 +110,7 @@ export default async function TeamPage({ params }) {
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-title">
-                Son <span>Maçlar</span>
+                {locale === 'en' ? <>Recent <span>Matches</span></> : <>Son <span>Maçlar</span></>}
               </div>
             </div>
             <Guide rows={past} />

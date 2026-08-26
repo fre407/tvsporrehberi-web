@@ -3,6 +3,7 @@ import AppCta from '../../components/AppCta';
 import { getPopularTeams, windowIso } from '../../lib/data';
 import { MAJOR_COMPETITION_KEYS } from '../../lib/competitions';
 import { SITE_URL } from '../../lib/links';
+import { getLocale } from '../../lib/locale';
 
 export const revalidate = 1800;
 
@@ -13,6 +14,7 @@ export const metadata = {
 };
 
 export default async function TeamsIndexPage() {
+  const locale = await getLocale();
   let teams = [];
   try {
     const { startIso, endIso } = windowIso(2, 21);
@@ -25,18 +27,18 @@ export default async function TeamsIndexPage() {
     <>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">Takımlar</div>
+          <div className="eyebrow">{locale === 'en' ? 'Teams' : 'Takımlar'}</div>
           <h1>
-            Popüler <em>takımlar</em>
+            {locale === 'en' ? <>Popular <em>teams</em></> : <>Popüler <em>takımlar</em></>}
           </h1>
-          <p className="page-desc">Bir takıma tıkla, yaklaşan ve son maçlarını, saatlerini ve yayın kanallarını gör.</p>
+          <p className="page-desc">{locale === 'en' ? 'Select a team to see its upcoming and recent matches, kick-off times and broadcasters.' : 'Bir takıma tıkla, yaklaşan ve son maçlarını, saatlerini ve yayın kanallarını gör.'}</p>
         </div>
       </div>
 
       <section style={{ paddingTop: 8 }}>
         <div className="wrap">
           {teams.length === 0 ? (
-            <div className="guide empty-note">Şu an listelenecek yaklaşan maç bulunamadı.</div>
+            <div className="guide empty-note">{locale === 'en' ? 'There are no upcoming matches to list right now.' : 'Şu an listelenecek yaklaşan maç bulunamadı.'}</div>
           ) : (
             <div className="index-grid">
               {teams.map((t) => (

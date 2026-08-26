@@ -14,6 +14,7 @@ import {
   MAJOR_COMPETITION_KEYS,
 } from '../../../lib/competitions';
 import { SITE_URL } from '../../../lib/links';
+import { getLocale } from '../../../lib/locale';
 
 export const revalidate = 600;
 
@@ -35,6 +36,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function LeaguePage({ params }) {
+  const locale = await getLocale();
   const { slug } = await params;
   const key = competitionKeyFromSlug(slug);
   if (!key) notFound();
@@ -58,8 +60,8 @@ export default async function LeaguePage({ params }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: competitionLabel(key), item: pageUrl },
+      { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Home' : 'Ana Sayfa', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: competitionLabel(key, locale), item: pageUrl },
     ],
   };
 
@@ -67,14 +69,14 @@ export default async function LeaguePage({ params }) {
     <>
       <JsonLd data={breadcrumbLd} />
       <div className="crumb wrap">
-        <Link href="/">Ana Sayfa</Link> › {competitionLabel(key)}
+        <Link href="/">{locale === 'en' ? 'Home' : 'Ana Sayfa'}</Link> › {competitionLabel(key, locale)}
       </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">{competitionFlag(key)} Lig Rehberi</div>
-          <h1>{competitionLabel(key)}</h1>
+          <div className="eyebrow">{competitionFlag(key)} {locale === 'en' ? 'League Guide' : 'Lig Rehberi'}</div>
+          <h1>{competitionLabel(key, locale)}</h1>
           <p className="page-desc">
-            {competitionLabel(key)}&apos;nde yaklaşan tüm maçlar, saatleri, puan durumu ve yayın kanalları.
+            {locale === 'en' ? `Upcoming ${competitionLabel(key, locale)} matches, kick-off times, standings and broadcast channels.` : `${competitionLabel(key)}'nde yaklaşan tüm maçlar, saatleri, puan durumu ve yayın kanalları.`}
           </p>
         </div>
       </div>
@@ -83,7 +85,7 @@ export default async function LeaguePage({ params }) {
         <div className="wrap">
           <div className="sec-head">
             <div className="sec-title">
-              Maç <span>Programı</span>
+              {locale === 'en' ? <>Match <span>Schedule</span></> : <>Maç <span>Programı</span></>}
             </div>
           </div>
           <Guide rows={rows} />
@@ -95,7 +97,7 @@ export default async function LeaguePage({ params }) {
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-title">
-                Puan <span>Durumu</span>
+                {locale === 'en' ? <><span>Standings</span></> : <>Puan <span>Durumu</span></>}
               </div>
             </div>
             <Standings data={standings} />
@@ -108,7 +110,7 @@ export default async function LeaguePage({ params }) {
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-title">
-                Gol &amp; Asist <span>Kralı</span>
+                {locale === 'en' ? <>Goals &amp; <span>Assists</span></> : <>Gol &amp; Asist <span>Kralı</span></>}
               </div>
             </div>
             <LeagueStats data={leagueStats} />
@@ -120,13 +122,13 @@ export default async function LeaguePage({ params }) {
         <div className="wrap">
           <div className="sec-head">
             <div className="sec-title">
-              Diğer <span>Ligler</span>
+              {locale === 'en' ? <>Other <span>Leagues</span></> : <>Diğer <span>Ligler</span></>}
             </div>
           </div>
           <div className="related-leagues">
             {MAJOR_COMPETITION_KEYS.filter((k) => k !== key).map((k) => (
               <Link key={k} href={`/lig/${competitionSlug(k)}`} className="related-league-chip">
-                {competitionFlag(k)} {competitionLabel(k)}
+                {competitionFlag(k)} {competitionLabel(k, locale)}
               </Link>
             ))}
           </div>

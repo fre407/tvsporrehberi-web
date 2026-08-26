@@ -4,6 +4,7 @@ import { getDistinctChannels, windowIso } from '../../lib/data';
 import { SITE_URL } from '../../lib/links';
 import { slugify } from '../../lib/format';
 import FavoriteButton from '../../components/FavoriteButton';
+import { getLocale } from '../../lib/locale';
 
 export const revalidate = 1800;
 
@@ -14,6 +15,7 @@ export const metadata = {
 };
 
 export default async function ChannelsIndexPage() {
+  const locale = await getLocale();
   let channels = [];
   try {
     const { startIso, endIso } = windowIso(1, 14);
@@ -26,18 +28,18 @@ export default async function ChannelsIndexPage() {
     <>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">Kanallar</div>
+          <div className="eyebrow">{locale === 'en' ? 'Channels' : 'Kanallar'}</div>
           <h1>
-            Yayın <em>kanalları</em>
+            {locale === 'en' ? <>Broadcast <em>channels</em></> : <>Yayın <em>kanalları</em></>}
           </h1>
-          <p className="page-desc">Bir kanala tıkla, o kanalda yayınlanan maçları ve saatlerini gör.</p>
+          <p className="page-desc">{locale === 'en' ? 'Select a channel to view the matches it broadcasts and their kick-off times.' : 'Bir kanala tıkla, o kanalda yayınlanan maçları ve saatlerini gör.'}</p>
         </div>
       </div>
 
       <section style={{ paddingTop: 8 }}>
         <div className="wrap">
           {channels.length === 0 ? (
-            <div className="guide empty-note">Şu an listelenecek kanal bilgisi bulunamadı.</div>
+            <div className="guide empty-note">{locale === 'en' ? 'No broadcast channel information is available to list right now.' : 'Şu an listelenecek kanal bilgisi bulunamadı.'}</div>
           ) : (
             <div className="index-grid">
               {channels.map((c) => (

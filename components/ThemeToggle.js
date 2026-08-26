@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useLanguage } from './LanguageProvider';
 
 const STORAGE_KEY = 'tvsporrehberi:theme';
 
 export default function ThemeToggle() {
+  const { t } = useLanguage();
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -21,9 +23,9 @@ export default function ThemeToggle() {
   }
 
   return (
-    <div className="theme-toggle" aria-label="Renk teması">
-      <button type="button" className={theme === 'dark' ? 'active' : ''} onClick={() => choose('dark')}>Koyu</button>
-      <button type="button" className={theme === 'light' ? 'active' : ''} onClick={() => choose('light')}>Açık</button>
+    <div className="theme-toggle" aria-label={t('theme.label')}>
+      <button type="button" className={theme === 'dark' ? 'active' : ''} onClick={() => choose('dark')}>{t('theme.dark')}</button>
+      <button type="button" className={theme === 'light' ? 'active' : ''} onClick={() => choose('light')}>{t('theme.light')}</button>
     </div>
   );
 }

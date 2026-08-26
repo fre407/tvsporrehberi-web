@@ -1,23 +1,25 @@
 import { playStoreUrl } from '../lib/links';
+import { getLocale } from '../lib/locale';
+import { t } from '../lib/i18n';
 
-export default function AppCta({ campaign }) {
+export default async function AppCta({ campaign }) {
+  const locale = await getLocale();
   return (
     <section>
       <div className="wrap">
         <div className="app-cta">
           <div>
             <h2>
-              Bildirim gelsin,
+              {t(locale, 'cta.title1')}
               <br />
-              <em>sen kaçırma.</em>
+              <em>{t(locale, 'cta.title2')}</em>
             </h2>
             <p>
-              Favori takımının maçı yaklaşınca, İlk 11 açıklanınca ve maç bitince telefonuna anında haber
-              verelim. TV Spor Rehberi uygulamasını indir, hiçbir maçı kaçırma.
+              {t(locale, 'cta.text')}
             </p>
             <div className="store-row">
               <a className="store-btn" href={playStoreUrl(campaign)} target="_blank" rel="noopener noreferrer">
-                ▶ Google Play&apos;den İndir
+                {t(locale, 'cta.download')}
               </a>
             </div>
           </div>

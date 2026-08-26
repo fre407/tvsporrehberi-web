@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useLanguage } from './LanguageProvider';
 
 const STORAGE_KEY = 'tvsporrehberi:favorites';
 
@@ -17,6 +18,7 @@ export function getFavoriteIds() {
 }
 
 export default function FavoriteButton({ favoriteId, label, compact = false }) {
+  const { t } = useLanguage();
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -41,8 +43,8 @@ export default function FavoriteButton({ favoriteId, label, compact = false }) {
       className={`favorite-button${active ? ' active' : ''}${compact ? ' compact' : ''}`}
       onClick={(event) => { event.stopPropagation(); toggle(); }}
       aria-pressed={active}
-      aria-label={`${label} ${active ? 'takipten çıkar' : 'takibe al'}`}
-      title={active ? 'Takipten çıkar' : 'Takibe al'}
+      aria-label={`${label} ${active ? t('common.unfollow') : t('common.follow')}`}
+      title={active ? t('common.unfollow') : t('common.follow')}
     >
       <span aria-hidden="true">★</span>
     </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLanguage } from './LanguageProvider';
 
 function escapeSvg(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[char]));
@@ -35,7 +36,8 @@ async function logoDataUrl(url) {
 }
 
 export default function DailyShareCard({ match }) {
-  const [message, setMessage] = useState('Görseli paylaş');
+  const { t } = useLanguage();
+  const [message, setMessage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   // Instagram Story tam ekranı 9:16'dır; kart ilk açıldığında paylaşım için
   // en uygun seçenek doğrudan bu olur. Yatay kart yine isteğe bağlıdır.
@@ -50,10 +52,10 @@ export default function DailyShareCard({ match }) {
     const wideSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
       <defs><radialGradient id="glow" cx="50%" cy="45%" r="65%"><stop stop-color="#3b3510"/><stop offset="1" stop-color="#0a0a08"/></radialGradient><linearGradient id="line" x1="0" x2="1"><stop stop-color="#ffe812" stop-opacity="0"/><stop offset=".5" stop-color="#ffe812"/><stop offset="1" stop-color="#ffe812" stop-opacity="0"/></linearGradient></defs>
       <rect width="1200" height="630" fill="#080907"/><rect width="1200" height="630" fill="url(#glow)"/><path d="M0 88H1200M0 542H1200" stroke="url(#line)" stroke-width="2"/>
-      <text x="72" y="66" fill="#ffe812" font-size="28" font-family="Impact, Arial Black, sans-serif" letter-spacing="3">TV SPOR REHBERİ</text><text x="1128" y="66" fill="#c9c4ae" font-size="18" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="end">BUGÜNÜN MAÇI</text>
+      <text x="72" y="66" fill="#ffe812" font-size="28" font-family="Impact, Arial Black, sans-serif" letter-spacing="3">TV SPOR REHBERİ</text><text x="1128" y="66" fill="#c9c4ae" font-size="18" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="end">${t('share.todaysMatch')}</text>
       ${crest(homeLogo, 238, initials(match.homeTeam))}${crest(awayLogo, 962, initials(match.awayTeam))}
       <text x="238" y="405" fill="#fff" font-size="31" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.homeTeam)}</text><text x="962" y="405" fill="#fff" font-size="31" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.awayTeam)}</text>
-      <text x="600" y="248" fill="#c9c4ae" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">BUGÜN</text><text x="600" y="330" fill="#ffe812" font-size="84" font-family="Impact, Arial Black, sans-serif" letter-spacing="2" text-anchor="middle">${escapeSvg(match.time)}</text><text x="600" y="365" fill="#c9c4ae" font-size="21" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">TSİ</text>
+      <text x="600" y="248" fill="#c9c4ae" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${t('home.today')}</text><text x="600" y="330" fill="#ffe812" font-size="84" font-family="Impact, Arial Black, sans-serif" letter-spacing="2" text-anchor="middle">${escapeSvg(match.time)}</text><text x="600" y="365" fill="#c9c4ae" font-size="21" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">TSİ</text>
       <rect x="390" y="451" width="420" height="52" rx="26" fill="#1d1c14" stroke="#5b5520"/><text x="600" y="485" fill="#ffe812" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.channel)}</text>
       <text x="600" y="581" fill="#9c967f" font-size="20" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">tvsporrehberi.com · Maçlar · Kanallar · Saatler</text>
     </svg>`;
@@ -63,11 +65,11 @@ export default function DailyShareCard({ match }) {
     const instagramStorySvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
       <defs><radialGradient id="igGlow" cx="50%" cy="40%" r="72%"><stop stop-color="#4a4212"/><stop offset="1" stop-color="#080907"/></radialGradient><linearGradient id="igLine" x1="0" x2="1"><stop stop-color="#ffe812" stop-opacity="0"/><stop offset=".5" stop-color="#ffe812"/><stop offset="1" stop-color="#ffe812" stop-opacity="0"/></linearGradient></defs>
       <rect width="1080" height="1920" fill="#080907"/><rect width="1080" height="1920" fill="url(#igGlow)"/><path d="M0 118H1080M0 1742H1080" stroke="url(#igLine)" stroke-width="3"/>
-      <text x="70" y="82" fill="#ffe812" font-size="32" font-family="Impact, Arial Black, sans-serif" letter-spacing="3">TV SPOR REHBERİ</text><text x="1010" y="82" fill="#c9c4ae" font-size="19" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="end">MAÇ KARTI</text>
-      <text x="540" y="330" fill="#c9c4ae" font-size="28" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">BUGÜN · ${escapeSvg(match.time)} TSİ</text>
+      <text x="70" y="82" fill="#ffe812" font-size="32" font-family="Impact, Arial Black, sans-serif" letter-spacing="3">TV SPOR REHBERİ</text><text x="1010" y="82" fill="#c9c4ae" font-size="19" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="end">${t('share.matchCard')}</text>
+      <text x="540" y="330" fill="#c9c4ae" font-size="28" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${t('home.today')} · ${escapeSvg(match.time)} TSİ</text>
       ${storyCrest(homeLogo, 250, initials(match.homeTeam))}${storyCrest(awayLogo, 830, initials(match.awayTeam))}
       <text x="250" y="830" fill="#fff" font-size="36" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.homeTeam)}</text><text x="830" y="830" fill="#fff" font-size="36" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.awayTeam)}</text>
-      <text x="540" y="660" fill="#ffe812" font-size="46" font-family="Impact, Arial Black, sans-serif" text-anchor="middle">VS</text><text x="540" y="1080" fill="#ffe812" font-size="112" font-family="Impact, Arial Black, sans-serif" letter-spacing="3" text-anchor="middle">${escapeSvg(match.time)}</text><text x="540" y="1126" fill="#c9c4ae" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">TÜRKİYE SAATİ İLE</text>
+      <text x="540" y="660" fill="#ffe812" font-size="46" font-family="Impact, Arial Black, sans-serif" text-anchor="middle">VS</text><text x="540" y="1080" fill="#ffe812" font-size="112" font-family="Impact, Arial Black, sans-serif" letter-spacing="3" text-anchor="middle">${escapeSvg(match.time)}</text><text x="540" y="1126" fill="#c9c4ae" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">${t('share.turkeyTime')}</text>
       <rect x="150" y="1250" width="780" height="74" rx="37" fill="#1d1c14" stroke="#6c6323" stroke-width="2"/><text x="540" y="1299" fill="#ffe812" font-size="31" font-family="Trebuchet MS, Arial, sans-serif" font-weight="700" text-anchor="middle">${escapeSvg(match.channel)}</text>
       <text x="540" y="1640" fill="#a59e84" font-size="24" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">tvsporrehberi.com</text><text x="540" y="1675" fill="#817a66" font-size="19" font-family="Trebuchet MS, Arial, sans-serif" text-anchor="middle">Maçlar · Kanallar · Saatler</text>
     </svg>`;
@@ -75,34 +77,34 @@ export default function DailyShareCard({ match }) {
     const png = await svgToPng(isInstagramStory ? instagramStorySvg : wideSvg, isInstagramStory ? 1080 : 1200, isInstagramStory ? 1920 : 630);
     const file = new File([png], isInstagramStory ? 'tv-spor-rehberi-instagram-story-9x16.png' : 'tv-spor-rehberi-yatay-mac-karti.png', { type: 'image/png' });
     try {
-      if (navigator.canShare?.({ files: [file] })) await navigator.share({ title: 'Bugünün maçı', files: [file] });
+      if (navigator.canShare?.({ files: [file] })) await navigator.share({ title: t('share.todaysMatch'), files: [file] });
       else {
         const url = URL.createObjectURL(file);
         const link = document.createElement('a');
         link.href = url; link.download = 'tv-spor-rehberi-bugunun-maci.png'; link.click();
         URL.revokeObjectURL(url);
       }
-      setMessage('Hazır!');
-      window.setTimeout(() => setMessage('Görseli paylaş'), 1800);
+      setMessage(t('share.ready'));
+      window.setTimeout(() => setMessage(''), 1800);
     } catch {}
   }
 
   const cardPreview = <div className="daily-share-card">
-    <div className="share-card-top"><span>PAYLAŞILABİLİR MAÇ KARTI</span><b>TV SPOR REHBERİ</b></div>
+    <div className="share-card-top"><span>{t('share.title')}</span><b>TV SPOR REHBERİ</b></div>
     <div className="share-card-match"><div>{match.homeLogo ? <img src={match.homeLogo} alt="" /> : <b>{initials(match.homeTeam)}</b>}<strong>{match.homeTeam}</strong></div><i>VS</i><div>{match.awayLogo ? <img src={match.awayLogo} alt="" /> : <b>{initials(match.awayTeam)}</b>}<strong>{match.awayTeam}</strong></div></div>
     <div className="share-card-meta"><b>{match.time} <small>TSİ</small></b><span>{match.channel}</span></div>
-    <div className="share-card-formats"><button type="button" className={format === 'instagram-story' ? 'active' : ''} onClick={() => setFormat('instagram-story')}>Instagram Story · 1080×1920</button><button type="button" className={format === 'wide' ? 'active' : ''} onClick={() => setFormat('wide')}>Yatay · 1200×630</button></div>
-    <button type="button" onClick={shareCard}>↗ {format === 'instagram-story' ? 'Story görselini paylaş' : message}</button>
+    <div className="share-card-formats"><button type="button" className={format === 'instagram-story' ? 'active' : ''} onClick={() => setFormat('instagram-story')}>{t('share.storyFormat')}</button><button type="button" className={format === 'wide' ? 'active' : ''} onClick={() => setFormat('wide')}>{t('share.wide')}</button></div>
+    <button type="button" onClick={shareCard}>↗ {format === 'instagram-story' ? t('share.story') : (message || t('share.image'))}</button>
   </div>;
 
   return <>
     <aside className="share-card-launcher">
-      <div><span>MAÇI PAYLAŞ</span><strong>Arkadaşlarına görsel maç kartı gönder</strong></div>
-      <button type="button" onClick={() => setPreviewOpen(true)}>Kartı görüntüle ↗</button>
+      <div><span>{t('share.launcher')}</span><strong>{t('share.launcherText')}</strong></div>
+      <button type="button" onClick={() => setPreviewOpen(true)}>{t('share.view')}</button>
     </aside>
-    {previewOpen ? <div className="share-card-modal" role="dialog" aria-modal="true" aria-label="Paylaşılabilir maç kartı" onClick={() => setPreviewOpen(false)}>
+    {previewOpen ? <div className="share-card-modal" role="dialog" aria-modal="true" aria-label={t('share.title')} onClick={() => setPreviewOpen(false)}>
       <div className="share-card-modal-inner" onClick={(event) => event.stopPropagation()}>
-        <button className="share-card-close" type="button" onClick={() => setPreviewOpen(false)} aria-label="Kart önizlemesini kapat">×</button>
+        <button className="share-card-close" type="button" onClick={() => setPreviewOpen(false)} aria-label={t('share.close')}>×</button>
         {cardPreview}
       </div>
     </div> : null}

@@ -5,6 +5,7 @@ import AppCta from '../../../components/AppCta';
 import JsonLd from '../../../components/JsonLd';
 import { getFixturesForChannelSlug, windowIso } from '../../../lib/data';
 import { SITE_URL } from '../../../lib/links';
+import { getLocale } from '../../../lib/locale';
 
 export const revalidate = 600;
 
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ChannelDetailPage({ params }) {
+  const locale = await getLocale();
   const { slug } = await params;
   const { matches, displayName } = await loadChannel(slug);
   if (!displayName) notFound();
@@ -37,7 +39,7 @@ export default async function ChannelDetailPage({ params }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+      { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Home' : 'Ana Sayfa', item: SITE_URL },
       { '@type': 'ListItem', position: 2, name: displayName, item: `${SITE_URL}/kanal/${slug}` },
     ],
   };
@@ -46,13 +48,13 @@ export default async function ChannelDetailPage({ params }) {
     <>
       <JsonLd data={breadcrumbLd} />
       <div className="crumb wrap">
-        <Link href="/">Ana Sayfa</Link> › {displayName}
+        <Link href="/">{locale === 'en' ? 'Home' : 'Ana Sayfa'}</Link> › {displayName}
       </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">Kanal Rehberi</div>
+          <div className="eyebrow">{locale === 'en' ? 'Channel Guide' : 'Kanal Rehberi'}</div>
           <h1>{displayName}</h1>
-          <p className="page-desc">{displayName}&apos;da yayınlanan maçlar ve saatleri.</p>
+          <p className="page-desc">{locale === 'en' ? `Matches broadcast on ${displayName} and their kick-off times.` : `${displayName}'da yayınlanan maçlar ve saatleri.`}</p>
         </div>
       </div>
 

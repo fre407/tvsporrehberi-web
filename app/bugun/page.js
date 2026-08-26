@@ -4,6 +4,7 @@ import AppCta from '../../components/AppCta';
 import { getFixturesInWindow } from '../../lib/data';
 import { dateKeyOffset, istDateLong, istKeyToUtcRange } from '../../lib/format';
 import { SITE_URL } from '../../lib/links';
+import { getLocale } from '../../lib/locale';
 
 export const revalidate = 60;
 
@@ -17,6 +18,7 @@ export async function generateMetadata() {
 }
 
 export default async function TodayPage() {
+  const locale = await getLocale();
   const todayKey = dateKeyOffset(0);
   const { startIso, endIso } = istKeyToUtcRange(todayKey);
 
@@ -33,18 +35,17 @@ export default async function TodayPage() {
         <div className="wrap">
           <div className="eyebrow">{istDateLong(new Date().toISOString())}</div>
           <h1>
-            Bugünün <em>maç programı</em>
+            {locale === 'en' ? <>Today&apos;s <em>match schedule</em></> : <>Bugünün <em>maç programı</em></>}
           </h1>
           <p className="page-desc">
-            Bugün oynanacak tüm maçlar, saatleri (TSİ) ve yayınlandığı kanal — lig lig sıralı. Dün, yarın ve
-            önümüzdeki 2 haftanın programı için aşağıdaki günlere göz at.
+            {locale === 'en' ? 'All matches being played today, their kick-off times (Türkiye time) and broadcaster — ordered by competition. Browse the days below for yesterday, tomorrow and the next two weeks.' : 'Bugün oynanacak tüm maçlar, saatleri (TSİ) ve yayınlandığı kanal — lig lig sıralı. Dün, yarın ve önümüzdeki 2 haftanın programı için aşağıdaki günlere göz at.'}
           </p>
         </div>
       </div>
 
       <section style={{ paddingTop: 8 }}>
         <div className="wrap">
-          <DayTabs activeOffset={0} />
+          <DayTabs activeOffset={0} locale={locale} />
           <Guide rows={rows} />
         </div>
       </section>

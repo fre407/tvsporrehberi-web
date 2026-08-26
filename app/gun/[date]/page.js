@@ -5,6 +5,7 @@ import AppCta from '../../../components/AppCta';
 import { getFixturesInWindow } from '../../../lib/data';
 import { dateKeyDiffDays, dateKeyOffset, istDateLong, istKeyToUtcRange } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
+import { getLocale } from '../../../lib/locale';
 
 export const revalidate = 60;
 
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function DayPage({ params }) {
+  const locale = await getLocale();
   const { date } = await params;
   const offset = resolveOffset(date);
   if (offset === null) notFound();
@@ -61,7 +63,7 @@ export default async function DayPage({ params }) {
 
       <section style={{ paddingTop: 0 }}>
         <div className="wrap">
-          <DayTabs activeOffset={offset} />
+          <DayTabs activeOffset={offset} locale={locale} />
           <Guide rows={rows} />
         </div>
       </section>

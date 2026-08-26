@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StickyBanner from '../components/StickyBanner';
 import JsonLd from '../components/JsonLd';
+import { LanguageProvider } from '../components/LanguageProvider';
+import { getLocale } from '../lib/locale';
 import { Big_Shoulders, DM_Sans } from 'next/font/google';
 
 // Fontlar next/font ile build sırasında indirilip KENDİ alan adımızdan
@@ -81,9 +83,10 @@ const ORG_JSON_LD = {
   url: SITE_URL,
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const locale = await getLocale();
   return (
-    <html lang="tr" className={`${displayFont.variable} ${bodyFont.variable}`}>
+    <html lang={locale} className={`${displayFont.variable} ${bodyFont.variable}`}>
       <head>
         <Script id="theme-init" strategy="beforeInteractive">
           {`try { const theme = localStorage.getItem('tvsporrehberi:theme'); document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }`}
@@ -97,12 +100,14 @@ export default function RootLayout({ children }) {
         <JsonLd data={ORG_JSON_LD} />
       </head>
       <body>
+        <LanguageProvider locale={locale}>
         <div className="sticky-shell">
           <StickyBanner />
-          <Header />
+          <Header locale={locale} />
         </div>
         <main>{children}</main>
-        <Footer />
+        <Footer locale={locale} />
+        </LanguageProvider>
       </body>
     </html>
   );

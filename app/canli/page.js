@@ -2,6 +2,7 @@ import LiveGuide from '../../components/LiveGuide';
 import AppCta from '../../components/AppCta';
 import { getLiveFixtures } from '../../lib/data';
 import { SITE_URL } from '../../lib/links';
+import { getLocale } from '../../lib/locale';
 
 export const revalidate = 30;
 
@@ -12,6 +13,7 @@ export const metadata = {
 };
 
 export default async function LivePage() {
+  const locale = await getLocale();
   let rows = [];
   try {
     rows = await getLiveFixtures();
@@ -23,11 +25,11 @@ export default async function LivePage() {
     <>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">● Canlı</div>
+          <div className="eyebrow">● {locale === 'en' ? 'Live' : 'Canlı'}</div>
           <h1>
-            Canlı <em>maç skorları</em>
+            {locale === 'en' ? <>Live <em>match scores</em></> : <>Canlı <em>maç skorları</em></>}
           </h1>
-          <p className="page-desc">Şu an oynanan tüm maçların skoru, dakikası ve yayın kanalı — otomatik yenilenir.</p>
+          <p className="page-desc">{locale === 'en' ? 'Scores, minutes and broadcasters for all live matches — refreshed automatically.' : 'Şu an oynanan tüm maçların skoru, dakikası ve yayın kanalı — otomatik yenilenir.'}</p>
         </div>
       </div>
 

@@ -7,15 +7,17 @@ import { broadcastServices, channelDisplay, matchStatus } from '../lib/data';
 import { istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
+import { useLanguage } from './LanguageProvider';
 
 const FILTER_STORAGE_KEY = 'tvsporrehberi:match-filter';
 
 function MatchRow({ row, isExpanded, onToggle }) {
+  const { locale, t } = useLanguage();
   const status = matchStatus(row);
-  const chan = channelDisplay(row);
+  const chan = channelDisplay(row, locale);
   const services = broadcastServices(row);
   const isLive = status === 'live';
-  const isPending = chan === 'Türkiye yayın bilgisi henüz bulunamadı';
+  const isPending = chan === t('broadcast.missing');
 
   return (
     <div className={`match-row-shell${isExpanded ? ' is-expanded' : ''}`} onClick={onToggle}>
@@ -24,8 +26,8 @@ function MatchRow({ row, isExpanded, onToggle }) {
         <div className={`mr-time${isLive ? ' live' : ''}`}>
           {isLive ? (
             <>
-              {row.elapsed != null ? `${row.elapsed}'` : 'CANLI'}
-              <small>CANLI</small>
+              {row.elapsed != null ? `${row.elapsed}'` : t('common.live')}
+              <small>{t('common.live')}</small>
             </>
           ) : (
             istTime(row.kickoff_at)
@@ -55,7 +57,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
       <div className="mr-channel-wrap">
         <div className={`mr-channel-pills${isPending ? ' pending' : ''}`}>
           {isPending ? (
-            <div className="mr-chan pending"><span>{chan}</span><small>Yayın bilgisi bekleniyor</small></div>
+            <div className="mr-chan pending"><span>{chan}</span><small>{t('guide.pending')}</small></div>
           ) : (
             <>
               {services.map((service) => (
@@ -73,14 +75,14 @@ function MatchRow({ row, isExpanded, onToggle }) {
             <strong>{row.home_team}</strong>
           </div>
           <div className="match-expanded-center">
-            <span>{isLive ? (row.elapsed != null ? `${row.elapsed}' · CANLI` : 'CANLI') : istTime(row.kickoff_at)}</span>
-            <small>{competitionLabel(row.competition_key)}</small>
+            <span>{isLive ? (row.elapsed != null ? `${row.elapsed}' · ${t('common.live')}` : t('common.live')) : istTime(row.kickoff_at)}</span>
+            <small>{competitionLabel(row.competition_key, locale)}</small>
           </div>
           <div className="match-expanded-team away">
             {row.away_logo ? <img src={row.away_logo} alt="" /> : null}
             <strong>{row.away_team}</strong>
           </div>
-          <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="match-expanded-link" onClick={(event) => event.stopPropagation()}>Maç detayına git →</Link>
+          <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="match-expanded-link" onClick={(event) => event.stopPropagation()}>{t('common.details')}</Link>
         </div>
       ) : null}
     </div>
@@ -89,6 +91,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
 
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
 export default function Guide({ rows, preserveGroupOrder = false }) {
+  const { locale, t } = useLanguage();
   const router = useRouter();
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
   const [activeFilter, setActiveFilter] = useState('all');
@@ -124,7 +127,7 @@ export default function Guide({ rows, preserveGroupOrder = false }) {
   }
 
   if (!rows || rows.length === 0) {
-    return <div className="guide empty-note">Bu aralıkta listelenecek maç bulunamadı.</div>;
+    return <div className="guide empty-note">{t('common.noMatches')}</div>;
   }
 
   const visibleRows = rows.filter((row) => {
@@ -158,16 +161,16 @@ export default function Guide({ rows, preserveGroupOrder = false }) {
     <>
       <div className="guide-filter-bar">
         {[
-          ['all', 'Tümü'], ['live', '● Canlı'], ['broadcast', 'Türkiye’de yayınlanan'],
-          ['super_lig', 'Süper Lig'], ['turkiye_kupasi', 'Türkiye Kupası'], ['sampiyonlar_ligi', 'Şampiyonlar Ligi'], ['favorites', '★ Takip ettiklerim'],
+          ['all', t('guide.all')], ['live', t('guide.live')], ['broadcast', t('guide.broadcast')],
+          ['super_lig', competitionShort('super_lig', locale)], ['turkiye_kupasi', t('guide.cup')], ['sampiyonlar_ligi', t('guide.champions')], ['favorites', t('guide.favorites')],
         ].map(([value, label]) => (
           <button key={value} type="button" className={`guide-filter${activeFilter === value ? ' active' : ''}`} onClick={() => chooseFilter(value)} aria-pressed={activeFilter === value}>{label}</button>
         ))}
       </div>
-      {groups.length === 0 ? <div className="guide empty-note">Takip ettiğin lig için bu aralıkta maç bulunamadı.</div> : <div className="guide">
+      {groups.length === 0 ? <div className="guide empty-note">{t('guide.noFavorites')}</div> : <div className="guide">
       {groups.map(([key, matches]) => {
         const isCollapsed = collapsedLeagues.has(key);
-        const label = competitionLabel(key);
+        const label = competitionLabel(key, locale);
         return (
         <div key={key}>
           <div className="league-row">
@@ -179,7 +182,7 @@ export default function Guide({ rows, preserveGroupOrder = false }) {
               className={`league-toggle${isCollapsed ? ' is-collapsed' : ''}`}
               onClick={() => toggleLeague(key)}
               aria-expanded={!isCollapsed}
-              aria-label={`${label} maçlarını ${isCollapsed ? 'aç' : 'kapat'}`}
+              aria-label={`${label} ${isCollapsed ? t('guide.open') : t('guide.close')}`}
             >
               <svg viewBox="0 0 16 16" aria-hidden="true">
                 <path d="m3 6 5 5 5-5" />

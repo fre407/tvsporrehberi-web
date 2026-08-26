@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Guide from './Guide';
+import { useLanguage } from './LanguageProvider';
 
 const POLL_MS = 25000;
 
@@ -10,6 +11,7 @@ const POLL_MS = 25000;
 // yok. Sadece BU sayfada polling var (kullanıcı isteği: "canlı skor sayfası
 // hariç gereksiz polling yapma").
 export default function LiveGuide({ initialRows }) {
+  const { locale, t } = useLanguage();
   const [rows, setRows] = useState(initialRows);
   const [updatedAt, setUpdatedAt] = useState(null);
   const timerRef = useRef(null);
@@ -34,10 +36,10 @@ export default function LiveGuide({ initialRows }) {
       {rows.length === 0 ? (
         <div className="guide">
           <div className="empty-note">
-            Şu anda canlı maç yok. ⚽
+            {t('live.none')}
             <br />
             <a href="/bugun" className="sec-link" style={{ display: 'inline-block', marginTop: 10 }}>
-              Bugünün maç programına göz at →
+              {t('live.browse')}
             </a>
           </div>
         </div>
@@ -45,7 +47,7 @@ export default function LiveGuide({ initialRows }) {
         <Guide rows={rows} />
       )}
       <div className="live-refresh-note">
-        {updatedAt ? `Son güncelleme: ${updatedAt.toLocaleTimeString('tr-TR')}` : 'Skorlar otomatik güncellenir.'}
+        {updatedAt ? t('live.updated', { time: updatedAt.toLocaleTimeString(locale === 'en' ? 'en-GB' : 'tr-TR') }) : t('live.refreshing')}
       </div>
     </>
   );

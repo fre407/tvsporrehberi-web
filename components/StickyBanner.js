@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { playStoreUrl } from '../lib/links';
+import { useLanguage } from './LanguageProvider';
 
 const DISMISS_KEY = '@tvsporrehberi_app_banner_dismissed';
 
 export default function StickyBanner() {
+  const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -33,14 +35,14 @@ export default function StickyBanner() {
       <div className="wrap sticky-banner-inner">
         <img className="sticky-banner-logo" src="/icon.png" alt="TV Spor Rehberi" width="32" height="32" />
         <div className="sticky-banner-copy">
-          <span className="sticky-banner-kicker">TV SPOR REHBERİ UYGULAMASI</span>
-          <span className="sticky-banner-text">Maç saati, yayıncı kanal ve canlı skor bildirimlerini kaçırma.</span>
+          <span className="sticky-banner-kicker">{t('banner.kicker')}</span>
+          <span className="sticky-banner-text">{t('banner.text')}</span>
         </div>
         <div className="sticky-banner-actions">
           <a href={playStoreUrl('sticky_banner')} target="_blank" rel="noopener noreferrer" className="sticky-banner-cta">
-            <span>Google Play</span><strong>Ücretsiz indir</strong>
+            <span>Google Play</span><strong>{t('banner.download')}</strong>
           </a>
-          <button type="button" onClick={dismiss} aria-label="Banner'ı kapat" className="sticky-banner-close">
+          <button type="button" onClick={dismiss} aria-label={t('banner.close')} className="sticky-banner-close">
             ✕
           </button>
         </div>

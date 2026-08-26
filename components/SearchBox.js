@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useLanguage } from './LanguageProvider';
 
 export default function SearchBox() {
+  const { t } = useLanguage();
   const [q, setQ] = useState('');
   const [results, setResults] = useState(null);
   const [open, setOpen] = useState(false);
@@ -52,19 +54,19 @@ export default function SearchBox() {
       </span>
       <input
         type="text"
-        placeholder="Takım, lig veya maç ara…"
+        placeholder={t('search.placeholder')}
         value={q}
         onChange={(e) => handleChange(e.target.value)}
         onFocus={() => setOpen(true)}
-        aria-label="Site içinde ara"
+        aria-label={t('search.label')}
       />
       {open && q.trim().length >= 2 ? (
         <div className="searchbox-panel">
-          {loading ? <div className="searchbox-empty">Aranıyor…</div> : null}
-          {!loading && !hasResults ? <div className="searchbox-empty">Sonuç bulunamadı.</div> : null}
+          {loading ? <div className="searchbox-empty">{t('search.loading')}</div> : null}
+          {!loading && !hasResults ? <div className="searchbox-empty">{t('search.empty')}</div> : null}
           {!loading && results?.teams.length ? (
             <div className="searchbox-group">
-              <div className="searchbox-group-label">Takımlar</div>
+              <div className="searchbox-group-label">{t('search.teams')}</div>
               {results.teams.map((t) => (
                 <Link key={t.href} href={t.href} className="searchbox-item" onClick={() => setOpen(false)}>
                   {t.name}
@@ -74,7 +76,7 @@ export default function SearchBox() {
           ) : null}
           {!loading && results?.leagues.length ? (
             <div className="searchbox-group">
-              <div className="searchbox-group-label">Ligler</div>
+              <div className="searchbox-group-label">{t('search.leagues')}</div>
               {results.leagues.map((l) => (
                 <Link key={l.href} href={l.href} className="searchbox-item" onClick={() => setOpen(false)}>
                   {l.label}
@@ -84,7 +86,7 @@ export default function SearchBox() {
           ) : null}
           {!loading && results?.matches.length ? (
             <div className="searchbox-group">
-              <div className="searchbox-group-label">Yaklaşan Maçlar</div>
+              <div className="searchbox-group-label">{t('search.upcoming')}</div>
               {results.matches.map((m) => (
                 <Link key={m.href} href={m.href} className="searchbox-item" onClick={() => setOpen(false)}>
                   <span>{m.label}</span>
