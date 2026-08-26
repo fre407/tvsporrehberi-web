@@ -8,7 +8,7 @@ import LeagueStats from '../components/LeagueStats';
 import LiveNowStrip from '../components/LiveNowStrip';
 import DailyShareCard from '../components/DailyShareCard';
 import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, windowIso } from '../lib/data';
-import { istDateLong, istTime } from '../lib/format';
+import { istDateLong, istTime, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 
 export const revalidate = 60;
@@ -54,6 +54,38 @@ const FAQ_JSON_LD = {
   })),
 };
 
+// Ana sayfanın kısa programı, günün tüm fikstürlerinin küçük bir kopyası
+// değildir: ziyaretçinin ilk bakışta aradığı yüksek ilgi maçlarını gösterir.
+// İsimleri slug ile karşılaştırmak API-Football yazım farklarını (ş/şs,
+// Fenerbahçe/Fenerbahce vb.) güvenle tolere eder.
+const TURKISH_BIG_FOUR = new Set(['galatasaray', 'fenerbahce', 'besiktas', 'trabzonspor']);
+const EUROPEAN_BIG_TEAMS = new Set([
+  'arsenal', 'chelsea', 'liverpool', 'manchester-city', 'manchester-united', 'tottenham', 'newcastle',
+  'real-madrid', 'barcelona', 'atletico-madrid',
+  'juventus', 'inter', 'inter-milan', 'ac-milan', 'milan', 'napoli', 'roma',
+  'bayern-munich', 'borussia-dortmund', 'bayer-leverkusen', 'rb-leipzig',
+  'paris-saint-germain', 'psg', 'olympique-marseille', 'monaco', 'lyon',
+]);
+const TOP_FIVE_LEAGUES = new Set(['premier_lig', 'la_liga', 'serie_a', 'bundesliga', 'ligue_1']);
+
+function matchPreviewPriority(row) {
+  const teams = [slugify(row.home_team), slugify(row.away_team)];
+  if (teams.some((team) => TURKISH_BIG_FOUR.has(team))) return 0;
+  if (teams.some((team) => EUROPEAN_BIG_TEAMS.has(team))) return 1;
+  if (TOP_FIVE_LEAGUES.has(row.competition_key)) return 2;
+  return 3;
+}
+
+function featuredPreview(rows, limit = 10) {
+  return [...rows]
+    .sort((a, b) => {
+      const priority = matchPreviewPriority(a) - matchPreviewPriority(b);
+      if (priority !== 0) return priority;
+      return new Date(a.kickoff_at).getTime() - new Date(b.kickoff_at).getTime();
+    })
+    .slice(0, limit);
+}
+
 export default async function HomePage() {
   const { startIso, endIso } = windowIso(0, 1);
   const [rows, standings, leagueStats, liveRows] = await Promise.all([
@@ -65,7 +97,9 @@ export default async function HomePage() {
   const hasStandings = Array.isArray(standings?.standings) && standings.standings.length > 0;
   const hasLeagueStats = (leagueStats?.top_scorers?.length ?? 0) > 0 || (leagueStats?.top_assists?.length ?? 0) > 0;
   // Ana sayfada en fazla 10 maçlık bir önizleme — tam liste /bugun'da.
-  const preview = rows.slice(0, 10);
+  // Dört büyükler her zaman ilk sırada; yoksa büyük Avrupa takımları ve
+  // beş büyük ligin maçları öne alınır.
+  const preview = featuredPreview(rows);
 
   return (
     <>
@@ -109,7 +143,7 @@ export default async function HomePage() {
                   Tüm program →
                 </Link>
               </div>
-              <Guide rows={preview} />
+              <Guide rows={preview} preserveGroupOrder />
               <Link className="home-all-matches" href="/bugun">
                 Bugünün tüm maç programını aç →
               </Link>

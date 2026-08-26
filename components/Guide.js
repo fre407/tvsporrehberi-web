@@ -88,7 +88,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
 }
 
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
-export default function Guide({ rows }) {
+export default function Guide({ rows, preserveGroupOrder = false }) {
   const router = useRouter();
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
   const [activeFilter, setActiveFilter] = useState('all');
@@ -140,9 +140,10 @@ export default function Guide({ rows }) {
     else byCompetition.set(row.competition_key, [row]);
   }
 
-  const groups = Array.from(byCompetition.entries()).sort(
-    (a, b) => competitionPriority(a[0]) - competitionPriority(b[0])
-  );
+  const groups = Array.from(byCompetition.entries());
+  if (!preserveGroupOrder) {
+    groups.sort((a, b) => competitionPriority(a[0]) - competitionPriority(b[0]));
+  }
 
   function toggleLeague(key) {
     setCollapsedLeagues((current) => {
