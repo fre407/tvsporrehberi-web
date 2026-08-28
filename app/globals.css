@@ -735,6 +735,16 @@ html[data-theme='light'] .match-row-shell.is-expanded {
 .mr-time.live {
   color: var(--live);
 }
+.mr-time.live .mr-live-score {
+  display: block;
+  margin-top: 2px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .02em;
+}
 .mr-time small {
   display: block;
   font-family: var(--font-body);
@@ -799,6 +809,25 @@ html[data-theme='light'] .match-row-shell.is-expanded {
   color: var(--subtext-dim);
   font-weight: 600;
   background: transparent;
+  min-height: 48px;
+  justify-content: center;
+  line-height: 1.25;
+}
+.mr-chan.pending > span,
+.mr-chan.pending > small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mr-chan.pending > span {
+  font-size: 12px;
+  line-height: 1.25;
+}
+.mr-chan.pending > small {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.2;
 }
 .mr-team .crest-fallback { display:grid; place-items:center; font-size:11px; }
 .mr-channel-pills {

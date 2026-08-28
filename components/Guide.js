@@ -18,16 +18,18 @@ function MatchRow({ row, isExpanded, onToggle }) {
   const services = broadcastServices(row);
   const isLive = status === 'live';
   const isPending = chan === t('broadcast.missing');
+  const hasLiveScore = isLive && row.home_score != null && row.away_score != null;
 
   return (
     <div className={`match-row-shell${isExpanded ? ' is-expanded' : ''}`} onClick={onToggle}>
-      <div className="match-row">
+      <div className={`match-row${isLive && isPending ? ' live-with-pending' : ''}`}>
       <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="mr-match-link" onClick={(event) => event.preventDefault()}>
         <div className={`mr-time${isLive ? ' live' : ''}`}>
           {isLive ? (
             <>
               {row.elapsed != null ? `${row.elapsed}'` : t('common.live')}
               <small>{t('common.live')}</small>
+              {hasLiveScore ? <b className="mr-live-score">{row.home_score}–{row.away_score}</b> : null}
             </>
           ) : (
             istTime(row.kickoff_at)
@@ -41,7 +43,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
               <span className="crest crest-fallback">⚽</span>
             )}
             <span className="nm">{row.home_team}</span>
-            {row.home_score != null && status !== 'upcoming' ? <span className="sc">{row.home_score}</span> : null}
+            {row.home_score != null && status !== 'upcoming' && !isLive ? <span className="sc">{row.home_score}</span> : null}
           </div>
           <div className="mr-team">
             {row.away_logo ? (
@@ -50,7 +52,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
               <span className="crest crest-fallback">⚽</span>
             )}
             <span className="nm">{row.away_team}</span>
-            {row.away_score != null && status !== 'upcoming' ? <span className="sc">{row.away_score}</span> : null}
+            {row.away_score != null && status !== 'upcoming' && !isLive ? <span className="sc">{row.away_score}</span> : null}
           </div>
         </div>
       </Link>
