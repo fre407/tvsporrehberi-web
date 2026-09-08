@@ -32,6 +32,17 @@ export const revalidate = 30;
 
 const DATE_TAIL_RE = /\d{4}-\d{2}-\d{2}$/;
 
+// Maç bittikten birkaç gün sonra bu sayfanın arama değeri kalmıyor (kimse
+// "X-Y maçı hangi kanalda" diye 2 hafta sonra aramaz) — GSC'de 1860 keşfedilen
+// sayfadan sadece 2'sinin indekslenmesi (bkz. lib/sitemapXml.js'teki not) ve
+// AdSense'in "düşük değere sahip içerik" tespiti, bu tür binlerce neredeyse
+// aynı şablonlu eski sayfanın sitenin genel kalite skorunu düşürdüğünü
+// gösteriyor. Sayfa yine de erişilebilir kalıyor (link kırılmıyor, kullanıcı
+// hâlâ görebiliyor), sadece Google'a "bunu arama sonuçlarında gösterme"
+// deniyor — `follow: true` iç linklerin (takım/lig sayfalarına) SEO değeri
+// aktarmasını engellemiyor.
+const NOINDEX_AFTER_MS = 3 * 24 * 60 * 60 * 1000;
+
 // Slug'ın son 10 karakteri her zaman "YYYY-MM-DD" — o günün fikstürleri
 // çekilip her birinin kendi slug'ı (matchSlug ile) yeniden üretilerek tam
 // eşleşme aranıyor. Ayrı bir slug kolonu/tablosu TUTULMUYOR (kullanıcı
@@ -78,12 +89,14 @@ export async function generateMetadata({ params }) {
   const timeLabel = istTime(row.kickoff_at);
   const title = `${row.home_team} - ${row.away_team} Maçı Hangi Kanalda? Saat Kaçta?`;
   const description = `${row.home_team} - ${row.away_team} maçı ${dateLabel} günü saat ${timeLabel}'de (TSİ) oynanıyor. Yayın: ${chan}. ${competitionLabel(row.competition_key)} maçının canlı skoru ve detayları.`;
+  const isStale = Date.now() - new Date(row.kickoff_at).getTime() > NOINDEX_AFTER_MS;
 
   return {
     title,
     description,
     alternates: { canonical: `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}` },
     openGraph: { title, description },
+    ...(isStale ? { robots: { index: false, follow: true } } : {}),
   };
 }
 

@@ -5,12 +5,42 @@ import AppCta from '../../../components/AppCta';
 import FormDots from '../../../components/FormDots';
 import JsonLd from '../../../components/JsonLd';
 import { getFixturesForTeamSlug, teamResultLetter, windowIso } from '../../../lib/data';
-import { slugify } from '../../../lib/format';
+import { istDateLong, istTime, slugify } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 import { TEAM_NAME_ALIASES } from '../../../lib/teamNames';
 import { getLocale } from '../../../lib/locale';
 
 export const revalidate = 600;
+
+// Lig sayfasındakiyle aynı gerekçe (bkz. lig/[slug]/page.js'teki not): sadece
+// veri tablosu değil, gerçek forma/sıradaki maça dayanan kısa bir özet.
+// Takım adı bir cümlenin içinde SERBEST bırakılmıyor — hep parantez/iki nokta
+// gibi ek gerektirmeyen bir kalıpla kullanılıyor, yanlış ünlü uyumu riski yok.
+function buildTeamSummary({ displayName, form, upcoming, locale }) {
+  const lines = [];
+  if (form.length > 0) {
+    const w = form.filter((r) => r === 'W').length;
+    const d = form.filter((r) => r === 'D').length;
+    const l = form.filter((r) => r === 'L').length;
+    lines.push(
+      locale === 'en'
+        ? `Recent form: ${w}W ${d}D ${l}L in the last ${form.length} matches.`
+        : `Son ${form.length} maçtaki form: ${w} galibiyet, ${d} beraberlik, ${l} mağlubiyet.`
+    );
+  }
+  const next = upcoming[0];
+  if (next) {
+    const isHome = next.home_team === displayName;
+    const opponent = isHome ? next.away_team : next.home_team;
+    const venue = locale === 'en' ? (isHome ? 'Home' : 'Away') : isHome ? 'Evinde' : 'Deplasmanda';
+    lines.push(
+      locale === 'en'
+        ? `Next match: ${opponent} (${venue}), ${istDateLong(next.kickoff_at)} at ${istTime(next.kickoff_at)}.`
+        : `Sıradaki maç: ${opponent} (${venue}), ${istDateLong(next.kickoff_at)} saat ${istTime(next.kickoff_at)} (TSİ).`
+    );
+  }
+  return lines;
+}
 
 // Takım adları kanonikleştirildiği için (bkz. lib/teamNames.js) eskiden
 // "Everton FC" gibi bir varyanttan üretilmiş ve Google'ın çoktan indekslemiş
@@ -65,6 +95,7 @@ export default async function TeamPage({ params }) {
     .slice(-8)
     .reverse();
   const form = past.map((m) => teamResultLetter(m, displayName)).filter(Boolean).slice(0, 5);
+  const summaryLines = buildTeamSummary({ displayName, form, upcoming, locale });
 
   const breadcrumbLd = {
     '@context': 'https://schema.org',
@@ -86,6 +117,9 @@ export default async function TeamPage({ params }) {
           <div className="eyebrow">{locale === 'en' ? 'Team Guide' : 'Takım Rehberi'}</div>
           <h1>{displayName}</h1>
           <p className="page-desc">{locale === 'en' ? `Upcoming ${displayName} matches, kick-off times and broadcast channels.` : `${displayName} takımının yaklaşan maçları, saatleri ve yayın kanalları.`}</p>
+          {summaryLines.map((line) => (
+            <p className="page-desc" key={line}>{line}</p>
+          ))}
           {form.length > 0 ? (
             <div style={{ marginTop: 14 }}>
               <FormDots results={form} />

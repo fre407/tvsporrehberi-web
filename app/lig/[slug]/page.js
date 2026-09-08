@@ -18,6 +18,42 @@ import { getLocale } from '../../../lib/locale';
 
 export const revalidate = 600;
 
+// Google/AdSense'in "sadece veri tablosu, özgün metin yok" tespitine karşı:
+// sayfadaki gerçek fikstür/puan durumu verisinden türetilmiş, uydurma
+// olmayan kısa bir özet cümlesi. Türkçe'de dinamik takım/lig adına doğrudan
+// ek eklemek yanlış ünlü uyumu üretebileceği için (bkz. generateMetadata'daki
+// not), cümleler hep adın SONRASINA bağımsız bir kelimeyle devam edecek
+// şekilde kuruldu — asla "{isim}'de" gibi ek gerektiren bir kalıp yok.
+function buildLeagueSummary({ rows, standings, locale }) {
+  const now = Date.now();
+  const upcomingCount = rows.filter((r) => new Date(r.kickoff_at).getTime() > now).length;
+  const list = Array.isArray(standings?.standings) ? standings.standings : [];
+  const lines = [];
+
+  if (upcomingCount > 0) {
+    lines.push(
+      locale === 'en'
+        ? `${upcomingCount} more ${upcomingCount === 1 ? 'match is' : 'matches are'} coming up in the schedule below.`
+        : `Aşağıdaki programda önümüzdeki günlerde oynanacak ${upcomingCount} maç var.`
+    );
+  }
+
+  if (list.length >= 2) {
+    const leader = list[0];
+    const second = list[1];
+    const gap = (leader.points ?? 0) - (second.points ?? 0);
+    if (leader.team?.name && second.team?.name) {
+      lines.push(
+        locale === 'en'
+          ? `${leader.team.name} lead the table with ${leader.points} points, ${gap} ahead of ${second.team.name}.`
+          : `Zirvede ${leader.team.name} var, ${leader.points} puanla lider; en yakın takipçisi ${second.team.name}, ${gap} puan geride.`
+      );
+    }
+  }
+
+  return lines;
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const key = competitionKeyFromSlug(slug);
@@ -55,6 +91,7 @@ export default async function LeaguePage({ params }) {
     rows = rows.length ? rows : [];
   }
 
+  const summaryLines = buildLeagueSummary({ rows, standings, locale });
   const pageUrl = `${SITE_URL}/lig/${slug}`;
   const breadcrumbLd = {
     '@context': 'https://schema.org',
@@ -78,6 +115,9 @@ export default async function LeaguePage({ params }) {
           <p className="page-desc">
             {locale === 'en' ? `Upcoming ${competitionLabel(key, locale)} matches, kick-off times, standings and broadcast channels.` : `${competitionLabel(key)}'nde yaklaşan tüm maçlar, saatleri, puan durumu ve yayın kanalları.`}
           </p>
+          {summaryLines.map((line) => (
+            <p className="page-desc" key={line}>{line}</p>
+          ))}
         </div>
       </div>
 
