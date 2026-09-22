@@ -34,6 +34,27 @@ const nextConfig = {
       },
     ];
   },
+  // AdMob doğrulaması, kullanıcı raporu 2026-09-22: apex domain (tvsporrehberi.com)
+  // şimdiye kadar Vercel domain ayarlarında SİTE GENELİNDE www'ye 308
+  // yönlendiriliyordu. App Store Connect'teki "Marketing URL" apex (www'siz)
+  // olduğundan, AdMob'un app-ads.txt tarayıcısı /app-ads.txt'yi apex'te
+  // ARADI, yönlendirmeyi (muhtemelen) takip etmedi ve doğrulama hep
+  // başarısız oldu — kod/reklam entegrasyonuyla ilgisi yok, salt bu dosyanın
+  // apex'te DOĞRUDAN (yönlendirmesiz) 200 dönmesi gerekiyordu.
+  // Çözüm: Vercel'deki domain-seviyesi (tüm path'leri kapsayan) yönlendirme
+  // kaldırıldı, yerine SADECE /app-ads.txt HARİÇ her şeyi apex'ten www'ye
+  // yönlendiren bu kural eklendi — sitenin geri kalanının kanonik adresi
+  // (SEO, mevcut linkler) değişmedi, sadece bu tek dosya istisna edildi.
+  async redirects() {
+    return [
+      {
+        source: '/:path((?!app-ads\\.txt$).*)',
+        has: [{ type: 'host', value: 'tvsporrehberi.com' }],
+        destination: 'https://www.tvsporrehberi.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
