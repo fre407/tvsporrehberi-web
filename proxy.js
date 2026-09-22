@@ -44,9 +44,23 @@ function isRateLimited(ip) {
   return entry.count > RATE_MAX;
 }
 
+// ads.txt/app-ads.txt (AdSense/AdMob sahtecilik önleme dosyaları) — kullanıcı
+// raporu, 2026-09-22: AdMob'un app-ads.txt doğrulayıcısı "TV Spor Rehberi
+// (iOS)"i doğrulayamıyordu. Dosyanın kendisi ve apex domain yönlendirmesi
+// doğruydu (ayrıca düzeltildi), ama BU dosyalar TANIM GEREĞİ her otomatik
+// istemciye (ki BAD_BOTS regex'i tam olarak bunları hedefliyor — jenerik
+// HTTP kütüphaneleri) açık olmak ZORUNDA; ad-network doğrulayıcıları genelde
+// googlebot gibi GOOD_BOTS listesinde olmayan, jenerik bir istemci imzasıyla
+// (Go/Java/okhttp vb.) tarıyor. Bu iki dosya, bot kontrolünün TAMAMEN
+// dışında tutuluyor — engellenmeleri güvenlik değil, doğrulamayı kıran bir
+// yan etkiydi.
+const ADS_TXT_PATHS = new Set(['/ads.txt', '/app-ads.txt']);
+
 export function proxy(req) {
   const ua = req.headers.get('user-agent') || '';
   const { pathname } = req.nextUrl;
+
+  if (ADS_TXT_PATHS.has(pathname)) return NextResponse.next();
 
   if (GOOD_BOTS.test(ua)) return NextResponse.next();
 
