@@ -6,6 +6,7 @@ import { broadcasterLabel, broadcastServices, isForeignBroadcaster, teamSlug } f
 import { competitionLabel } from '../lib/competitions';
 import { istDateLong, istTime, matchSlug } from '../lib/format';
 import { SITE_URL } from '../lib/links';
+import { roundText } from '../lib/rounds';
 
 // Maç listesinde bir satıra tıklayınca açılan kart. Maçın durumuna göre
 // (oynanmadı / canlı / bitti / ertelendi) farklı bilgi gösterir; hepsi
@@ -23,31 +24,6 @@ function accessTag(name, en) {
   if (FREE_TO_AIR.test(key)) return { label: en ? 'Free-to-air' : 'Şifresiz', free: true };
   if (SUBSCRIPTION.test(key)) return { label: en ? 'Subscription' : 'Abonelikli', free: false };
   return null;
-}
-
-// Veri kaynağının İngilizce tur adları → Türkçe. Tanınmayan biçim olduğu
-// gibi gösterilir.
-const ROUND_NAMES_TR = {
-  'Knockout Round Play-offs': 'Play-off turu',
-  'Round of 32': 'Son 32',
-  'Round of 16': 'Son 16',
-  'Quarter-finals': 'Çeyrek final',
-  'Semi-finals': 'Yarı final',
-  Final: 'Final',
-};
-
-function roundText(round, en) {
-  if (!round) return null;
-  const week = round.match(/^Regular Season - (\d+)$/);
-  if (week) return en ? `Matchweek ${week[1]}` : `${week[1]}. Hafta`;
-  if (en) return round;
-  const league = round.match(/^League Stage - (\d+)$/);
-  if (league) return `Lig aşaması · ${league[1]}. maç günü`;
-  const group = round.match(/^Group ([A-Z]) - (\d+)$/);
-  if (group) return `${group[1]} Grubu · ${group[2]}. maç`;
-  const nth = round.match(/^(?:(\d+)(?:st|nd|rd|th) Round|Round (\d+))$/);
-  if (nth) return `${nth[1] ?? nth[2]}. tur`;
-  return ROUND_NAMES_TR[round] ?? round;
 }
 
 function timeUntil(iso, en) {
@@ -111,7 +87,7 @@ export default function MatchExpandedCard({ row, status, locale }) {
   const services = broadcastServices(row);
   const channelText = services.map((name) => broadcasterLabel(name, locale)).join(' / ');
   const href = `/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`;
-  const round = roundText(row.round, en);
+  const round = roundText(row.round, locale);
   const countdown = isUpcoming ? timeUntil(row.kickoff_at, en) : null;
   const result = isFinished ? resultText(row, en) : null;
 

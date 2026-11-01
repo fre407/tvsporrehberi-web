@@ -2472,3 +2472,223 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
   .match-expanded-facts dd { font-size: 12.5px; }
   .match-expanded-center em { font-size: 10px; }
 }
+
+/* Maç sayfası yorumları (2026-11-02) */
+.comments {
+  margin-top: 26px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+.comments-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.comments-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+}
+.comments-head span { color: var(--subtext); font-size: 13px; font-weight: 700; }
+.comments-sub { margin: 6px 0 16px; color: var(--subtext); font-size: 14px; }
+.comments-form {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+.comments-field { display: grid; gap: 6px; align-content: start; }
+.comments-field span { font-size: 12px; font-weight: 800; color: var(--subtext); }
+.comments-field b { color: var(--live); }
+.comments-field input,
+.comments-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  resize: vertical;
+}
+.comments-field input:focus,
+.comments-field textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.comments-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.comments-form-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.comments-form-foot small { color: var(--subtext-dim); font-size: 12px; }
+.comments-form-foot button {
+  flex: none;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.comments-form-foot button:disabled { opacity: .6; cursor: wait; }
+.comments-msg { grid-column: 1 / -1; margin: 0; font-size: 13px; font-weight: 700; }
+.comments-msg.error { color: var(--live); }
+.comments-msg.ok { color: #1e7a46; }
+.comments-empty { margin: 16px 0 0; color: var(--subtext); font-size: 14px; }
+.comments-list {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.comments-list li { display: flex; gap: 12px; align-items: flex-start; }
+.comments-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: hsl(var(--avatar-hue) 55% 42%);
+  color: #ffffff;
+  font-weight: 800;
+}
+.comments-bubble {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border-radius: 4px 14px 14px 14px;
+  background: var(--surface-2);
+}
+.comments-meta { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.comments-meta b { font-size: 14px; }
+.comments-meta time { color: var(--subtext-dim); font-size: 12px; }
+.comments-report {
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--subtext-dim);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.comments-report:hover:not(:disabled) { color: var(--live); }
+.comments-bubble p {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.comments-more {
+  display: block;
+  margin: 14px auto 0;
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+@media (max-width: 720px) {
+  .comments { padding: 18px 14px; }
+  .comments-head h2 { font-size: 24px; }
+  .comments-form { grid-template-columns: 1fr; padding: 12px; }
+  .comments-form-foot { flex-direction: column; align-items: stretch; }
+  .comments-form-foot button { width: 100%; }
+}
+
+/* "Kim kazanır?" tahmin anketi (2026-11-02) */
+.prediction {
+  margin-top: 26px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+.prediction-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.prediction-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+}
+.prediction-head span { color: var(--subtext); font-size: 13px; font-weight: 700; }
+.prediction-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.prediction-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 58px;
+  padding: 10px 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.prediction-option:not(:disabled):hover { border-color: var(--accent); }
+.prediction-option:disabled { cursor: default; }
+.prediction-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  transition: width .4s ease;
+}
+.prediction-option.is-picked { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.prediction-option.is-picked .prediction-bar { background: color-mix(in srgb, var(--accent) 38%, transparent); }
+.prediction-option.is-correct { border-color: #1e7a46; box-shadow: inset 0 0 0 1px #1e7a46; }
+.prediction-label { position: relative; display: grid; min-width: 0; }
+.prediction-label b {
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.prediction-label small { color: var(--subtext); font-size: 12px; }
+.prediction-option strong {
+  position: relative;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+.prediction-note { margin: 12px 0 0; color: var(--subtext); font-size: 13px; }
+.prediction-note.error { color: var(--live); font-weight: 700; }
+@media (max-width: 720px) {
+  .prediction { padding: 16px 14px; }
+  .prediction-head h2 { font-size: 24px; }
+  .prediction-options { grid-template-columns: 1fr; gap: 8px; }
+  .prediction-option { min-height: 50px; }
+}

@@ -16,6 +16,7 @@ import {
 } from '../../../lib/data';
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
+import { roundText } from '../../../lib/rounds';
 import { APP_STORE_URL, SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -28,6 +29,8 @@ import HeadToHead from '../../../components/HeadToHead';
 import MatchDetailActions from '../../../components/MatchDetailActions';
 import DailyShareCard from '../../../components/DailyShareCard';
 import FavoriteButton from '../../../components/FavoriteButton';
+import MatchComments from '../../../components/MatchComments';
+import MatchPrediction from '../../../components/MatchPrediction';
 
 export const revalidate = 30;
 
@@ -54,9 +57,7 @@ const NOINDEX_AFTER_MS = 3 * 24 * 60 * 60 * 1000;
 // Türkçe sayfada lig haftası olarak gösteriliyor. Diğer tur adları
 // (ör. "Round of 16") olduğu gibi kalıyor.
 function roundLabel(round) {
-  if (!round) return '';
-  const week = round.match(/^Regular Season - (\d+)$/);
-  return week ? `${week[1]}. Hafta` : round;
+  return roundText(round) ?? '';
 }
 
 // Sayfadaki gerçek veriden kurulan kısa düz metin özet — sadece tablo/kart
@@ -65,15 +66,15 @@ function roundLabel(round) {
 function buildMatchSummary({ row, status, chan, homeStanding, awayStanding }) {
   const lines = [];
   const league = competitionLabel(row.competition_key);
-  const roundText = row.round ? ` (${roundLabel(row.round)})` : '';
+  const roundSuffix = row.round ? ` (${roundLabel(row.round)})` : '';
   if (status === 'finished' && row.home_score != null && row.away_score != null) {
-    lines.push(`${league}${roundText} karşılaşması sona erdi: ${row.home_team} ${row.home_score} - ${row.away_score} ${row.away_team}.`);
+    lines.push(`${league}${roundSuffix} karşılaşması sona erdi: ${row.home_team} ${row.home_score} - ${row.away_score} ${row.away_team}.`);
   } else if (status === 'live') {
     lines.push(`${row.home_team} - ${row.away_team} karşılaşması şu anda oynanıyor; skor ve dakika bu sayfada otomatik güncelleniyor.`);
   } else if (status === 'not_happening') {
     lines.push(`${row.home_team} - ${row.away_team} karşılaşması ertelendi veya iptal edildi; yeni tarih açıklanırsa bu sayfa güncellenir.`);
   } else if (status !== 'finished_unknown') {
-    lines.push(`${row.home_team} ile ${row.away_team}, ${league}${roundText} kapsamında ${istDateLong(row.kickoff_at)} günü saat ${istTime(row.kickoff_at)} (TSİ) itibarıyla karşı karşıya gelecek.`);
+    lines.push(`${row.home_team} ile ${row.away_team}, ${league}${roundSuffix} kapsamında ${istDateLong(row.kickoff_at)} günü saat ${istTime(row.kickoff_at)} (TSİ) itibarıyla karşı karşıya gelecek.`);
   }
   if (status !== 'finished' && status !== 'finished_unknown') {
     if (broadcastServices(row).length > 0) {
@@ -342,6 +343,24 @@ export default async function MatchDetailPage({ params }) {
               App Store
             </a>
           </p>
+
+          <MatchPrediction
+            matchKey={matchSlug(row.home_team, row.away_team, row.kickoff_at)}
+            homeTeam={row.home_team}
+            awayTeam={row.away_team}
+            isOpen={status === 'upcoming'}
+            result={
+              status === 'finished' && row.home_score != null && row.away_score != null
+                ? row.home_score > row.away_score ? '1' : row.home_score < row.away_score ? '2' : 'X'
+                : null
+            }
+          />
+
+          <MatchComments
+            matchKey={matchSlug(row.home_team, row.away_team, row.kickoff_at)}
+            title={`${row.home_team} - ${row.away_team}`}
+            isLive={isLive}
+          />
         </div>
       </section>
 
