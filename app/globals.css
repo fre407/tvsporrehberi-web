@@ -133,8 +133,10 @@ img {
   text-decoration: none;
   white-space: nowrap;
 }
-.sticky-banner-cta span { font-size: 9px; font-weight: 600; opacity: .77; }
-.sticky-banner-cta strong { font-size: 11px; font-weight: 800; }
+.sticky-banner-store-icon { width: 16px; height: 16px; flex: none; }
+.sticky-banner-cta-text { display: grid; line-height: 1.1; }
+.sticky-banner-cta-text span { font-size: 8.5px; font-weight: 600; opacity: .77; }
+.sticky-banner-cta-text strong { font-size: 11.5px; font-weight: 800; }
 .sticky-banner-close {
   background: transparent;
   border: none;
@@ -2005,9 +2007,8 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
   .sticky-banner-copy { display: block; }
   .sticky-banner-kicker { display: none; }
   .sticky-banner-text { display: block; font-size: 11px; }
-  .sticky-banner-cta { gap: 0; padding: 5px 8px; }
-  .sticky-banner-cta span { display: none; }
-  .sticky-banner-cta strong { font-size: 10px; }
+  .sticky-banner-cta { gap: 0; justify-content: center; width: 32px; padding: 5px; }
+  .sticky-banner-cta-text { display: none; }
   .sticky-banner-actions { gap: 5px; }
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
   .foot-brand-block { grid-column: 1 / -1; }
