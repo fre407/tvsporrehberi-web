@@ -26,11 +26,13 @@ export default function Footer({ locale }) {
             <Link href="/canli">{t(locale, 'footer.live')}</Link>
             <Link href="/ligler">{t(locale, 'footer.leagues')}</Link>
             <Link href="/kanallar">{t(locale, 'footer.channels')}</Link>
+            <Link href="/yayin-haklari">{t(locale, 'footer.rights')}</Link>
           </nav>
 
           <nav className="foot-column" aria-label={t(locale, 'footer.info')}>
             <h2>{t(locale, 'footer.info')}</h2>
             <Link href="/hakkimizda">{t(locale, 'footer.about')}</Link>
+            <Link href="/iletisim">{t(locale, 'footer.contact')}</Link>
             <Link href="/gizlilik-politikasi">{t(locale, 'footer.privacy')}</Link>
             <a href="https://fre407.github.io/yasal-bilgilendirme.html" target="_blank" rel="noopener noreferrer">{t(locale, 'footer.legal')}</a>
           </nav>

@@ -45,12 +45,24 @@ const nextConfig = {
   // kaldırıldı, yerine SADECE /app-ads.txt HARİÇ her şeyi apex'ten www'ye
   // yönlendiren bu kural eklendi — sitenin geri kalanının kanonik adresi
   // (SEO, mevcut linkler) değişmedi, sadece bu tek dosya istisna edildi.
+  //
+  // DÜZELTME, 2026-11-01: yukarıdaki varsayım YANLIŞTI — sitenin kanonik
+  // adresi hiçbir zaman www olmadı. lib/links.js'teki SITE_URL apex; her
+  // sayfanın <link rel="canonical">'ı, og:url, sitemap <loc>'ları ve
+  // robots.txt'deki Sitemap satırı hep apex'i gösteriyor. Apex→www
+  // yönlendirmesi bu yüzden bir DÖNGÜ kurdu: Google sitemap'teki apex URL'ye
+  // gidiyor → www'ye yönleniyor → www sayfası "kanoniğim apex" diyor → apex
+  // yine www'ye yönleniyor. Sonuç: GSC'de 0 dizine eklenen sayfa, 1.400+
+  // "Keşfedildi - dizine eklenmedi"; AdSense'in ads.txt tarayıcısı da apex'te
+  // dosyayı bulamadı ("Bulunamadı", yönlendirme takip edilmiyor). GSC mülkü
+  // ve AdSense sitesi de apex olarak kayıtlı. Bu yüzden yön tersine çevrildi:
+  // apex her şeyi doğrudan (200) sunuyor, www → apex kalıcı yönlendiriliyor.
   async redirects() {
     return [
       {
-        source: '/:path((?!app-ads\\.txt$).*)',
-        has: [{ type: 'host', value: 'tvsporrehberi.com' }],
-        destination: 'https://www.tvsporrehberi.com/:path*',
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.tvsporrehberi.com' }],
+        destination: 'https://tvsporrehberi.com/:path*',
         permanent: true,
       },
     ];

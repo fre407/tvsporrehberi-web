@@ -7,6 +7,7 @@ import {
   getFixturesForCompetition,
   getHeadToHead,
   getStandings,
+  isIndexWorthyMatch,
   broadcastServices,
   channelDisplay,
   matchStatus,
@@ -42,6 +43,52 @@ const DATE_TAIL_RE = /\d{4}-\d{2}-\d{2}$/;
 // deniyor — `follow: true` iç linklerin (takım/lig sayfalarına) SEO değeri
 // aktarmasını engellemiyor.
 const NOINDEX_AFTER_MS = 3 * 24 * 60 * 60 * 1000;
+
+// Aynı gerekçeyle: küçük bir ligin, yayıncısı bilinmeyen maçının "hangi
+// kanalda" sayfası soruyu cevaplamıyor — indekslenmesi siteye değer
+// katmıyor, kalite skorunu düşürüyor (kural: lib/data.js isIndexWorthyMatch,
+// sitemap ile ortak). Yayın bilgisi gelince sayfa kendiliğinden
+// indekslenebilir olur.
+
+// Veri sağlayıcısı tur adını İngilizce veriyor ("Regular Season - 9");
+// Türkçe sayfada lig haftası olarak gösteriliyor. Diğer tur adları
+// (ör. "Round of 16") olduğu gibi kalıyor.
+function roundLabel(round) {
+  if (!round) return '';
+  const week = round.match(/^Regular Season - (\d+)$/);
+  return week ? `${week[1]}. Hafta` : round;
+}
+
+// Sayfadaki gerçek veriden kurulan kısa düz metin özet — sadece tablo/kart
+// değil, her maça özgü okunabilir içerik. Lig/takım sayfalarındaki gibi
+// dinamik adlara Türkçe ek EKLENMİYOR (ünlü uyumu hatası riski).
+function buildMatchSummary({ row, status, chan, homeStanding, awayStanding }) {
+  const lines = [];
+  const league = competitionLabel(row.competition_key);
+  const roundText = row.round ? ` (${roundLabel(row.round)})` : '';
+  if (status === 'finished' && row.home_score != null && row.away_score != null) {
+    lines.push(`${league}${roundText} karşılaşması sona erdi: ${row.home_team} ${row.home_score} - ${row.away_score} ${row.away_team}.`);
+  } else if (status === 'live') {
+    lines.push(`${row.home_team} - ${row.away_team} karşılaşması şu anda oynanıyor; skor ve dakika bu sayfada otomatik güncelleniyor.`);
+  } else if (status === 'not_happening') {
+    lines.push(`${row.home_team} - ${row.away_team} karşılaşması ertelendi veya iptal edildi; yeni tarih açıklanırsa bu sayfa güncellenir.`);
+  } else if (status !== 'finished_unknown') {
+    lines.push(`${row.home_team} ile ${row.away_team}, ${league}${roundText} kapsamında ${istDateLong(row.kickoff_at)} günü saat ${istTime(row.kickoff_at)} (TSİ) itibarıyla karşı karşıya gelecek.`);
+  }
+  if (status !== 'finished' && status !== 'finished_unknown') {
+    if (broadcastServices(row).length > 0) {
+      lines.push(`Yayın bilgisi: karşılaşma Türkiye'den ${chan} üzerinden canlı izlenebilecek.`);
+    } else if (row.confirmed_unavailable) {
+      lines.push('Yayın bilgisi: bu karşılaşmanın Türkiye’de canlı yayınlanmayacağı doğrulandı.');
+    } else {
+      lines.push('Yayın bilgisi: yayıncı kuruluş henüz netleşmedi; bilgi geldiğinde bu sayfa otomatik olarak güncellenir.');
+    }
+  }
+  if (homeStanding && awayStanding) {
+    lines.push(`Puan durumu: ${row.home_team} ${homeStanding.rank}. sırada (${homeStanding.points} puan), ${row.away_team} ${awayStanding.rank}. sırada (${awayStanding.points} puan).`);
+  }
+  return lines;
+}
 
 // Slug'ın son 10 karakteri her zaman "YYYY-MM-DD" — o günün fikstürleri
 // çekilip her birinin kendi slug'ı (matchSlug ile) yeniden üretilerek tam
@@ -96,7 +143,7 @@ export async function generateMetadata({ params }) {
     description,
     alternates: { canonical: `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}` },
     openGraph: { title, description },
-    ...(isStale ? { robots: { index: false, follow: true } } : {}),
+    ...(isStale || !isIndexWorthyMatch(row) ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -146,6 +193,7 @@ export default async function MatchDetailPage({ params }) {
   const homeStanding = findStanding(row.home_team);
   const awayStanding = findStanding(row.away_team);
   const matchUrl = `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`;
+  const summaryLines = buildMatchSummary({ row, status, chan, homeStanding, awayStanding });
   const broadcastServiceList = broadcastServices(row);
   const eventStatus = isFinished
     ? 'https://schema.org/EventCompleted'
@@ -206,7 +254,7 @@ export default async function MatchDetailPage({ params }) {
         <div className="wrap">
           <div className="eyebrow">
             {competitionLabel(row.competition_key)}
-            {row.round ? ` · ${row.round}` : ''}
+            {row.round ? ` · ${roundLabel(row.round)}` : ''}
           </div>
           <h1 style={{ fontSize: 30 }}>
             {row.home_team} - {row.away_team} <em>maçı hangi kanalda, saat kaçta?</em>
@@ -275,6 +323,14 @@ export default async function MatchDetailPage({ params }) {
             />
             <DailyShareCard match={{ homeTeam: row.home_team, awayTeam: row.away_team, homeLogo: row.home_logo, awayLogo: row.away_logo, time: istTime(row.kickoff_at), channel: chan }} />
           </div>
+
+          {summaryLines.length > 0 ? (
+            <div className="match-summary">
+              {summaryLines.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </div>
+          ) : null}
 
           <p style={{ marginTop: 22 }}>
             <a href={playStoreUrl('mac_detay')} className="sec-link" target="_blank" rel="noopener noreferrer">

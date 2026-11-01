@@ -30,7 +30,7 @@ export default function AboutPage() {
 
           <h2>Kim işletiyor?</h2>
           <p>
-            Site ve mobil uygulama, <strong>Fre4 Developments</strong> tarafından geliştirilip işletiliyor.
+            Site ve mobil uygulama, <strong>Fre4 Studios</strong> tarafından geliştirilip işletiliyor.
             Herhangi bir spor kulübü, lig, federasyon veya yayın kuruluşuyla bağlantılı, sponsorlu veya bunlar
             tarafından onaylanmış değildir.
           </p>

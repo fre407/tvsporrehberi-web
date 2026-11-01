@@ -54,7 +54,7 @@ export default async function ChannelDetailPage({ params }) {
         <div className="wrap">
           <div className="eyebrow">{locale === 'en' ? 'Channel Guide' : 'Kanal Rehberi'}</div>
           <h1>{displayName}</h1>
-          <p className="page-desc">{locale === 'en' ? `Matches broadcast on ${displayName} and their kick-off times.` : `${displayName}'da yayınlanan maçlar ve saatleri.`}</p>
+          <p className="page-desc">{locale === 'en' ? `Matches broadcast on ${displayName} and their kick-off times.` : `${displayName} yayın akışı: bu kanalda/platformda yayınlanacak maçlar ve saatleri (TSİ).`}</p>
         </div>
       </div>
 

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { SITE_URL } from '../../lib/links';
 
 export const revalidate = false;
@@ -36,8 +37,10 @@ export default function PrivacyPage() {
 
           <h2>Çerezler ve yerel depolama</h2>
           <p>
-            Site, &quot;uygulamayı indir&quot; bandını kapattığınızda bu tercihi hatırlamak için tarayıcınızın yerel
-            depolamasını (localStorage) kullanır — bu veri yalnızca kendi cihazınızda tutulur, bize gönderilmez.
+            Site; tema (açık/koyu), dil, takip ettiğiniz takım/maç tercihleri ve &quot;uygulamayı indir&quot; bandını
+            kapatma tercihinizi hatırlamak için tarayıcınızın yerel depolamasını (localStorage) ve dil tercihi için
+            bir çerezi kullanır. Bu veriler yalnızca kendi cihazınızda tutulur, bize gönderilmez; tarayıcı
+            ayarlarınızdan istediğiniz zaman silebilirsiniz.
           </p>
 
           <h2>Reklamlar (Google AdSense)</h2>
@@ -52,7 +55,10 @@ export default function PrivacyPage() {
             <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">
               Google Reklam Ayarları
             </a>{' '}
-            sayfalarını ziyaret edebilirsiniz.
+            sayfalarını ziyaret edebilirsiniz. Google dahil üçüncü taraf reklam sağlayıcıları, bu siteye ve
+            diğer sitelere yaptığınız önceki ziyaretlere dayalı reklam göstermek için çerez kullanabilir. Avrupa
+            Ekonomik Alanı ve Birleşik Krallık&apos;tan gelen ziyaretçilerden, kişiselleştirilmiş reklam için
+            gerekli izin Google&apos;ın onaylı izin yönetimi araçlarıyla alınır.
           </p>
 
           <h2>Maç ve yayın verileri</h2>
@@ -67,13 +73,22 @@ export default function PrivacyPage() {
             politikaları geçerlidir; TV Spor Rehberi bu sitelerin içeriğinden sorumlu değildir.
           </p>
 
-          <h2>İletişim</h2>
+          <h2>Haklarınız (KVKK ve GDPR)</h2>
           <p>
-            Bu politika hakkında sorularınız için TV Spor Rehberi uygulamasındaki iletişim/geri bildirim
-            seçeneklerini kullanabilirsiniz.
+            6698 sayılı Kişisel Verilerin Korunması Kanunu ve (geçerli olduğu durumlarda) Avrupa Birliği Genel Veri
+            Koruma Tüzüğü kapsamında; verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme, düzeltilmesini
+            veya silinmesini isteme ve işlemeye itiraz etme haklarına sahipsiniz. Talepleriniz için aşağıdaki
+            e-posta adresine yazabilirsiniz.
           </p>
 
-          <p className="legal-updated">Son güncelleme: Ağustos 2026</p>
+          <h2>İletişim</h2>
+          <p>
+            Bu politika hakkında sorularınız için <a href="mailto:fre4dev@gmail.com">fre4dev@gmail.com</a> adresine
+            yazabilir veya <Link href="/iletisim">İletişim</Link> sayfasını kullanabilirsiniz. Site, Fre4 Studios
+            tarafından işletilmektedir.
+          </p>
+
+          <p className="legal-updated">Son güncelleme: Kasım 2026</p>
         </div>
       </section>
     </>

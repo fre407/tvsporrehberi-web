@@ -5,7 +5,7 @@ import Standings from '../../../components/Standings';
 import LeagueStats from '../../../components/LeagueStats';
 import AppCta from '../../../components/AppCta';
 import JsonLd from '../../../components/JsonLd';
-import { getFixturesForCompetition, getLeagueStats, getStandings, windowIso } from '../../../lib/data';
+import { getFixturesForCompetition, getLeagueStats, getStandings, topBroadcasters, windowIso } from '../../../lib/data';
 import {
   competitionFlag,
   competitionKeyFromSlug,
@@ -49,6 +49,16 @@ function buildLeagueSummary({ rows, standings, locale }) {
           : `Zirvede ${leader.team.name} var, ${leader.points} puanla lider; en yakın takipçisi ${second.team.name}, ${gap} puan geride.`
       );
     }
+  }
+
+  const broadcasters = topBroadcasters(rows);
+  if (broadcasters.length > 0) {
+    const names = broadcasters.map((b) => b.name).join(', ');
+    lines.push(
+      locale === 'en'
+        ? `Broadcasters in Türkiye for the matches listed below: ${names}.`
+        : `Aşağıdaki maçların Türkiye'deki yayıncıları: ${names}. Her maçın kanalı tek tek maç satırında yazıyor.`
+    );
   }
 
   return lines;
@@ -113,7 +123,7 @@ export default async function LeaguePage({ params }) {
           <div className="eyebrow">{competitionFlag(key)} {locale === 'en' ? 'League Guide' : 'Lig Rehberi'}</div>
           <h1>{competitionLabel(key, locale)}</h1>
           <p className="page-desc">
-            {locale === 'en' ? `Upcoming ${competitionLabel(key, locale)} matches, kick-off times, standings and broadcast channels.` : `${competitionLabel(key)}'nde yaklaşan tüm maçlar, saatleri, puan durumu ve yayın kanalları.`}
+            {locale === 'en' ? `Upcoming ${competitionLabel(key, locale)} matches, kick-off times, standings and broadcast channels.` : `${competitionLabel(key)}: yaklaşan tüm maçlar, saatleri, puan durumu ve yayın kanalları.`}
           </p>
           {summaryLines.map((line) => (
             <p className="page-desc" key={line}>{line}</p>
