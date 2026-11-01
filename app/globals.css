@@ -2380,3 +2380,10 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
   .board-tile div b { font-size: 36px; }
   .board-tile-dark { grid-column: 1 / -1; }
 }
+
+/* AdSense otomatik reklamları (2026-11-01 açıldı) bazen bir ızgaranın içine
+   yerleşir; o zaman tek bir hücreye sıkışıp düzeni kaydırmasın, tüm satırı
+   kaplasın. Reklamın kendisine stil verilmiyor, yalnızca yerleşimine. */
+:is(.match-board, .feature-grid, .index-grid, .stats-grid, .lineup-grid, .rights-list, .home-content-grid, .foot-grid) > :is(.google-auto-placed, ins.adsbygoogle) {
+  grid-column: 1 / -1;
+}
