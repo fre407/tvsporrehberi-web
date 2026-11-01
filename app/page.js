@@ -7,11 +7,13 @@ import Standings from '../components/Standings';
 import LeagueStats from '../components/LeagueStats';
 import LiveNowStrip from '../components/LiveNowStrip';
 import DailyShareCard from '../components/DailyShareCard';
-import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, windowIso } from '../lib/data';
+import MatchDayBoard from '../components/MatchDayBoard';
+import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, matchStatus, windowIso } from '../lib/data';
 import { istDateLong, istTime, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 import { getLocale } from '../lib/locale';
 import { t } from '../lib/i18n';
+import { HOME_LAYOUT } from '../lib/siteConfig';
 
 export const revalidate = 60;
 
@@ -126,9 +128,31 @@ export default async function HomePage() {
   // Dört büyükler her zaman ilk sırada; yoksa büyük Avrupa takımları ve
   // beş büyük ligin maçları öne alınır.
   const preview = featuredPreview(rows);
+  const isBoard = HOME_LAYOUT === 'pano';
+  // Panodaki "günün maçı": öncelik sırasındaki ilk canlı/oynanmamış maç;
+  // hepsi bittiyse yine en öncelikli maç.
+  const boardFeatured = preview.find((row) => ['live', 'upcoming'].includes(matchStatus(row))) ?? preview[0] ?? null;
 
   return (
     <>
+      {isBoard ? (
+      <div className="board-hero">
+        <div className="wrap">
+          <div className="board-hero-head">
+            <div>
+              <div className="eyebrow">{copy('eyebrow')} · {istDateLong(new Date().toISOString())}</div>
+              <h1>
+                {copy('title1')}{' '}
+                {locale === 'en' ? <>on which <em>channel</em>, at what time?</> : <>hangi <em>kanalda</em>, kaçta?</>}
+              </h1>
+            </div>
+            <p className="page-desc">{copy('intro')}</p>
+          </div>
+          <MatchDayBoard rows={rows} featured={boardFeatured} liveRows={liveRows} locale={locale} />
+        </div>
+      </div>
+      ) : (
+      <>
       <div className="hero home-hero night-match-preview">
         <div className="wrap">
           <div className="home-hero-grid">
@@ -152,6 +176,8 @@ export default async function HomePage() {
         </div>
       </div>
       <LiveNowStrip rows={liveRows} />
+      </>
+      )}
 
       <section className="home-guide-section">
         <div className="wrap">
@@ -169,7 +195,7 @@ export default async function HomePage() {
                   {copy('programme')}
                 </Link>
               </div>
-              <Guide rows={preview} preserveGroupOrder />
+              <Guide rows={preview} preserveGroupOrder groupBy={isBoard ? 'time' : 'league'} />
               <Link className="home-all-matches" href="/bugun">
                 {copy('allMatches')}
               </Link>

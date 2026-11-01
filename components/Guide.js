@@ -4,14 +4,31 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { broadcastServices, channelDisplay, isForeignBroadcaster, matchStatus } from '../lib/data';
-import { istTime, matchSlug, slugify } from '../lib/format';
+import { dateKeyOffset, istDateKey, istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionShort, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
 import { useLanguage } from './LanguageProvider';
 
 const FILTER_STORAGE_KEY = 'tvsporrehberi:match-filter';
 
-function MatchRow({ row, isExpanded, onToggle }) {
+// Ana sayfadaki "saat blokları" düzeni (groupBy="time") için: maçlar lige
+// göre değil, günün saat dilimine göre gruplanıyor. Ertesi güne sarkan
+// maçlar "Yarın" önekiyle ayrı blokta kalır.
+const TIME_BLOCKS = [
+  { id: 'morning', until: 12, tr: 'Öğleden önce', en: 'Morning', range: '00:00 – 11:59' },
+  { id: 'afternoon', until: 18, tr: 'Öğleden sonra', en: 'Afternoon', range: '12:00 – 17:59' },
+  { id: 'prime', until: 22, tr: 'Akşam · prime time', en: 'Evening · prime time', range: '18:00 – 21:59' },
+  { id: 'night', until: 24, tr: 'Gece', en: 'Night', range: '22:00 +' },
+];
+
+function timeBlockOf(row) {
+  const hour = Number(istTime(row.kickoff_at).slice(0, 2));
+  const block = TIME_BLOCKS.find((b) => hour < b.until) ?? TIME_BLOCKS[3];
+  const isToday = istDateKey(row.kickoff_at) === dateKeyOffset(0);
+  return { key: `${isToday ? 'today' : 'later'}:${block.id}`, block, isToday };
+}
+
+function MatchRow({ row, isExpanded, onToggle, showCompetition = false }) {
   const { locale, t } = useLanguage();
   const status = matchStatus(row);
   const chan = channelDisplay(row, locale);
@@ -54,6 +71,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
             <span className="nm">{row.away_team}</span>
             {row.away_score != null && status !== 'upcoming' && !isLive ? <span className="sc">{row.away_score}</span> : null}
           </div>
+          {showCompetition ? <span className="mr-comp">{competitionShort(row.competition_key, locale)}</span> : null}
         </div>
       </Link>
       <div className="mr-channel-wrap">
@@ -95,7 +113,7 @@ function MatchRow({ row, isExpanded, onToggle }) {
 }
 
 // Fikstürleri lig önceliğine göre grupla ve TV rehberi formatında render et.
-export default function Guide({ rows, preserveGroupOrder = false }) {
+export default function Guide({ rows, preserveGroupOrder = false, groupBy = 'league' }) {
   const { locale, t } = useLanguage();
   const router = useRouter();
   const [collapsedLeagues, setCollapsedLeagues] = useState(() => new Set());
@@ -149,6 +167,22 @@ export default function Guide({ rows, preserveGroupOrder = false }) {
   }
 
   const groups = Array.from(byCompetition.entries());
+  const timeGroups = [];
+  if (groupBy === 'time') {
+    const byBlock = new Map();
+    for (const row of [...visibleRows].sort((a, b) => new Date(a.kickoff_at) - new Date(b.kickoff_at))) {
+      const { key, block, isToday } = timeBlockOf(row);
+      const group = byBlock.get(key);
+      if (group) group.matches.push(row);
+      else {
+        const name = block[locale === 'en' ? 'en' : 'tr'];
+        const label = isToday ? name : `${locale === 'en' ? 'Tomorrow' : 'Yarın'} · ${name}`;
+        const created = { key, label, range: block.range, prime: block.id === 'prime', matches: [row] };
+        byBlock.set(key, created);
+        timeGroups.push(created);
+      }
+    }
+  }
   if (!preserveGroupOrder) {
     groups.sort((a, b) => competitionPriority(a[0]) - competitionPriority(b[0]));
   }
@@ -172,7 +206,19 @@ export default function Guide({ rows, preserveGroupOrder = false }) {
           <button key={value} type="button" className={`guide-filter${activeFilter === value ? ' active' : ''}`} onClick={() => chooseFilter(value)} aria-pressed={activeFilter === value}>{label}</button>
         ))}
       </div>
-      {groups.length === 0 ? <div className="guide empty-note">{t('guide.noFavorites')}</div> : <div className="guide">
+      {groups.length === 0 ? <div className="guide empty-note">{t('guide.noFavorites')}</div> : groupBy === 'time' ? <div className="guide guide-time">
+      {timeGroups.map((group) => (
+        <div key={group.key}>
+          <div className={`time-block-row${group.prime ? ' is-prime' : ''}`}>
+            <b>{group.label}</b>
+            <span>{group.range} · {group.matches.length} {locale === 'en' ? 'matches' : 'maç'}</span>
+          </div>
+          {group.matches.map((row) => (
+            <MatchRow key={row.id} row={row} showCompetition isExpanded={expandedMatchId === row.id} onToggle={() => setExpandedMatchId((current) => current === row.id ? null : row.id)} />
+          ))}
+        </div>
+      ))}
+      </div> : <div className="guide">
       {groups.map(([key, matches]) => {
         const isCollapsed = collapsedLeagues.has(key);
         const label = competitionLabel(key, locale);
