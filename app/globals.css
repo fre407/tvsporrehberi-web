@@ -2387,3 +2387,88 @@ html[data-theme='light'] .night-match-preview .home-hero-note {
 :is(.match-board, .feature-grid, .index-grid, .stats-grid, .lineup-grid, .rights-list, .home-content-grid, .foot-grid) > :is(.google-auto-placed, ins.adsbygoogle) {
   grid-column: 1 / -1;
 }
+
+/* Maç satırına tıklayınca açılan kart — ek bilgiler (2026-11-02) */
+.match-expanded-team { color: inherit; }
+.match-expanded-team:hover strong { color: var(--accent); }
+.match-expanded-center em {
+  color: var(--subtext);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+}
+.match-expanded-center em.match-expanded-live { color: var(--live); }
+.match-expanded-facts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin: 4px 0 0;
+}
+.match-expanded-facts > div {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.match-expanded-facts dt {
+  margin-bottom: 4px;
+  color: var(--subtext-dim);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.match-expanded-facts dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.match-expanded-facts dd small { color: var(--subtext); font-size: 11px; }
+.match-expanded-channels { grid-column: span 2; }
+.match-expanded-channels dd { display: flex; flex-wrap: wrap; gap: 6px; }
+.match-expanded-chan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: var(--surface-2);
+  color: var(--accent);
+  font-size: 13px;
+}
+.match-expanded-chan b {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--border);
+  color: var(--subtext);
+  font-size: 10px;
+  font-weight: 800;
+}
+.match-expanded-chan b.is-free { background: #1e7a46; color: #ffffff; }
+.match-expanded-accent { color: var(--accent); }
+.match-expanded-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.match-expanded-actions .match-expanded-link { grid-column: auto; margin-top: 0; }
+.match-expanded-btn {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.match-expanded-btn:hover { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 720px) {
+  .match-expanded-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .match-expanded-facts dd { font-size: 12.5px; }
+  .match-expanded-center em { font-size: 10px; }
+}

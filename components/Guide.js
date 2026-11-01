@@ -7,6 +7,7 @@ import { broadcastServices, channelDisplay, isForeignBroadcaster, matchStatus } 
 import { dateKeyOffset, istDateKey, istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionShort, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
+import MatchExpandedCard from './MatchExpandedCard';
 import { useLanguage } from './LanguageProvider';
 
 const FILTER_STORAGE_KEY = 'tvsporrehberi:match-filter';
@@ -91,23 +92,7 @@ function MatchRow({ row, isExpanded, onToggle, showCompetition = false }) {
         </div>
       </div>
       </div>
-      {isExpanded ? (
-        <div className="match-expanded">
-          <div className="match-expanded-team">
-            {row.home_logo ? <img src={row.home_logo} alt="" width="58" height="58" loading="lazy" /> : null}
-            <strong>{row.home_team}</strong>
-          </div>
-          <div className="match-expanded-center">
-            <span>{isLive ? (row.elapsed != null ? `${row.elapsed}' · ${t('common.live')}` : t('common.live')) : istTime(row.kickoff_at)}</span>
-            <small>{competitionLabel(row.competition_key, locale)}</small>
-          </div>
-          <div className="match-expanded-team away">
-            {row.away_logo ? <img src={row.away_logo} alt="" width="58" height="58" loading="lazy" /> : null}
-            <strong>{row.away_team}</strong>
-          </div>
-          <Link href={`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`} className="match-expanded-link" onClick={(event) => event.stopPropagation()}>{t('common.details')}</Link>
-        </div>
-      ) : null}
+      {isExpanded ? <MatchExpandedCard row={row} status={status} locale={locale} /> : null}
     </div>
   );
 }
