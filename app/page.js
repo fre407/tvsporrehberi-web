@@ -44,7 +44,7 @@ const FAQ = [
   },
   {
     q: 'TV Spor Rehberi mobil uygulamasını nereden indirebilirim?',
-    a: 'Uygulamayı Google Play Store üzerinden ücretsiz indirebilir, favori takımın için maç bildirimlerini açabilirsin.',
+    a: 'Uygulamayı Android için Google Play’den, iPhone için App Store’dan ücretsiz indirebilir, favori takımın için maç bildirimlerini açabilirsin.',
   },
 ];
 
@@ -53,7 +53,7 @@ const FAQ_EN = [
   { q: 'How often is broadcast information updated?', a: 'Match schedules and channel information are refreshed automatically at regular intervals, so changes are reflected on the site shortly afterwards.' },
   { q: 'Are live scores updated in real time?', a: 'The Live Scores page refreshes match scores and minutes automatically at regular intervals without requiring a page reload.' },
   { q: 'Which leagues and tournaments are covered?', a: 'The coverage includes the Trendyol Süper Lig, Premier League, LaLiga, Serie A, Bundesliga, Ligue 1, Champions League, Europa League, Conference League and more.' },
-  { q: 'Where can I download the TV Spor Rehberi mobile app?', a: 'You can download the app free from Google Play and enable match notifications for your favourite team.' },
+  { q: 'Where can I download the TV Spor Rehberi mobile app?', a: 'You can download the app free from Google Play (Android) or the App Store (iPhone) and enable match notifications for your favourite team.' },
 ];
 
 const FAQ_JSON_LD = {
