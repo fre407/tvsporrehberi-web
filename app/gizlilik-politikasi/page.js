@@ -56,9 +56,8 @@ export default function PrivacyPage() {
               Google Reklam Ayarları
             </a>{' '}
             sayfalarını ziyaret edebilirsiniz. Google dahil üçüncü taraf reklam sağlayıcıları, bu siteye ve
-            diğer sitelere yaptığınız önceki ziyaretlere dayalı reklam göstermek için çerez kullanabilir. Avrupa
-            Ekonomik Alanı ve Birleşik Krallık&apos;tan gelen ziyaretçilerden, kişiselleştirilmiş reklam için
-            gerekli izin Google&apos;ın onaylı izin yönetimi araçlarıyla alınır.
+            diğer sitelere yaptığınız önceki ziyaretlere dayalı reklam göstermek için çerez kullanabilir.
+            Kişiselleştirilmiş reklamları yukarıdaki Google Reklam Ayarları sayfasından kapatabilirsiniz.
           </p>
 
           <h2>Maç ve yayın verileri</h2>
