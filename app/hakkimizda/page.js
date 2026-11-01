@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { SITE_URL, playStoreUrl } from '../../lib/links';
+import { APP_STORE_URL, SITE_URL, playStoreUrl } from '../../lib/links';
 
 export const revalidate = false;
 
@@ -24,7 +24,7 @@ export default function AboutPage() {
           <p>
             TV Spor Rehberi, Süper Lig&apos;den Şampiyonlar Ligi&apos;ne Avrupa&apos;nın büyük liglerindeki maçların
             hangi kanalda, saat kaçta yayınlandığını ve canlı skorlarını tek bir yerde toplayan ücretsiz bir yayın
-            rehberidir. Bu web sitesi, aynı isimli Android uygulamasının bir uzantısıdır ve aynı veri altyapısını
+            rehberidir. Bu web sitesi, aynı isimli Android ve iOS uygulamasının bir uzantısıdır ve aynı veri altyapısını
             kullanır.
           </p>
 
@@ -47,8 +47,13 @@ export default function AboutPage() {
             Aynı bilgilere favori takım bildirimleri, canlı skor bildirimleri gibi ek özelliklerle mobil uygulamadan
             da ulaşabilirsin.{' '}
             <a href={playStoreUrl('hakkimizda')} target="_blank" rel="noopener noreferrer">
-              Play Store&apos;dan indir →
-            </a>
+              Google Play&apos;den (Android)
+            </a>{' '}
+            veya{' '}
+            <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
+              App Store&apos;dan (iPhone)
+            </a>{' '}
+            ücretsiz indirebilirsin.
           </p>
 
           <h2>İletişim</h2>

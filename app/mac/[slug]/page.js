@@ -16,7 +16,7 @@ import {
 } from '../../../lib/data';
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
-import { SITE_URL, playStoreUrl } from '../../../lib/links';
+import { APP_STORE_URL, SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import Image from 'next/image';
 import AppCta from '../../../components/AppCta';
@@ -333,8 +333,13 @@ export default async function MatchDetailPage({ params }) {
           ) : null}
 
           <p style={{ marginTop: 22 }}>
+            📲 Canlı skor bildirimi almak için uygulamayı indir:{' '}
             <a href={playStoreUrl('mac_detay')} className="sec-link" target="_blank" rel="noopener noreferrer">
-              📲 Canlı skor bildirimi almak için uygulamayı indir →
+              Google Play
+            </a>{' '}
+            ·{' '}
+            <a href={APP_STORE_URL} className="sec-link" target="_blank" rel="noopener noreferrer">
+              App Store
             </a>
           </p>
         </div>

@@ -803,6 +803,11 @@ html[data-theme='light'] .match-row-shell.is-expanded {
   white-space: nowrap;
   overflow: visible;
 }
+.mr-chan-country {
+  color: var(--subtext-dim);
+  font-size: 10px;
+  font-weight: 600;
+}
 .mr-chan.pending {
   flex-direction: column;
   gap: 2px;
@@ -1116,6 +1121,7 @@ footer.site {
   color: var(--accent-ink);
   font-size: 11px;
 }
+.foot-app-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .foot-app-cta span:not(.foot-app-play) { display: grid; gap: 1px; }
 .foot-app-cta small { color: var(--subtext-dim); font-size: 9px; }
 .foot-app-cta strong { color: var(--text); font-size: 12px; }

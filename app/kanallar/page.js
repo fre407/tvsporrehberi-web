@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import AppCta from '../../components/AppCta';
-import { getDistinctChannels, windowIso } from '../../lib/data';
+import { broadcasterLabel, getDistinctChannels, windowIso } from '../../lib/data';
 import { SITE_URL } from '../../lib/links';
 import { slugify } from '../../lib/format';
 import FavoriteButton from '../../components/FavoriteButton';
@@ -45,7 +45,7 @@ export default async function ChannelsIndexPage() {
               {channels.map((c) => (
                 <div key={c.slug} className="index-card channel-index-card">
                   <Link href={`/kanal/${c.slug}`} className="channel-index-link">
-                    <span className="index-card-name">{c.name}</span>
+                    <span className="index-card-name">{broadcasterLabel(c.name, locale)}</span>
                   </Link>
                   <FavoriteButton favoriteId={`channel:${slugify(c.name)}`} label={c.name} compact />
                 </div>

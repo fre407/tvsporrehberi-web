@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { playStoreUrl } from '../lib/links';
+import { APP_STORE_URL, playStoreUrl } from '../lib/links';
 import { t } from '../lib/i18n';
 
 export default function Footer({ locale }) {
@@ -13,11 +13,18 @@ export default function Footer({ locale }) {
               <div className="brand-name">SPOR<span>REHBERİ</span></div>
             </Link>
             <p>{t(locale, 'footer.text')}</p>
-            <a href={playStoreUrl('footer_app')} target="_blank" rel="noopener noreferrer" className="foot-app-cta">
-              <span className="foot-app-play" aria-hidden="true">▶</span>
-              <span><small>{t(locale, 'footer.app')}</small><strong>Google Play</strong></span>
-              <b aria-hidden="true">↗</b>
-            </a>
+            <div className="foot-app-row">
+              <a href={playStoreUrl('footer_app')} target="_blank" rel="noopener noreferrer" className="foot-app-cta">
+                <span className="foot-app-play" aria-hidden="true">▶</span>
+                <span><small>{t(locale, 'footer.app')}</small><strong>Google Play</strong></span>
+                <b aria-hidden="true">↗</b>
+              </a>
+              <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="foot-app-cta">
+                <span className="foot-app-play" aria-hidden="true">↓</span>
+                <span><small>{t(locale, 'footer.app')}</small><strong>App Store</strong></span>
+                <b aria-hidden="true">↗</b>
+              </a>
+            </div>
           </div>
 
           <nav className="foot-column" aria-label={t(locale, 'footer.explore')}>

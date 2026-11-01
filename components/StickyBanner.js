@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { playStoreUrl } from '../lib/links';
+import { APP_STORE_URL, playStoreUrl } from '../lib/links';
 import { useLanguage } from './LanguageProvider';
 
 const DISMISS_KEY = '@tvsporrehberi_app_banner_dismissed';
@@ -9,8 +9,14 @@ const DISMISS_KEY = '@tvsporrehberi_app_banner_dismissed';
 export default function StickyBanner() {
   const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
+  const [isIos, setIsIos] = useState(false);
 
   useEffect(() => {
+    // Banner tek düğmelik (mobilde iki düğmeye yer yok) — iPhone/iPad'de
+    // App Store'a, diğer her yerde Google Play'e gider. iPadOS 13+ masaüstü
+    // Safari gibi "Macintosh" dediği için dokunmatik kontrolü de yapılıyor.
+    const ua = navigator.userAgent || '';
+    setIsIos(/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1));
     try {
       if (localStorage.getItem(DISMISS_KEY) !== '1') setVisible(true);
     } catch {
@@ -39,8 +45,8 @@ export default function StickyBanner() {
           <span className="sticky-banner-text">{t('banner.text')}</span>
         </div>
         <div className="sticky-banner-actions">
-          <a href={playStoreUrl('sticky_banner')} target="_blank" rel="noopener noreferrer" className="sticky-banner-cta">
-            <span>Google Play</span><strong>{t('banner.download')}</strong>
+          <a href={isIos ? APP_STORE_URL : playStoreUrl('sticky_banner')} target="_blank" rel="noopener noreferrer" className="sticky-banner-cta">
+            <span>{isIos ? 'App Store' : 'Google Play'}</span><strong>{t('banner.download')}</strong>
           </a>
           <button type="button" onClick={dismiss} aria-label={t('banner.close')} className="sticky-banner-close">
             ✕

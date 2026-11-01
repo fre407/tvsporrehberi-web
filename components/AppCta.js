@@ -1,4 +1,4 @@
-import { playStoreUrl } from '../lib/links';
+import { APP_STORE_URL, playStoreUrl } from '../lib/links';
 import { getLocale } from '../lib/locale';
 import { t } from '../lib/i18n';
 
@@ -20,6 +20,9 @@ export default async function AppCta({ campaign }) {
             <div className="store-row">
               <a className="store-btn" href={playStoreUrl(campaign)} target="_blank" rel="noopener noreferrer">
                 {t(locale, 'cta.download')}
+              </a>
+              <a className="store-btn" href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
+                {t(locale, 'cta.downloadIos')}
               </a>
             </div>
           </div>

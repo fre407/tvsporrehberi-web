@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { broadcastServices, channelDisplay, matchStatus } from '../lib/data';
+import { broadcastServices, channelDisplay, isForeignBroadcaster, matchStatus } from '../lib/data';
 import { istTime, matchSlug, slugify } from '../lib/format';
 import { competitionFlag, competitionLabel, competitionPriority, competitionShort, competitionSlug } from '../lib/competitions';
 import FavoriteButton, { getFavoriteIds } from './FavoriteButton';
@@ -63,7 +63,10 @@ function MatchRow({ row, isExpanded, onToggle }) {
           ) : (
             <>
               {services.map((service) => (
-                <div className="mr-chan" key={service} title={service}><span>{service}</span></div>
+                <div className="mr-chan" key={service} title={service}>
+                  <span>{service}</span>
+                  {isForeignBroadcaster(service) ? <small className="mr-chan-country">{locale === 'en' ? 'Azerbaijan' : 'Azerbaycan'}</small> : null}
+                </div>
               ))}
             </>
           )}

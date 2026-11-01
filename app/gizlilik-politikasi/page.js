@@ -23,7 +23,7 @@ export default function PrivacyPage() {
         <div className="wrap legal-text">
           <p>
             Bu sayfa, <strong>tvsporrehberi.com</strong> web sitesinin ziyaretçi verilerini nasıl işlediğini açıklar.
-            TV Spor Rehberi Android uygulamasının kendi gizlilik politikası ayrıdır ve uygulama içindeki bağlantıdan
+            TV Spor Rehberi mobil uygulamasının (Android ve iOS) kendi gizlilik politikası ayrıdır ve uygulama içindeki bağlantıdan
             ulaşılabilir.
           </p>
 

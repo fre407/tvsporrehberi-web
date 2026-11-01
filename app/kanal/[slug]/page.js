@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
 import JsonLd from '../../../components/JsonLd';
-import { getFixturesForChannelSlug, windowIso } from '../../../lib/data';
+import { getFixturesForChannelSlug, isForeignBroadcaster, windowIso } from '../../../lib/data';
 import { SITE_URL } from '../../../lib/links';
 import { getLocale } from '../../../lib/locale';
 
@@ -54,7 +54,9 @@ export default async function ChannelDetailPage({ params }) {
         <div className="wrap">
           <div className="eyebrow">{locale === 'en' ? 'Channel Guide' : 'Kanal Rehberi'}</div>
           <h1>{displayName}</h1>
-          <p className="page-desc">{locale === 'en' ? `Matches broadcast on ${displayName} and their kick-off times.` : `${displayName} yayın akışı: bu kanalda/platformda yayınlanacak maçlar ve saatleri (TSİ).`}</p>
+          <p className="page-desc">{locale === 'en' ? `Matches broadcast on ${displayName} and their kick-off times.` : `${displayName} yayın akışı: bu kanalda/platformda yayınlanacak maçlar ve saatleri (TSİ).`}
+            {isForeignBroadcaster(displayName) ? (locale === 'en' ? ' Note: this is an Azerbaijani channel.' : ' Not: bu bir Azerbaycan kanalıdır.') : null}
+          </p>
         </div>
       </div>
 
