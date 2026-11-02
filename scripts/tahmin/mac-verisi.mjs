@@ -75,14 +75,6 @@ const upcoming = rows.filter(
 );
 const finished = rows.filter((r) => FINISHED.has(r.status) && r.home_score != null && r.away_score != null);
 
-function recentForm(team, limit = 6) {
-  return finished
-    .filter((r) => r.home_team === team || r.away_team === team)
-    .slice(-limit)
-    .reverse()
-    .map((r) => resultLine(r, team));
-}
-
 const standingsCache = new Map();
 async function standingFor(competitionKey, team) {
   const leagueApiId = COMPETITION_TO_LEAGUE_API_ID[competitionKey];
@@ -101,9 +93,8 @@ async function standingFor(competitionKey, team) {
     galibiyet: found.all?.win,
     beraberlik: found.all?.draw,
     maglubiyet: found.all?.lose,
-    atilan: found.all?.goals?.for,
-    yenilen: found.all?.goals?.against,
-    form: found.form,
+    averaj: found.goalsDiff ?? null,
+    formEnYeniSolda: found.form,
   };
 }
 
@@ -119,10 +110,12 @@ async function headToHead(home, away) {
     .map((r) => `${istDateKey(r.kickoff_at)} ${competitionLabel(r.competition_key)}: ${r.home_team} ${r.home_score}-${r.away_score} ${r.away_team}`);
 }
 
-// 4 büyük dışındaki rakibin son maçları ayrı sorguyla (yukarıdaki toplu
-// sorgu yalnızca 4 büyüğün maçlarını getiriyor).
-async function opponentForm(team, limit = 6) {
-  if (isBig(team)) return recentForm(team, limit);
+// Bir takımın son resmi maçları (en yeni önce). 4 büyük dışındaki rakip
+// için ayrı sorgu (yukarıdaki toplu sorgu yalnızca 4 büyüğün maçlarını getiriyor).
+async function teamRows(team, limit = 6) {
+  if (isBig(team)) {
+    return finished.filter((r) => r.home_team === team || r.away_team === team).slice(-limit).reverse();
+  }
   const names = teamNameVariants(team).map((n) => `"${n.replace(/"/g, '')}"`).join(',');
   const data = await rest(
     `fixtures_with_channel?select=*&kickoff_at=gte.${fromIso}&kickoff_at=lt.${new Date(now).toISOString()}` +
@@ -131,8 +124,83 @@ async function opponentForm(team, limit = 6) {
   return data
     .map(normalize)
     .filter((r) => FINISHED.has(r.status) && r.home_score != null && !EXCLUDED_COMPETITIONS.has(r.competition_key))
-    .slice(0, limit)
-    .map((r) => resultLine(r, team));
+    .slice(0, limit);
+}
+
+// --- Kaba istatistiksel gol beklentisi -----------------------------------
+// Yazarın HAREKET NOKTASI, tahminin kendisi değil. Son 6 resmi maçın attığı/
+// yediği gol ortalaması, lig seviyesi farkıyla (Süper Lig takımı Premier Lig
+// takımına karşı gibi) ve iç saha avantajıyla düzeltilir; Poisson ile skor
+// olasılıkları çıkar. Hoca değişikliği, kriz, sakatlık, motivasyon gibi
+// konjonktürü BİLMEZ — yazar bunlarla yukarı/aşağı düzeltir (bkz. rehber).
+const UEFA_KEYS = new Set(['sampiyonlar_ligi', 'avrupa_ligi', 'konferans_ligi', 'uefa_super_kupa']);
+const LEAGUE_STRENGTH = {
+  premier_lig: 1.0, la_liga: 0.95, serie_a: 0.9, bundesliga: 0.9, ligue_1: 0.82,
+  eredivisie: 0.74, primeira_liga: 0.74, super_lig: 0.7, belcika_ligi: 0.7,
+};
+const DEFAULT_STRENGTH = 0.6;
+
+function domesticLeague(rows) {
+  const counts = new Map();
+  for (const r of rows) if (!UEFA_KEYS.has(r.competition_key)) counts.set(r.competition_key, (counts.get(r.competition_key) ?? 0) + 1);
+  return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+}
+
+function averages(rows, team) {
+  if (!rows.length) return { atilan: 1.3, yenilen: 1.3 };
+  let gf = 0;
+  let ga = 0;
+  for (const r of rows) {
+    const home = r.home_team === team;
+    gf += home ? r.home_score : r.away_score;
+    ga += home ? r.away_score : r.home_score;
+  }
+  return { atilan: gf / rows.length, yenilen: ga / rows.length };
+}
+
+function poisson(k, l) {
+  let f = 1;
+  for (let i = 2; i <= k; i++) f *= i;
+  return (Math.exp(-l) * l ** k) / f;
+}
+
+function goalExpectation(home, away, homeRows, awayRows) {
+  const h = averages(homeRows, home);
+  const a = averages(awayRows, away);
+  const hLeague = domesticLeague(homeRows);
+  const aLeague = domesticLeague(awayRows);
+  const ratio = ((LEAGUE_STRENGTH[hLeague] ?? DEFAULT_STRENGTH) / (LEAGUE_STRENGTH[aLeague] ?? DEFAULT_STRENGTH)) ** 0.8;
+  const lh = Math.max(0.2, ((h.atilan + a.yenilen) / 2) * 1.1 * ratio);
+  const la = Math.max(0.2, ((a.atilan + h.yenilen) / 2) * 0.9 / ratio);
+  const grid = [];
+  let p1 = 0, px = 0, p2 = 0, over25 = 0, btts = 0;
+  for (let i = 0; i <= 7; i++) {
+    for (let j = 0; j <= 7; j++) {
+      const p = poisson(i, lh) * poisson(j, la);
+      grid.push({ skor: `${i}-${j}`, p });
+      if (i > j) p1 += p; else if (i === j) px += p; else p2 += p;
+      if (i + j > 2.5) over25 += p;
+      if (i > 0 && j > 0) btts += p;
+    }
+  }
+  const pct = (x) => Math.round(x * 100);
+  return {
+    not: 'Kaba istatistiksel taban — konjonktürle (hoca, kriz, sakatlık, motivasyon) düzeltilmeli.',
+    evSahibiLig: hLeague,
+    deplasmanLig: aLeague,
+    evSahibiSon6Ortalama: { atilan: +h.atilan.toFixed(2), yenilen: +h.yenilen.toFixed(2) },
+    deplasmanSon6Ortalama: { atilan: +a.atilan.toFixed(2), yenilen: +a.yenilen.toFixed(2) },
+    beklenenGol: { evSahibi: +lh.toFixed(2), deplasman: +la.toFixed(2) },
+    olasilikYuzde: { ms1: pct(p1), msX: pct(px), ms2: pct(p2), ust25: pct(over25), kgVar: pct(btts) },
+    enOlasiSkorlar: grid.sort((x, y) => y.p - x.p).slice(0, 8).map((g) => `${g.skor} (%${pct(g.p)})`),
+  };
+}
+
+// İç ligdeki yer (UEFA maçlarında da takımın kendi liginde nerede olduğu
+// konjonktür için önemli).
+async function domesticStanding(team, rows) {
+  const league = domesticLeague(rows);
+  return league ? { lig: competitionLabel(league), ...(await standingFor(league, team)) } : null;
 }
 
 const out = [];
@@ -153,10 +221,23 @@ for (const r of upcoming) {
     tarihTSI: istDateKey(r.kickoff_at),
     saatTSI: istTime(r.kickoff_at),
     channel: [r.channel, r.channel2, r.platform].filter(Boolean).join(' / ') || null,
-    evSahibiSonMaclar: await opponentForm(r.home_team),
-    deplasmanSonMaclar: await opponentForm(r.away_team),
-    evSahibiPuanDurumu: await standingFor(r.competition_key, r.home_team),
-    deplasmanPuanDurumu: await standingFor(r.competition_key, r.away_team),
+    ...(await (async () => {
+      const homeRows = await teamRows(r.home_team);
+      const awayRows = await teamRows(r.away_team);
+      return {
+        evSahibiSonMaclar: homeRows.map((x) => resultLine(x, r.home_team)),
+        deplasmanSonMaclar: awayRows.map((x) => resultLine(x, r.away_team)),
+        buTurnuvadaPuanDurumu: {
+          evSahibi: await standingFor(r.competition_key, r.home_team),
+          deplasman: await standingFor(r.competition_key, r.away_team),
+        },
+        kendiLigindekiYeri: {
+          evSahibi: await domesticStanding(r.home_team, homeRows),
+          deplasman: await domesticStanding(r.away_team, awayRows),
+        },
+        golBeklentisi: goalExpectation(r.home_team, r.away_team, homeRows, awayRows),
+      };
+    })()),
     aralarindakiSonMaclar: await headToHead(r.home_team, r.away_team),
   });
 }

@@ -35,4 +35,16 @@ for (const file of files) {
     console.log(`✓ ${file} (${wordCount(article)} kelime)`);
   }
 }
+// Skor ayarı uyarısı (hata değil): son 4 yazının hepsi tek farklıysa
+// yazar bunu gerçekten veriye/konjonktüre dayandırmış mı, tekrar düşünsün.
+const all = readdirSync(DIR)
+  .filter((f) => f.endsWith('.json'))
+  .map((f) => { try { return JSON.parse(readFileSync(join(DIR, f), 'utf8')); } catch { return null; } })
+  .filter((a) => a?.scorePrediction)
+  .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
+  .slice(0, 4);
+if (all.length === 4 && all.every((a) => Math.abs(a.scorePrediction.home - a.scorePrediction.away) === 1)) {
+  console.log('UYARI: son 4 yazının skor tahmini de tek farklı (' + all.map((a) => `${a.scorePrediction.home}-${a.scorePrediction.away}`).join(', ') +
+    '). Rehberdeki "Skor tahmini nasıl verilir" bölümüne göre bunun gerçekten veriye ve konjonktüre dayandığını kontrol et.');
+}
 process.exit(failed ? 1 : 0);

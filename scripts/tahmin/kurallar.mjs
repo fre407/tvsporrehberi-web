@@ -106,6 +106,9 @@ export function validateArticle(article, fileName) {
     if (!s.heading) errors.push(`${i + 1}. bölümün başlığı yok`);
     if (!Array.isArray(s.paragraphs) || s.paragraphs.length === 0) errors.push(`${i + 1}. bölümde paragraf yok`);
   }
+  if (!sections.some((s) => /kulüp/i.test(s.heading ?? ''))) {
+    errors.push('"Kulüplerde son durum" bölümü yok (başlığında "Kulüp" geçen bir bölüm zorunlu)');
+  }
   const wc = wordCount(article);
   if (wc < MIN_WORDS) errors.push(`yazı çok kısa: ${wc} kelime (en az ${MIN_WORDS})`);
 

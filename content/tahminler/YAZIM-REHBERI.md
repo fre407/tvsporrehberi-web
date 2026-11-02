@@ -34,6 +34,55 @@ yazara bölünür; bizde tek, akıcı, baştan sona okunan bir maç önü yazıs
    ya da zorlanacağını açıkça söyle — gerçekçilik güven kazandırır.
 5. **Yazar kimliği uydurulmaz.** İmza her zaman "TV Spor Rehberi Editörü".
 
+## Konjonktür: takımları SADECE sahadaki puanla değerlendirme
+
+Kullanıcının en önemli uyarısı (2026-11-02): "Takımların güncel durumunu
+sadece futbol ve puana göre değil, her anlamda, konjonktürel olarak
+değerlendir." Bir takımın sahaya nasıl çıkacağını puan tablosundan çok
+kulübün o haftaki havası belirler. Her yazıdan önce MUTLAKA araştır:
+
+- **Teknik direktör:** yeni mi geldi, kovuldu mu, istifa mı etti, geçici
+  hoca mı var, yeni hoca gelmek üzere mi, koltuğu sallanıyor mu? Geçici
+  hocalı ve yönetim krizindeki bir takım, kâğıt üstündeki kadrosunun çok
+  altında oynar — tahmine bunu yansıt.
+- **Yönetim ve camia:** başkana/yönetime protesto, "istifa" tezahüratı,
+  olağanüstü toplantı, seçim/kongre, mali sorun, transfer yasağı.
+- **Soyunma odası:** oyuncu–taraftar gerginliği, kadro dışı bırakılanlar,
+  ayrılık söylentileri, hocayla sorun, kaptanın sakatlığı.
+- **Moral ve seri:** üst üste yenilgiler, kaçan maçlar ("2-0'dan 2-2"),
+  derbi yenilgisinin yorgunluğu ya da galibiyet serisinin özgüveni.
+- **Takvim ve motivasyon:** maç yoğunluğu, rotasyon, hafta sonu derbi/lider
+  maçı, tur atlama hesabı, ligdeki yarış (kendi liginde kaçıncı?).
+- **Rakibin konjonktürü:** yabancı rakibin de hocası baskı altında mı,
+  kendi liginde kaçıncı, krizde mi, yükselişte mi?
+- **Kamuoyu beklentisi:** taraftarın ve yorumcuların bu maçtan ne beklediği
+  ("ağır bir yenilgi korkusu", "farklı galibiyet beklentisi"). Beklentiyi
+  yazıda söyle; katılıyorsan neden, katılmıyorsan neden.
+
+Bu araştırma yazıda **"Kulüplerde son durum"** başlıklı ayrı bir bölüm
+olarak yer alır (zorunlu; başlıkta "Kulüp" geçmeli) ve skor tahminini
+doğrudan etkiler.
+
+## Skor tahmini nasıl verilir (skor ayarı)
+
+Hata (2026-11-02): ilk dört yazının hepsine 2-1/1-2 verilmişti — riskten
+kaçınıp her maça "güvenli" tek farklı skor yazmak gerçekçi değildir.
+
+1. `mac-verisi.mjs` çıktısındaki `golBeklentisi` hareket noktasıdır:
+   beklenen goller, 1/X/2 olasılıkları ve en olası skorlar. Bu taban lig
+   seviyesi farkını ve iç saha avantajını hesaba katar ama konjonktürü
+   BİLMEZ.
+2. Konjonktürle düzelt: krizdeki, geçici hocalı, sakatlıklarla savunması
+   dağılmış takımın yiyeceği gol beklentisini artır; serisi süren,
+   özgüvenli takımınkini artır. Fark büyükse skor da büyük olur: güçlü
+   rakibe karşı krizdeki takıma 0-3, 1-4, hatta 0-5 yazmaktan çekinme.
+3. Dengeli maçta beraberlik (1-1, 2-2) de gerçek bir seçenektir.
+4. Tek farklı skor ancak gerçekten dengeli ve tek golün belirleyeceği bir
+   maçsa verilir; her maça varsayılan olarak 2-1/1-2 yazma. Son yazıların
+   skorlarına bak, hepsi tek farklıysa bu maçın gerçekten öyle olup
+   olmadığını yeniden düşün.
+5. Skorun gerekçesini yazıda açıkça kur: "neden 1-4, neden 0-2 değil?"
+
 ## Ses ve üslup (insan gibi yazmanın yolu)
 
 - Sohbet havasında, kendinden emin, yer yer iddialı: "bence", "tercihim",
@@ -75,8 +124,11 @@ yazara bölünür; bizde tek, akıcı, baştan sona okunan bir maç önü yazıs
    kısa gerekçesi. Tarih, saat (TSİ) ve yayın kanalı burada doğal geçsin.
 2. **Bölümler (`sections`)** — her birinin kısa bir ara başlığı var; en az
    5 bölüm, her bölüm 1–2 paragraf, toplam en az 650 kelime:
+   - "Kulüplerde son durum" (ZORUNLU, ilk bölüm) — yukarıdaki konjonktür
+     başlıklarından bulunanlar: hoca, yönetim, camia, moral, kamuoyu
+     beklentisi; iki takım için de.
    - "Form durumu" — iki takımın son 5 resmi maçı, gol attığı/yediği,
-     iç saha/deplasman performansı. Somut skorlar.
+     iç saha/deplasman performansı, kendi liglerindeki yeri. Somut skorlar.
    - "Sakatlar, cezalılar ve muhtemel 11" — kim yok, kim döndü, hocanın
      muhtemel tercihi. Bilgi yoksa uydurma, "kadro sürprizi beklenmiyor" de.
    - "Taktik çerçeve / maçın anahtarı" — hocaların oyun planı, eşleşmeler,
@@ -103,16 +155,21 @@ yazara bölünür; bizde tek, akıcı, baştan sona okunan bir maç önü yazıs
 
 ## Araştırma sırası (her yazıdan önce)
 
-1. Veri: `node scripts/tahmin/mac-verisi.mjs` çıktısı — fikstür, kanal, son
-   maçlar, puan durumu, aralarındaki son maçlar.
-2. Web: her iki takım için son 48 saatin haberleri — sakat/cezalı, kadro,
+1. Veri: `node --no-warnings scripts/tahmin/mac-verisi.mjs` çıktısı —
+   fikstür, kanal, son maçlar, turnuva ve kendi ligindeki puan durumu,
+   gol beklentisi (`golBeklentisi`), aralarındaki son maçlar.
+2. Web — KONJONKTÜR (her iki takım için, son 1 hafta): hoca durumu,
+   yönetim/camia krizi, protesto, istifa, yeni hoca söylentisi, soyunma
+   odası, taraftar tepkisi, kamuoyu beklentisi. (WebSearch "extended".)
+3. Web — son 48 saatin maç haberleri: sakat/cezalı, kadro, muhtemel 11,
    hoca açıklaması, rotasyon ihtimali, hakem. (WebSearch "standard";
    gerekirse "extended".)
-3. Web: Türkiye'deki popüler tahmin yazıları/yorumcular bu maç için ne
+4. Web: Türkiye'deki popüler tahmin yazıları/yorumcular bu maç için ne
    diyor (Fanatik iddaa, Sporx, 90min, Milliyet Skorer, Ajansspor, Fotomaç,
    yorumcu YouTube başlıkları). Sadece eğilimi not al, metni kopyalama.
-4. Hepsini birleştirip kendi gerçekçi tahminini oluştur. Popüler görüşe
-   körü körüne uyma; veri başka şey söylüyorsa onu yaz.
+5. Hepsini birleştirip kendi gerçekçi tahminini oluştur ("Skor tahmini
+   nasıl verilir" bölümüne uy). Popüler görüşe körü körüne uyma; veri ve
+   konjonktür başka şey söylüyorsa onu yaz.
 
 ## Dosya biçimi
 
