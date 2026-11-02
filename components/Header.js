@@ -6,6 +6,16 @@ import { t } from '../lib/i18n';
 
 const NAV_ITEMS = [
   {
+    href: '/iddiali-tahminler',
+    label: 'predictions',
+    highlight: true,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
+      </svg>
+    ),
+  },
+  {
     href: '/bugun',
     label: 'today',
     icon: (
@@ -71,7 +81,7 @@ export default function Header({ locale }) {
       <div className="nav-row2-outer">
         <div className="wrap nav-row2">
           {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} className="nav-chip">
+            <Link key={item.href} href={item.href} className={`nav-chip${item.highlight ? ' nav-chip-highlight' : ''}`}>
               <span className="nav-chip-icon">{item.icon}</span>
               {t(locale, `nav.${item.label}`)}
             </Link>

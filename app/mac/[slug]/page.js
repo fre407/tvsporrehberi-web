@@ -17,6 +17,7 @@ import {
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { roundText } from '../../../lib/rounds';
+import { predictionForMatch, predictionUrl } from '../../../lib/predictions';
 import { APP_STORE_URL, SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -343,6 +344,18 @@ export default async function MatchDetailPage({ params }) {
               App Store
             </a>
           </p>
+
+          {(() => {
+            const article = predictionForMatch(matchSlug(row.home_team, row.away_team, row.kickoff_at));
+            if (!article) return null;
+            return (
+              <Link href={predictionUrl(article)} className="match-pred-link">
+                <span className="match-pred-kicker">⚡ İDDİALI TAHMİN</span>
+                <b>{article.title}</b>
+                <span>Skor tahminim {article.scorePrediction.home}-{article.scorePrediction.away} · ilk yarı, ikinci yarı ve iddaa tercihleri →</span>
+              </Link>
+            );
+          })()}
 
           <MatchPrediction
             matchKey={matchSlug(row.home_team, row.away_team, row.kickoff_at)}

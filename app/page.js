@@ -8,6 +8,8 @@ import LeagueStats from '../components/LeagueStats';
 import LiveNowStrip from '../components/LiveNowStrip';
 import DailyShareCard from '../components/DailyShareCard';
 import MatchDayBoard from '../components/MatchDayBoard';
+import PredictionShowcase from '../components/PredictionShowcase';
+import { showcasePredictions } from '../lib/predictions';
 import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, matchStatus, windowIso } from '../lib/data';
 import { istDateLong, istTime, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
@@ -178,6 +180,8 @@ export default async function HomePage() {
       <LiveNowStrip rows={liveRows} />
       </>
       )}
+
+      <PredictionShowcase items={showcasePredictions()} />
 
       <section className="home-guide-section">
         <div className="wrap">

@@ -29,6 +29,7 @@ export default function Footer({ locale }) {
 
           <nav className="foot-column" aria-label={t(locale, 'footer.explore')}>
             <h2>{t(locale, 'footer.explore')}</h2>
+            <Link href="/iddiali-tahminler">{t(locale, 'footer.predictions')}</Link>
             <Link href="/bugun">{t(locale, 'footer.today')}</Link>
             <Link href="/canli">{t(locale, 'footer.live')}</Link>
             <Link href="/ligler">{t(locale, 'footer.leagues')}</Link>

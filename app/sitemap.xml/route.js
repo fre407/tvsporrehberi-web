@@ -9,5 +9,6 @@ export function GET() {
     '/sitemaps/days.xml',
     '/sitemaps/entities.xml',
     '/sitemaps/matches.xml',
+    '/sitemaps/tahminler.xml',
   ]));
 }
