@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import JsonLd from '../../../components/JsonLd';
+import { predictionArticleJsonLd } from '../../../lib/structuredData';
 import { channelDisplay, getFixtureByMatchSlug, matchStatus } from '../../../lib/data';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { istDateLong, istTime } from '../../../lib/format';
@@ -101,30 +102,7 @@ export default async function PredictionArticlePage({ params }) {
     .sort((a, b) => Number(isUpcoming(b)) - Number(isUpcoming(a)) || new Date(b.kickoff) - new Date(a.kickoff))
     .slice(0, 4);
 
-  const articleLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.description,
-    image: [`${url}/opengraph-image`],
-    datePublished: article.publishedAt,
-    dateModified: article.updatedAt ?? article.publishedAt,
-    inLanguage: 'tr-TR',
-    articleSection: 'İddialı Tahminler',
-    keywords: (article.keywords ?? []).join(', '),
-    author: { '@type': 'Organization', name: 'TV Spor Rehberi', url: SITE_URL },
-    publisher: { '@type': 'Organization', name: 'TV Spor Rehberi', url: SITE_URL, logo: { '@type': 'ImageObject', url: `${SITE_URL}/icon.png` } },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    about: {
-      '@type': 'SportsEvent',
-      name: `${article.homeTeam} - ${article.awayTeam}`,
-      startDate: article.kickoff,
-      sport: 'Futbol',
-      homeTeam: { '@type': 'SportsTeam', name: article.homeTeam },
-      awayTeam: { '@type': 'SportsTeam', name: article.awayTeam },
-      url: `${SITE_URL}/mac/${article.matchSlug}`,
-    },
-  };
+  const articleLd = predictionArticleJsonLd({ siteUrl: SITE_URL, url, article });
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

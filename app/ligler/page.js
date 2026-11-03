@@ -5,7 +5,7 @@ import { SITE_URL } from '../../lib/links';
 import { getLocale } from '../../lib/locale';
 
 export const metadata = {
-  title: 'Tüm Ligler ve Kupalar — Maç Programı, Puan Durumu, Yayın Bilgileri',
+  title: 'Tüm Ligler ve Kupalar: Maç Programı ve Puan Durumu',
   description: 'Süper Lig, Şampiyonlar Ligi, Premier Lig, LaLiga ve daha fazlası — her ligin maç programı, puan durumu ve hangi kanalda yayınlandığı bilgisi tek sayfada.',
   alternates: { canonical: `${SITE_URL}/ligler` },
 };

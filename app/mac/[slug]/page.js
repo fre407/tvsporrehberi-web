@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import {
   getFixtureById,
   getFixturesInWindow,
@@ -9,7 +9,9 @@ import {
   getStandings,
   isIndexWorthyMatch,
   broadcastServices,
+  broadcasterLabel,
   channelDisplay,
+  channelSlug,
   matchStatus,
   teamSlug,
   windowIso,
@@ -24,6 +26,7 @@ import Image from 'next/image';
 import AppCta from '../../../components/AppCta';
 import Guide from '../../../components/Guide';
 import JsonLd from '../../../components/JsonLd';
+import { breadcrumbJsonLd, matchPageJsonLd } from '../../../lib/structuredData';
 import Lineups from '../../../components/Lineups';
 import MatchStats from '../../../components/MatchStats';
 import HeadToHead from '../../../components/HeadToHead';
@@ -128,16 +131,37 @@ async function resolveParam(slug) {
   return { row };
 }
 
+// Meta açıklama ve JSON-LD açıklaması aynı metin — maçın durumuna göre
+// (bitmiş maça "oynanıyor" yazılmasın). Saatin arkasına Türkçe ek
+// eklenmiyor ("20:45'de" gibi ünlü uyumu hataları olmasın).
+function matchDescription(row) {
+  const status = matchStatus(row);
+  const league = competitionLabel(row.competition_key);
+  const services = broadcastServices(row);
+  const yayin = services.length > 0 ? `Yayın: ${channelDisplay(row)}.` : 'Yayıncı kanal henüz açıklanmadı.';
+  const when = `${istDateLong(row.kickoff_at)}, saat ${istTime(row.kickoff_at)} (TSİ)`;
+  if (status === 'finished' && row.home_score != null && row.away_score != null) {
+    return `${row.home_team} ${row.home_score}-${row.away_score} ${row.away_team}: ${league} maçı ${when} oynandı. ${yayin} Maç sonucu, kadrolar ve istatistikler.`;
+  }
+  if (status === 'finished_unknown') {
+    return `${row.home_team} - ${row.away_team} (${league}) maçı ${when} oynandı. ${yayin} Maç sonucu ve detayları.`;
+  }
+  if (status === 'live') {
+    return `${row.home_team} - ${row.away_team} maçı şu an canlı. ${yayin} ${league} maçının canlı skoru, dakikası ve kadroları.`;
+  }
+  if (status === 'not_happening') {
+    return `${row.home_team} - ${row.away_team} (${league}) maçı ertelendi veya iptal edildi. Asıl tarih: ${when}. Yeni tarih açıklanınca güncellenir.`;
+  }
+  return `${row.home_team} - ${row.away_team} maçı ${when}. ${yayin} ${league} maçının canlı skoru ve detayları.`;
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const { row, legacyId } = await resolveParam(slug);
   if (!row || legacyId) return { title: row ? 'Yönlendiriliyor…' : 'Maç Bulunamadı' };
 
-  const chan = channelDisplay(row);
-  const dateLabel = istDateLong(row.kickoff_at);
-  const timeLabel = istTime(row.kickoff_at);
   const title = `${row.home_team} - ${row.away_team} Maçı Hangi Kanalda? Saat Kaçta?`;
-  const description = `${row.home_team} - ${row.away_team} maçı ${dateLabel} günü saat ${timeLabel}'de (TSİ) oynanıyor. Yayın: ${chan}. ${competitionLabel(row.competition_key)} maçının canlı skoru ve detayları.`;
+  const description = matchDescription(row);
   const isStale = Date.now() - new Date(row.kickoff_at).getTime() > NOINDEX_AFTER_MS;
 
   return {
@@ -153,7 +177,7 @@ export default async function MatchDetailPage({ params }) {
   const { slug } = await params;
   const { row, legacyId } = await resolveParam(slug);
   if (!row) notFound();
-  if (legacyId) redirect(`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`);
+  if (legacyId) permanentRedirect(`/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`);
 
   const status = matchStatus(row);
   const chan = channelDisplay(row);
@@ -196,50 +220,20 @@ export default async function MatchDetailPage({ params }) {
   const awayStanding = findStanding(row.away_team);
   const matchUrl = `${SITE_URL}/mac/${matchSlug(row.home_team, row.away_team, row.kickoff_at)}`;
   const summaryLines = buildMatchSummary({ row, status, chan, homeStanding, awayStanding });
-  const broadcastServiceList = broadcastServices(row);
-  const eventStatus = isFinished
-    ? 'https://schema.org/EventCompleted'
-    : isLive
-      ? 'https://schema.org/EventInProgress'
-      : 'https://schema.org/EventScheduled';
-  const broadcastEvents = broadcastServiceList.map((service) => ({
-    '@type': 'BroadcastEvent',
-    broadcastOfEvent: { '@type': 'SportsEvent', name: `${row.home_team} - ${row.away_team}`, url: matchUrl },
-    videoFormat: 'TV',
-    broadcastDisplayName: service,
-  }));
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SportsEvent',
-    name: `${row.home_team} - ${row.away_team}`,
+  const jsonLd = matchPageJsonLd({
+    siteUrl: SITE_URL,
     url: matchUrl,
-    startDate: row.kickoff_at,
-    dateModified: row.updated_at ?? row.kickoff_at,
-    eventStatus,
-    sport: 'Football',
-    homeTeam: { '@type': 'SportsTeam', name: row.home_team },
-    awayTeam: { '@type': 'SportsTeam', name: row.away_team },
-    image: [row.home_logo, row.away_logo].filter(Boolean),
-    location: { '@type': 'Place', name: competitionLabel(row.competition_key) },
-    organizer: { '@type': 'SportsOrganization', name: competitionLabel(row.competition_key) },
-    ...(broadcastEvents.length ? { publication: broadcastEvents } : {}),
-  };
-
-  const breadcrumbLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: competitionLabel(row.competition_key),
-        item: `${SITE_URL}/lig/${competitionSlug(row.competition_key)}`,
-      },
-      { '@type': 'ListItem', position: 3, name: `${row.home_team} - ${row.away_team}`, item: matchUrl },
-    ],
-  };
+    name: `${row.home_team} - ${row.away_team} Maçı Hangi Kanalda? Saat Kaçta?`,
+    description: matchDescription(row),
+    homeTeam: row.home_team,
+    awayTeam: row.away_team,
+    dateModified: row.updated_at ?? undefined,
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: 'Ana Sayfa', url: SITE_URL },
+    { name: competitionLabel(row.competition_key), url: `${SITE_URL}/lig/${competitionSlug(row.competition_key)}` },
+    { name: `${row.home_team} - ${row.away_team}`, url: matchUrl },
+  ]);
 
   return (
     <>
@@ -304,7 +298,17 @@ export default async function MatchDetailPage({ params }) {
             </div>
 
             <div className="detail-meta">
-              <div className={`meta-pill channel`}>📺 {chan}</div>
+              {broadcastServices(row).length > 0 ? (
+                // Kanal adları kanalın yayın akışı sayfasına bağlanır (maç → kanal
+                // iç bağlantısı; denetim 2026-11-03).
+                broadcastServices(row).map((service) => (
+                  <Link key={service} href={`/kanal/${channelSlug(service)}`} className="meta-pill channel">
+                    📺 {broadcasterLabel(service)}
+                  </Link>
+                ))
+              ) : (
+                <div className={`meta-pill channel`}>📺 {chan}</div>
+              )}
               {isLive ? <div className="meta-pill live">● Canlı</div> : null}
               <div className="meta-pill">🗓 {istDateLong(row.kickoff_at)}</div>
               <div className="meta-pill">⏰ Saat {istTime(row.kickoff_at)} (TSİ)</div>

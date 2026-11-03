@@ -89,7 +89,10 @@ export default async function RootLayout({ children }) {
     <html lang={locale} className={`${displayFont.variable} ${bodyFont.variable}`}>
       <head>
         <Script id="theme-init" strategy="beforeInteractive">
-          {`try { const theme = localStorage.getItem('tvsporrehberi:theme'); document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }`}
+          {/* Uygulama şeridini kapatmış ziyaretçide şerit sayfa çizilmeden gizlensin
+              (StickyBanner artık sunucuda görünür basılıyor — eskiden sonradan
+              belirip tüm sayfayı aşağı itiyordu; PageSpeed CLS 0,229, 2026-11-03). */}
+          {`try { const theme = localStorage.getItem('tvsporrehberi:theme'); document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; } try { if (localStorage.getItem('@tvsporrehberi_app_banner_dismissed') === '1') document.documentElement.dataset.appBanner = 'off'; } catch {}`}
         </Script>
         <Script
           async

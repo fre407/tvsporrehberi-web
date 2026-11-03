@@ -11,7 +11,7 @@ import MatchDayBoard from '../components/MatchDayBoard';
 import PredictionShowcase from '../components/PredictionShowcase';
 import { showcasePredictions } from '../lib/predictions';
 import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, matchStatus, windowIso } from '../lib/data';
-import { istDateLong, istTime, slugify } from '../lib/format';
+import { dateKeyOffset, istDateKey, istDateLong, istTime, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
 import { getLocale } from '../lib/locale';
 import { t } from '../lib/i18n';
@@ -191,7 +191,12 @@ export default async function HomePage() {
               <div className="sec-head home-guide-heading">
                 <div>
                   <div className="sec-title">
-                    {locale === 'en' ? <>Today&apos;s <span>Matches</span></> : <>Bugünün <span>Maçları</span></>}
+                    {/* Liste "şimdiden itibaren 24 saat"; gece geç saatte bugünün maçı
+                        kalmamışsa başlık "Yarının Maçları" olur (denetim 2026-11-03:
+                        23:55'te yarının maçları "Bugünün Maçları" başlığıyla görünüyordu). */}
+                    {preview.length > 0 && !preview.some((r) => istDateKey(r.kickoff_at) === dateKeyOffset(0))
+                      ? (locale === 'en' ? <>Tomorrow&apos;s <span>Matches</span></> : <>Yarının <span>Maçları</span></>)
+                      : (locale === 'en' ? <>Today&apos;s <span>Matches</span></> : <>Bugünün <span>Maçları</span></>)}
                   </div>
                   <div className="sec-sub">{copy('subtitle')}</div>
                 </div>

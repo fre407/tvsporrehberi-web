@@ -26,18 +26,22 @@ function AppleIcon() {
 
 export default function StickyBanner() {
   const { t } = useLanguage();
-  const [visible, setVisible] = useState(false);
+  // Sunucuda GÖRÜNÜR basılır ki sonradan belirip sayfayı aşağı itmesin (CLS).
+  // Kapatmış ziyaretçide app/layout.js'teki erken betik <html data-app-banner="off">
+  // koyar, CSS şeridi ilk boyamadan önce gizler; burada da bileşen kaldırılır.
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     try {
-      if (localStorage.getItem(DISMISS_KEY) !== '1') setVisible(true);
+      if (localStorage.getItem(DISMISS_KEY) === '1') setVisible(false);
     } catch {
-      setVisible(true);
+      // localStorage kapalı — şerit görünür kalır.
     }
   }, []);
 
   function dismiss() {
     setVisible(false);
+    document.documentElement.dataset.appBanner = 'off';
     try {
       localStorage.setItem(DISMISS_KEY, '1');
     } catch {

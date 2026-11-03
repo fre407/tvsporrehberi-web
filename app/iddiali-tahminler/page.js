@@ -9,9 +9,9 @@ import { PREDICTIONS_PATH, allPredictions, isUpcoming, predictionUrl } from '../
 export const revalidate = 600;
 
 export const metadata = {
-  title: { absolute: 'İddialı Tahminler: Galatasaray, Fenerbahçe, Beşiktaş ve Trabzonspor Maç Tahminleri | TV Spor Rehberi' },
+  title: { absolute: 'İddialı Tahminler: 4 Büyüklerin Maç Tahminleri ve İddaa Yorumları' },
   description:
-    'Galatasaray, Fenerbahçe, Beşiktaş ve Trabzonspor maçları için skor tahmini, ilk yarı-ikinci yarı beklentisi ve iddaa yorumları. Form, sakat ve cezalılara dayalı maç önü analizler.',
+    'Galatasaray, Fenerbahçe, Beşiktaş ve Trabzonspor maçları için skor tahmini ve iddaa yorumu: form, sakatlar ve kulüplerin son durumuna dayalı analizler.',
   alternates: { canonical: `${SITE_URL}${PREDICTIONS_PATH}` },
   openGraph: { type: 'website', url: `${SITE_URL}${PREDICTIONS_PATH}`, title: 'İddialı Tahminler | TV Spor Rehberi' },
 };

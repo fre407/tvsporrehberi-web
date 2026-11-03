@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
@@ -85,7 +85,7 @@ export default async function TeamPage({ params }) {
   const locale = await getLocale();
   const { slug: slugParam } = await params;
   const { matches, displayName, slug, redirectTo } = await loadTeam(slugParam);
-  if (redirectTo) redirect(`/takim/${redirectTo}`);
+  if (redirectTo) permanentRedirect(`/takim/${redirectTo}`);
   if (!displayName) notFound();
 
   const now = Date.now();

@@ -27,7 +27,7 @@ export async function generateMetadata() {
   const season = seasonLabel();
   return {
     title: `Hangi Lig Hangi Kanalda? ${season} Futbol Yayın Rehberi`,
-    description: `Süper Lig, Şampiyonlar Ligi, Avrupa Ligi, Premier Lig, LaLiga, Serie A, Bundesliga ve diğer turnuvaların ${season} sezonunda Türkiye'de hangi kanal ve platformlarda yayınlandığı — güncel maç verisine göre.`,
+    description: `Süper Lig, Şampiyonlar Ligi, Premier Lig, LaLiga, Serie A ve Bundesliga ${season} sezonunda Türkiye'de hangi kanalda? Güncel maç verisine göre yayıncılar.`,
     alternates: { canonical: `${SITE_URL}/yayin-haklari` },
   };
 }

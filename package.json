@@ -8,7 +8,9 @@
     "prebuild": "node --no-warnings scripts/tahmin/derle.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --no-warnings --test tests/*.test.mjs",
+    "seo-audit": "node --no-warnings scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
