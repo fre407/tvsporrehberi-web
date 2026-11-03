@@ -6,7 +6,9 @@ import { competitionLabel } from '../lib/competitions';
 import { istDateLong, istTime } from '../lib/format';
 
 // Ana sayfadaki "İddialı Tahminler" kutusu: en yakın tarihteki tahmin
-// yazısının TAMAMI. Aynı güne birden fazla büyük maç denk gelirse yazılar
+// yazısının KISA ÖZETİ (giriş, skor, ilk tercihler) — yazının tamamı kendi
+// sayfasında (canonical), ana sayfada aynı metin tekrarlanmıyor (SEO denetimi
+// 2026-11-03). Aynı güne birden fazla büyük maç denk gelirse yazılar
 // yan yana durur; ok düğmeleri, noktalar ya da parmakla kaydırarak geçilir.
 
 function Slide({ article }) {
@@ -27,23 +29,15 @@ function Slide({ article }) {
         <strong>{home} - {away}</strong>
         <span>{article.awayTeam}</span>
       </div>
-      <p className="showcase-intro"><strong>{firstSentence}</strong> {rest.join(' ')}</p>
+      <p className="showcase-intro"><strong>{firstSentence}</strong> {rest.slice(0, 1).join(' ')}</p>
       <ul className="showcase-picks" aria-label="İddaa tercihleri">
-        {article.picks.map((p) => (
+        {article.picks.slice(0, 3).map((p) => (
           <li key={`${p.market}-${p.pick}`}><small>{p.market}</small><b>{p.pick}</b></li>
         ))}
       </ul>
-      {article.sections.map((s) => (
-        <div key={s.heading} className="showcase-section">
-          <h4>{s.heading}</h4>
-          {s.paragraphs.map((p) => <p key={p.slice(0, 40)}>{p}</p>)}
-        </div>
-      ))}
-      <div className="showcase-section">
-        <h4>Son söz</h4>
-        <p>{article.closing}</p>
-      </div>
-      <Link className="showcase-link" href={`/iddiali-tahminler/${article.slug}`}>Yazının sayfasını aç →</Link>
+      <Link className="showcase-link" href={`/iddiali-tahminler/${article.slug}`}>
+        Yazının tamamını oku{article.readingMinutes ? ` · ${article.readingMinutes} dk` : ''} →
+      </Link>
     </article>
   );
 }

@@ -9,7 +9,17 @@ import LiveNowStrip from '../components/LiveNowStrip';
 import DailyShareCard from '../components/DailyShareCard';
 import MatchDayBoard from '../components/MatchDayBoard';
 import PredictionShowcase from '../components/PredictionShowcase';
-import { showcasePredictions } from '../lib/predictions';
+import { readingMinutes, showcasePredictions } from '../lib/predictions';
+
+// Ana sayfa kutusu yalnızca özeti gösteriyor; istemciye de yalnızca o alanlar
+// gidiyor (yazının bölümleri sayfa HTML'ine/JS'ine girmez).
+function showcaseSummary(a) {
+  return {
+    slug: a.slug, title: a.title, competition: a.competition, kickoff: a.kickoff, channel: a.channel,
+    homeTeam: a.homeTeam, awayTeam: a.awayTeam, scorePrediction: a.scorePrediction,
+    intro: a.intro, picks: a.picks, readingMinutes: readingMinutes(a),
+  };
+}
 import { channelDisplay, getFixturesInWindow, getLeagueStats, getLiveFixtures, getStandings, matchStatus, windowIso } from '../lib/data';
 import { dateKeyOffset, istDateKey, istDateLong, istTime, slugify } from '../lib/format';
 import { SITE_URL } from '../lib/links';
@@ -181,7 +191,7 @@ export default async function HomePage() {
       </>
       )}
 
-      <PredictionShowcase items={showcasePredictions()} />
+      <PredictionShowcase items={showcasePredictions().map(showcaseSummary)} />
 
       <section className="home-guide-section">
         <div className="wrap">

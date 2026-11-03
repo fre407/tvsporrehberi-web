@@ -23,9 +23,11 @@
 - Oran, kupon, bahis sitesi adı veya bağlantısı yok. Mevcut kural korunuyor.
 - Yazar "TV Spor Rehberi Editörü" olarak görünüyor, JSON-LD'de Organization. Gerçek olmayan
   kişi biyografisi oluşturulmadı.
-- **Kullanıcı kararı:** master prompt ana sayfada yazının kısa özetinin gösterilmesini
-  öneriyor. Kullanıcı daha önce yazının ana sayfada tamamının gösterilmesini istemişti. Bu
-  davranış değiştirilmedi. Canonical yazı sayfasında olduğu için çift içerik riski düşük.
+- Ana sayfa kutusu artık yazının **kısa özetini** gösteriyor. Kullanıcı bunu 03.11.2026'da
+  onayladı. Özet şunlardan oluşuyor: başlık, skor tahmini, girişin ilk iki cümlesi, ilk üç
+  tercih ve "Yazının tamamını oku" bağlantısı. Bölümler ve "Son söz" yalnızca yazı
+  sayfasında (canonical) yer alıyor, yani aynı metin ana sayfada tekrarlanmıyor. Ana
+  sayfa HTML'i 108 KB'den 96 KB'ye düştü.
 
 ## Güven sayfaları
 /hakkimizda, /iletisim ve /gizlilik-politikasi mevcut ve 200 dönüyor. Sahte ekip üyesi
