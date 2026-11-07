@@ -3,6 +3,7 @@ import {
   getFixtureById,
   getFixturesInWindow,
   getFixtureLineups,
+  getFixtureLiveEvents,
   getFixtureStats,
   getFixturesForCompetition,
   getHeadToHead,
@@ -19,6 +20,7 @@ import {
 import { istDateLong, istKeyToUtcRange, istTime, matchSlug, slugify } from '../../../lib/format';
 import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { roundText } from '../../../lib/rounds';
+import { keyMatchEvents } from '../../../lib/matchEvents';
 import { predictionForMatch, predictionUrl } from '../../../lib/predictions';
 import { APP_STORE_URL, SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
@@ -29,6 +31,7 @@ import JsonLd from '../../../components/JsonLd';
 import { breadcrumbJsonLd, matchPageJsonLd } from '../../../lib/structuredData';
 import Lineups from '../../../components/Lineups';
 import MatchStats from '../../../components/MatchStats';
+import MatchKeyEvents from '../../../components/MatchKeyEvents';
 import HeadToHead from '../../../components/HeadToHead';
 import MatchDetailActions from '../../../components/MatchDetailActions';
 import DailyShareCard from '../../../components/DailyShareCard';
@@ -202,6 +205,21 @@ export default async function MatchDetailPage({ params }) {
   } catch {
     // Bu ek bölümler opsiyonel — hata olursa maç kartının kendisi yine de gösterilsin.
   }
+  // Goller + kırmızı kartlar (skor kartında). Maç bitince fixture_stats,
+  // canlıyken ya da istatistik henüz yazılmadıysa uygulamanın canlı olay
+  // önbelleği; skorla tutmayan liste gösterilmez (lib/matchEvents.js).
+  let keyEvents = null;
+  if (isLive || isFinished) {
+    keyEvents = keyMatchEvents(stats?.events, row.home_score, row.away_score);
+    if (!keyEvents) {
+      try {
+        const live = await getFixtureLiveEvents(row.id);
+        keyEvents = keyMatchEvents(live?.events, row.home_score, row.away_score);
+      } catch {
+        // opsiyonel bölüm
+      }
+    }
+  }
   const otherLeagueMatches = otherFixtures.filter((r) => r.id !== row.id).slice(0, 4);
 
   // Puan durumu verisi ayrı bir kaynaktan (league_standings) geliyor ve
@@ -296,6 +314,10 @@ export default async function MatchDetailPage({ params }) {
                 </div>
               </div>
             </div>
+
+            {isLive || isFinished ? (
+              <MatchKeyEvents fixtureId={row.id} initialEvents={keyEvents} isLive={isLive} />
+            ) : null}
 
             <div className="detail-meta">
               {broadcastServices(row).length > 0 ? (

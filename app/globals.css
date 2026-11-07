@@ -2878,3 +2878,14 @@ html[data-theme='light'] .pred-card-read { color: #8a6100; }
 html[data-app-banner='off'] .sticky-banner { display: none; }
 /* Açık temada üst etiket açık zeminde okunur koyu altın (WCAG AA). */
 html[data-theme='light'] .eyebrow { color: var(--accent-text); }
+
+/* Maç kartı: goller + kırmızı kartlar (components/MatchKeyEvents.js) */
+.match-key-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px auto 14px;
+  max-width: 560px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
