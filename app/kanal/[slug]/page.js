@@ -10,7 +10,10 @@ import { getLocale } from '../../../lib/locale';
 export const revalidate = 600;
 
 async function loadChannel(slug) {
-  const { startIso, endIso } = windowIso(1, 14);
+  // Site haritasıyla (lib/sitemapXml.js entityEntries: 7 gün geri / 30 ileri)
+  // AYNI pencere — farklı olunca haritadaki kanal adresi 404 veriyordu (GSC,
+  // 2026-11-09: /kanal/trt-1, /kanal/tabii-spor-5).
+  const { startIso, endIso } = windowIso(7, 30);
   try {
     return await getFixturesForChannelSlug(slug, { startIso, endIso });
   } catch {
