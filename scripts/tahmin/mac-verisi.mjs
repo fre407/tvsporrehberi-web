@@ -4,7 +4,8 @@
 //   node scripts/tahmin/mac-verisi.mjs --hours 96
 //   node scripts/tahmin/mac-verisi.mjs --all      → yazısı olanları da göster
 //
-// Çıktı (stdout, JSON): 4 büyüklerin (GS, FB, BJK, TS) yazısı HENÜZ
+// Çıktı (stdout, JSON): 4 büyüklerin (GS, FB, BJK, TS) ve Türkiye A Milli
+// Takımı'nın yazısı HENÜZ
 // OLMAYAN resmi maçları; her biri için kanal, iki takımın son resmi maçları,
 // puan durumundaki yerleri ve aralarındaki son maçlar. Veri sitenin kendi
 // Supabase görünümünden (herkese açık anon anahtar — lib/supabase.js ile aynı).
@@ -22,7 +23,8 @@ const SUPABASE_URL = 'https://pwpwibvomoujxokjxtlp.supabase.co/rest/v1';
 const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3cHdpYnZvbW91anhva2p4dGxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMjI3ODUsImV4cCI6MjEwMDY5ODc4NX0.xijK0Hd1x0DQQ4q4p03k2_4XIyU8_5ZSOYQAnN8i83Q';
 
-const BIG_FOUR = new Set(['galatasaray', 'fenerbahce', 'besiktas', 'trabzonspor']);
+// 4 büyükler + Türkiye A Milli Takımı (kullanıcı isteği, 2026-11-12).
+const BIG_FOUR = new Set(['galatasaray', 'fenerbahce', 'besiktas', 'trabzonspor', 'turkiye']);
 const EXCLUDED_COMPETITIONS = new Set(['hazirlik_maci']);
 const FINISHED = new Set(['FT', 'AET', 'PEN']);
 
@@ -58,7 +60,8 @@ function resultLine(row, team) {
 
 const BIG_OR = encodeURIComponent(
   '(home_team.ilike.*galatasaray*,away_team.ilike.*galatasaray*,home_team.ilike.*fenerbah*,away_team.ilike.*fenerbah*,' +
-    'home_team.ilike.*ikta*,away_team.ilike.*ikta*,home_team.ilike.*trabzonspor*,away_team.ilike.*trabzonspor*)',
+    'home_team.ilike.*ikta*,away_team.ilike.*ikta*,home_team.ilike.*trabzonspor*,away_team.ilike.*trabzonspor*,' +
+    'home_team.eq.Türkiye,away_team.eq.Türkiye)',
 );
 
 const now = Date.now();

@@ -95,7 +95,10 @@ export function validateArticle(article, fileName) {
     errors.push(`intro "Skor tahminim: ... ${home}-${away} ..." ile başlamalı`);
   }
 
-  if (!article.title.includes(article.homeTeam) || !article.title.includes(article.awayTeam)) errors.push('title iki takımın adını içermeli');
+  // Milli takım rakipleri veride İngilizce (Belgium, France…); başlıkta
+  // Türkçe adı da kabul edilir (2026-11-12, Türkiye A Milli Takımı kapsamı).
+  const inTitle = (name) => article.title.includes(name) || (TR_COUNTRY_NAMES[name] && article.title.includes(TR_COUNTRY_NAMES[name]));
+  if (!inTitle(article.homeTeam) || !inTitle(article.awayTeam)) errors.push('title iki takımın adını içermeli');
   if (!/Maç Tahmini/.test(article.title)) errors.push('title "Maç Tahmini" içermeli');
   if (article.seoTitle.length > 75) errors.push('seoTitle 75 karakteri geçmemeli');
   if (article.description.length < 110 || article.description.length > 170) errors.push('description 110–170 karakter olmalı');
@@ -125,3 +128,13 @@ export function validateArticle(article, fileName) {
   }
   return errors;
 }
+
+const TR_COUNTRY_NAMES = {
+  Belgium: 'Belçika', France: 'Fransa', Italy: 'İtalya', Germany: 'Almanya', Spain: 'İspanya',
+  England: 'İngiltere', Netherlands: 'Hollanda', Portugal: 'Portekiz', Croatia: 'Hırvatistan',
+  Denmark: 'Danimarka', Switzerland: 'İsviçre', Austria: 'Avusturya', Scotland: 'İskoçya',
+  Wales: 'Galler', Norway: 'Norveç', Sweden: 'İsveç', Poland: 'Polonya', Czechia: 'Çekya',
+  Hungary: 'Macaristan', Serbia: 'Sırbistan', Georgia: 'Gürcistan', Greece: 'Yunanistan',
+  Romania: 'Romanya', Ukraine: 'Ukrayna', Slovakia: 'Slovakya', Slovenia: 'Slovenya',
+};
+
