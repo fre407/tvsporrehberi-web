@@ -35,6 +35,7 @@ export default function Footer({ locale }) {
             <Link href="/ligler">{t(locale, 'footer.leagues')}</Link>
             <Link href="/kanallar">{t(locale, 'footer.channels')}</Link>
             <Link href="/yayin-haklari">{t(locale, 'footer.rights')}</Link>
+            <Link href="/rehber">{locale === 'en' ? 'Guides' : 'Rehber'}</Link>
           </nav>
 
           <nav className="foot-column" aria-label={t(locale, 'footer.info')}>

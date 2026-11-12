@@ -4,7 +4,7 @@ import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
 import FormDots from '../../../components/FormDots';
 import JsonLd from '../../../components/JsonLd';
-import { getFixturesForTeamSlug, teamResultLetter, windowIso } from '../../../lib/data';
+import { getFixturesForTeamSlug, isIndexWorthyTeam, teamResultLetter, windowIso } from '../../../lib/data';
 import { istDateLong, istTime, slugify } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 import { TEAM_NAME_ALIASES } from '../../../lib/teamNames';
@@ -71,13 +71,14 @@ async function loadTeam(slugParam) {
 
 export async function generateMetadata({ params }) {
   const { slug: slugParam } = await params;
-  const { displayName, slug, redirectTo } = await loadTeam(slugParam);
+  const { displayName, slug, redirectTo, matches } = await loadTeam(slugParam);
   if (redirectTo) return { title: 'Yönlendiriliyor…' };
   if (!displayName) return { title: 'Takım Bulunamadı' };
   return {
     title: `${displayName} Maçı Ne Zaman, Saat Kaçta, Hangi Kanalda?`,
     description: `${displayName} takımının yaklaşan ve son maçları, maç saatleri ve hangi kanalda yayınlandığı bilgisi.`,
     alternates: { canonical: `${SITE_URL}/takim/${slug}` },
+    ...(isIndexWorthyTeam(matches) ? {} : { robots: { index: false, follow: true } }),
   };
 }
 

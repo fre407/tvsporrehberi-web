@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import Guide from '../../../components/Guide';
 import DayTabs from '../../../components/DayTabs';
 import AppCta from '../../../components/AppCta';
-import { getFixturesInWindow } from '../../../lib/data';
+import { getFixturesInWindow, isIndexWorthyDay } from '../../../lib/data';
 import { dateKeyDiffDays, dateKeyOffset, istDateLong, istKeyToUtcRange } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 import { getLocale } from '../../../lib/locale';
@@ -32,6 +32,7 @@ export async function generateMetadata({ params }) {
     title: `${dateLabel} Maç Programı ve Yayın Kanalları`,
     description: `${dateLabel} tarihinde oynanacak/oynanan tüm maçlar, saatleri ve hangi kanalda yayınlandığı bilgisi.`,
     alternates: { canonical: `${SITE_URL}/gun/${date}` },
+    ...(isIndexWorthyDay(offset) ? {} : { robots: { index: false, follow: true } }),
   };
 }
 

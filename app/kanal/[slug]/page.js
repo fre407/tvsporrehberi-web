@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Guide from '../../../components/Guide';
 import AppCta from '../../../components/AppCta';
 import JsonLd from '../../../components/JsonLd';
-import { getFixturesForChannelSlug, isForeignBroadcaster, windowIso } from '../../../lib/data';
+import { MIN_CHANNEL_MATCHES, getFixturesForChannelSlug, isForeignBroadcaster, windowIso } from '../../../lib/data';
 import { SITE_URL } from '../../../lib/links';
 import { getLocale } from '../../../lib/locale';
 
@@ -23,12 +23,13 @@ async function loadChannel(slug) {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const { displayName } = await loadChannel(slug);
+  const { displayName, matches } = await loadChannel(slug);
   if (!displayName) return { title: 'Kanal Bulunamadı' };
   return {
     title: `${displayName} Yayın Akışı — Hangi Maçlar Var?`,
     description: `${displayName} kanalında/platformunda yayınlanan maçlar, saatleri ve karşılaşma detayları.`,
     alternates: { canonical: `${SITE_URL}/kanal/${slug}` },
+    ...(matches.length >= MIN_CHANNEL_MATCHES ? {} : { robots: { index: false, follow: true } }),
   };
 }
 

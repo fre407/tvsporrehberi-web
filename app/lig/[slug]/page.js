@@ -5,7 +5,8 @@ import Standings from '../../../components/Standings';
 import LeagueStats from '../../../components/LeagueStats';
 import AppCta from '../../../components/AppCta';
 import JsonLd from '../../../components/JsonLd';
-import { getFixturesForCompetition, getLeagueStats, getStandings, topBroadcasters, windowIso } from '../../../lib/data';
+import { leagueGuide } from '../../../lib/leagueGuides';
+import { getFixturesForCompetition, getLeagueStats, getStandings, isIndexWorthyLeague, topBroadcasters, windowIso } from '../../../lib/data';
 import {
   competitionFlag,
   competitionKeyFromSlug,
@@ -78,6 +79,7 @@ export async function generateMetadata({ params }) {
     // üretiyordu).
     description: `${label}: bu hafta oynanacak tüm maçlar, saatleri, puan durumu ve hangi kanalda yayınlandığı bilgisi.`,
     alternates: { canonical: `${SITE_URL}/lig/${slug}` },
+    ...(isIndexWorthyLeague(key) ? {} : { robots: { index: false, follow: true } }),
   };
 }
 
@@ -141,6 +143,23 @@ export default async function LeaguePage({ params }) {
           <Guide rows={rows} />
         </div>
       </section>
+
+      {leagueGuide(key) ? (
+        <section style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-title">
+                Turnuva <span>Hakkında</span>
+              </div>
+            </div>
+            <div className="legal-text">
+              {leagueGuide(key).map((p) => (
+                <p key={p.slice(0, 40)}>{p}</p>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {standings ? (
         <section style={{ paddingTop: 0 }}>
