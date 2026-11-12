@@ -12,6 +12,13 @@ yazara bölünür; bizde tek, akıcı, baştan sona okunan bir maç önü yazıs
 
 - Galatasaray, Fenerbahçe, Beşiktaş ve Trabzonspor'un **resmi** maçları:
   Süper Lig, Türkiye Kupası, Süper Kupa, UEFA kupaları. Hazırlık maçı yok.
+- **Türkiye A Milli Takımı**'nın resmi maçları (Uluslar Ligi, Dünya Kupası /
+  EURO elemeleri ve finalleri). Özel/hazırlık maçı yok. "Kulüplerde son
+  durum" bölümünde milli takımın teknik direktörü, kamp kadrosu, federasyon
+  ve rakip milli takımın durumu anlatılır (başlıkta yine "Kulüp" ya da
+  uygun bir ifade geçmeli). Rakip veride İngilizce adla gelir (Belgium);
+  metinde ve başlıkta Türkçe adı (Belçika) kullan, homeTeam/awayTeam alanları
+  veri adıyla kalır.
 - İki büyük karşılaşıyorsa (derbi) tek yazı.
 - Yazı maçtan 12–48 saat önce yayımlanır.
 
