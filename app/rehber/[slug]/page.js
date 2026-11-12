@@ -44,7 +44,10 @@ export default async function GuidePage({ params }) {
     publisher: { '@type': 'Organization', name: 'TV Spor Rehberi', url: SITE_URL, logo: { '@type': 'ImageObject', url: `${SITE_URL}/icon.png` } },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
   };
-  const others = GUIDES.filter((g) => g.slug !== guide.slug);
+  const others = [
+    ...GUIDES.filter((g) => g.slug !== guide.slug && g.category === guide.category),
+    ...GUIDES.filter((g) => g.slug !== guide.slug && g.category !== guide.category),
+  ].slice(0, 6);
 
   return (
     <>
@@ -59,7 +62,7 @@ export default async function GuidePage({ params }) {
       </div>
       <div className="hero" style={{ paddingBottom: 10 }}>
         <div className="wrap">
-          <div className="eyebrow">Rehber · TV Spor Rehberi Editörü</div>
+          <div className="eyebrow">Rehber · {guide.category} · TV Spor Rehberi Editörü</div>
           <h1>{guide.title}</h1>
           <p className="page-desc">{guide.intro}</p>
         </div>

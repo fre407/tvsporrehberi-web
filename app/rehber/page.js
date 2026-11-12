@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { GUIDES, guideUrl } from '../../lib/guides';
+import { GUIDES, GUIDE_CATEGORIES, guideUrl } from '../../lib/guides';
 import { SITE_URL } from '../../lib/links';
 
 export const revalidate = false;
@@ -21,21 +21,30 @@ export default function GuidesIndexPage() {
           <div className="eyebrow">Rehber</div>
           <h1>Futbol izleyicisi için rehber yazıları</h1>
           <p className="page-desc">
-            Maç saatlerinin neden değiştiği, Avrupa kupalarının nasıl oynandığı ve puan tablolarının nasıl
-            sıralandığı gibi sık sorulan soruları sade bir dille anlattığımız yazılar.
+            Türk futbolunun büyük kulüpleri, A Milli Takım'ın unutulmaz turnuvaları, efsane isimler ve futbolun
+            kuralları üzerine sade bir dille yazdığımız rehber yazıları.
           </p>
         </div>
       </div>
       <section style={{ paddingTop: 8 }}>
         <div className="wrap legal-text">
-          {GUIDES.map((guide) => (
-            <div key={guide.slug} style={{ marginBottom: 22 }}>
-              <h2>
-                <Link href={guideUrl(guide)}>{guide.title}</Link>
-              </h2>
-              <p>{guide.description}</p>
-            </div>
-          ))}
+          {GUIDE_CATEGORIES.map((category) => {
+            const items = GUIDES.filter((guide) => guide.category === category);
+            if (items.length === 0) return null;
+            return (
+              <div key={category} style={{ marginBottom: 30 }}>
+                <div className="eyebrow" style={{ marginBottom: 6 }}>{category}</div>
+                {items.map((guide) => (
+                  <div key={guide.slug} style={{ marginBottom: 22 }}>
+                    <h2>
+                      <Link href={guideUrl(guide)}>{guide.title}</Link>
+                    </h2>
+                    <p>{guide.description}</p>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       </section>
     </>
