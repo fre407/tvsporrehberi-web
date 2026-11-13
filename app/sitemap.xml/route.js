@@ -10,5 +10,6 @@ export function GET() {
     '/sitemaps/entities.xml',
     '/sitemaps/matches.xml',
     '/sitemaps/tahminler.xml',
+    '/sitemaps/analizler.xml',
   ]));
 }

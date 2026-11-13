@@ -7,6 +7,7 @@ import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { istDateLong, istTime } from '../../../lib/format';
 import { SITE_URL } from '../../../lib/links';
 import { roundText } from '../../../lib/rounds';
+import { analysisForPrediction, analysisUrl } from '../../../lib/analyses';
 import {
   PREDICTIONS_PATH,
   allPredictions,
@@ -148,6 +149,18 @@ export default async function PredictionArticlePage({ params }) {
             {channel ? <span>📺 {channel}</span> : null}
             <Link href={`/mac/${article.matchSlug}`}>Maç sayfası, kadrolar ve canlı skor →</Link>
           </div>
+
+          {(() => {
+            const analysis = analysisForPrediction(article.slug);
+            if (!analysis) return null;
+            return (
+              <Link href={analysisUrl(analysis)} className="match-pred-link" style={{ marginTop: 18 }}>
+                <span className="match-pred-kicker">📊 MAÇ SONU ANALİZİ</span>
+                <b>{analysis.title}</b>
+                <span>Maç sonucu {analysis.finalScore.home}-{analysis.finalScore.away} · tahminimiz neden tuttu ya da tutmadı →</span>
+              </Link>
+            );
+          })()}
 
           <p className="pred-intro">
             <strong>{firstSentence}</strong> {restIntro.join(' ')}

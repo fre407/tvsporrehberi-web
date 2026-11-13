@@ -22,6 +22,7 @@ import { competitionLabel, competitionSlug } from '../../../lib/competitions';
 import { roundText } from '../../../lib/rounds';
 import { keyMatchEvents } from '../../../lib/matchEvents';
 import { predictionForMatch, predictionUrl } from '../../../lib/predictions';
+import { analysisForMatch, analysisUrl } from '../../../lib/analyses';
 import { APP_STORE_URL, SITE_URL, playStoreUrl } from '../../../lib/links';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -379,6 +380,18 @@ export default async function MatchDetailPage({ params }) {
                 <span className="match-pred-kicker">⚡ İDDİALI TAHMİN</span>
                 <b>{article.title}</b>
                 <span>Skor tahminim {article.scorePrediction.home}-{article.scorePrediction.away} · ilk yarı, ikinci yarı ve iddaa tercihleri →</span>
+              </Link>
+            );
+          })()}
+
+          {(() => {
+            const analysis = analysisForMatch(matchSlug(row.home_team, row.away_team, row.kickoff_at));
+            if (!analysis) return null;
+            return (
+              <Link href={analysisUrl(analysis)} className="match-pred-link">
+                <span className="match-pred-kicker">📊 MAÇ SONU ANALİZİ</span>
+                <b>{analysis.title}</b>
+                <span>Maç sonu analizini oku · kırılma anları ve tahminimizin karnesi →</span>
               </Link>
             );
           })()}
