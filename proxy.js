@@ -54,13 +54,17 @@ function isRateLimited(ip) {
 // (Go/Java/okhttp vb.) tarıyor. Bu iki dosya, bot kontrolünün TAMAMEN
 // dışında tutuluyor — engellenmeleri güvenlik değil, doğrulamayı kıran bir
 // yan etkiydi.
-const ADS_TXT_PATHS = new Set(['/ads.txt', '/app-ads.txt']);
+// robots.txt ve site haritaları da aynı gerekçeyle herkese açık (2026-11-20:
+// imzasız/jenerik istemciye 403 dönüyordu; doğrulayıcılar önce robots.txt'ye
+// bakabiliyor).
+const ADS_TXT_PATHS = new Set(['/ads.txt', '/app-ads.txt', '/robots.txt', '/sitemap.xml']);
+const SITEMAP_PREFIX = '/sitemaps/';
 
 export function proxy(req) {
   const ua = req.headers.get('user-agent') || '';
   const { pathname } = req.nextUrl;
 
-  if (ADS_TXT_PATHS.has(pathname)) return NextResponse.next();
+  if (ADS_TXT_PATHS.has(pathname) || pathname.startsWith(SITEMAP_PREFIX)) return NextResponse.next();
 
   if (GOOD_BOTS.test(ua)) return NextResponse.next();
 
