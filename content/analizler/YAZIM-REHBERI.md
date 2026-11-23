@@ -5,7 +5,9 @@ kalıbıdır. Her akşam çalışan otomatik görev (`mac-analizleri-aksam`) yaz
 yazmadan önce bu dosyayı baştan sona okur ve buna uyar.
 
 ## Kapsam
-- Yalnızca **İddialı Tahminler yazısı olan** maçlar (4 büyükler + A Milli Takım).
+- Yalnızca **İddialı Tahminler yazısı olan BÜYÜK** maçlar (2026-11-23): Avrupa
+  kupaları, A Milli Takım ve 4 büyüklerin kendi aralarındaki derbiler. Sıradan
+  lig maçlarına analiz yazılmaz (`bekleyen.mjs` bunu kendisi süzer).
 - Analiz, **maç gününden 1 gün sonra** yazılır (maç günü TSİ "dün" ya da daha
   eski). Geçmişe dönük yazı yok: 13.11.2026 öncesi maçlara analiz yazılmaz
   (`scripts/analiz/bekleyen.mjs` bunu kendisi süzer).

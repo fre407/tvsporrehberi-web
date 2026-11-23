@@ -23,6 +23,18 @@ async function rest(path) {
   return res.json();
 }
 
+// Yalnızca BÜYÜK maçlar (kullanıcı kararı 2026-11-23 — seri üretim izlenimi
+// AdSense için risk): Avrupa kupaları, A Milli Takım ve 4 büyüklerin kendi
+// aralarındaki derbiler. Sıradan lig maçlarına analiz yazılmaz.
+const BIG_COMPETITIONS = new Set(['sampiyonlar_ligi', 'avrupa_ligi', 'konferans_ligi', 'uefa_super_kupa', 'turkiye_super_kupa']);
+const BIG_FOUR = ['galatasaray', 'fenerbah', 'besiktas', 'beşiktaş', 'trabzonspor'];
+const isBigFour = (name) => BIG_FOUR.some((k) => name.toLowerCase().includes(k));
+function isBigMatch(p) {
+  if (BIG_COMPETITIONS.has(p.competition)) return true;
+  if (p.homeTeam === 'Türkiye' || p.awayTeam === 'Türkiye') return true;
+  return isBigFour(p.homeTeam) && isBigFour(p.awayTeam);
+}
+
 const yesterday = dateKeyOffset(-1);
 const predictions = readdirSync(join(ROOT, 'content', 'tahminler'))
   .filter((f) => f.endsWith('.json'))
@@ -31,7 +43,7 @@ const predictions = readdirSync(join(ROOT, 'content', 'tahminler'))
 const out = [];
 for (const p of predictions) {
   const day = istDateKey(p.kickoff);
-  if (day < ANALIZ_BASLANGIC || day > yesterday) continue;
+  if (day < ANALIZ_BASLANGIC || day > yesterday || !isBigMatch(p)) continue;
   const slug = p.slug.replace('-mac-tahmini-', '-mac-analizi-');
   if (existsSync(join(ROOT, 'content', 'analizler', `${slug}.json`))) continue;
   const rows = await rest(

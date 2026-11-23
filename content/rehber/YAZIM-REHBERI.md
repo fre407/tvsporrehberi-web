@@ -1,17 +1,17 @@
 # Rehber yazıları — haftalık yazım rehberi
 
-Her 7 günde bir **en az 6 yazı** eklenir: **3 "Güncel"** + **3 "Futbol Tarihi"**.
+Her 7 günde bir **2 yazı** eklenir: **1 "Güncel"** + **1 "Futbol Tarihi"** (2026-11-23: az ama derin; seri üretim yok).
 Otomatik görev (`rehber-haftalik`) bu dosyayı baştan sona okur ve uyar.
 
 ## Konu seçimi
-- **Güncel (3):** son 7–10 günün Türk ve dünya futbolunda en çok konuşulan
+- **Güncel (1):** son 7–10 günün Türk ve dünya futbolunda en çok konuşulan
   konuları. Örnek: bir teknik direktör değişikliğinin arka planı, şampiyonluk
   yarışının durumu, Avrupa kupalarında Türk takımlarının tablosu, A Milli
   Takım'ın yeni dönemi, öne çıkan bir genç oyuncunun yükselişi, yaklaşan büyük
   bir derbinin hikâyesi. Haber kopyası değil; "neden önemli, ne anlama geliyor"
   açıklaması. Tarih geçince eskimeyecek biçimde yaz ("12 Kasım'da…" gibi kesin
   tarih ver, "dün" deme).
-- **Futbol Tarihi (3):** Türk futbolseverin ilgisini çekecek tarih konuları:
+- **Futbol Tarihi (1):** Türk futbolseverin ilgisini çekecek tarih konuları:
   unutulmaz maçlar, efsane oyuncular ve hocalar, kulüplerin kuruluş hikâyeleri,
   rekorlar, büyük turnuvalardan anlar, ünlü transferler, statların hikâyesi.
   Türk futbolu ağırlıklı; dünya futbolundan Türk okurun bildiği büyük hikâyeler
