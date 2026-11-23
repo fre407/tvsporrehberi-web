@@ -29,10 +29,27 @@ export default function PrivacyPage() {
 
           <h2>Hangi veriler toplanıyor?</h2>
           <p>
-            Sitede üyelik, kayıt veya form doldurma yoktur; ziyaretçilerden isim, e-posta gibi kişisel veriler
-            doğrudan talep edilmez. Sunucularımız, standart web sunucusu günlükleri kapsamında IP adresi ve
-            tarayıcı bilgisi gibi teknik verileri güvenlik ve kötüye kullanımı (ör. otomatik veri kazıma) önlemek
-            amacıyla kısa süreliğine işleyebilir.
+            Sitede üyelik veya kayıt yoktur; ziyaretçilerden gerçek isim, e-posta ya da telefon gibi kişisel veriler
+            talep edilmez. Sunucularımız, standart web sunucusu günlükleri kapsamında IP adresi ve tarayıcı bilgisi
+            gibi teknik verileri güvenlik ve kötüye kullanımı (ör. otomatik veri kazıma) önlemek amacıyla kısa
+            süreliğine işleyebilir.
+          </p>
+
+          <h2>Maç yorumları ve &quot;Kim kazanır?&quot; anketi</h2>
+          <p>
+            Maç sayfalarındaki yorum alanını kullanırsanız yazdığınız <strong>takma ad</strong> ve{' '}
+            <strong>yorum metni</strong>, yorumun yazıldığı maç ve gönderim zamanıyla birlikte saklanır ve sitede
+            herkese açık olarak gösterilir. Gerçek adınızı veya iletişim bilgilerinizi yazmamanızı öneririz.
+            Anketteki tercihiniz (ev sahibi, beraberlik ya da deplasman) yalnızca toplam oy sayısını oluşturmak için
+            saklanır; kimin hangi tercihi yaptığı gösterilmez.
+          </p>
+          <p>
+            Spam, tekrar gönderim ve kötüye kullanımı önlemek için her iki özellikte de IP adresinizin kendisi değil,
+            geri çevrilemeyen bir özeti (karma değeri) kaydedilir. Hakaret, argo ve bağlantı içeren yorumlar otomatik
+            olarak reddedilir; birden fazla ziyaretçi tarafından bildirilen yorumlar gizlenir. Takma adınız ve oy
+            tercihiniz, bir sonraki ziyaretinizde hatırlanması için yalnızca kendi tarayıcınızda da tutulur. Bir
+            yorumunuzun silinmesini isterseniz aşağıdaki e-posta adresinden, yorumun yazıldığı maçı belirterek bize
+            ulaşabilirsiniz.
           </p>
 
           <h2>Çerezler ve yerel depolama</h2>
